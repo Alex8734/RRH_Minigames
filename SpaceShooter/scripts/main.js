@@ -9,7 +9,7 @@ ship.image.onload = () => {
     gameLoop();
 };
 
-let lastTime = performance.now();
+let lastTime = 0;
 
 function gameLoop() {
     let currentTime = performance.now();
