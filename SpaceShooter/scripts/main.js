@@ -10,8 +10,17 @@ const ship = new SpaceShip();
 ship.image.onload = () => {
     gameLoop();
 };
-
 let lastTime = 0;
+
+let bg1 = new Image();
+bg1.src = "./images/background.png";
+bg1.size = {x: 1024, y: 1024};
+let bg2 = new Image();
+bg2.src = "./images/background.png";
+bg2.size = {x: canvas.width, y: canvas.height};
+
+bg1.pos = {x: 0, y: 0}
+bg2.pos = {x: canvas.width, y: 0}
 
 function gameLoop() {
     let currentTime = performance.now();
@@ -24,10 +33,33 @@ function gameLoop() {
     if (keysPressed["s"]) {
         ship.moveDown(deltaTime);
     }
+
+    console.log(bg1.pos);
+    console.log(bg2.pos);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    DrawAndMoveBackground();
     ship.draw();
     console.log(ship.pos);
     requestAnimationFrame(gameLoop);
+}
+
+function DrawAndMoveBackground()
+{
+    bg1.pos.x -= 5;
+    bg2.pos.x -= 5;
+
+    if (bg1.pos.x <= -500)
+    {
+        bg1.pos.x = canvas.width;
+    }
+    if (bg2.pos.x <= -500)
+    {
+        bg2.pos.x = canvas.width;
+    }
+
+    ctx.drawImage(bg1, bg1.pos.x, bg1.pos.y, canvas.width, canvas.height);
+    ctx.drawImage(bg2, bg2.pos.x, bg2.pos.y, canvas.width, canvas.height);
 }
 
 window.addEventListener("keydown", handleKeyDown);
