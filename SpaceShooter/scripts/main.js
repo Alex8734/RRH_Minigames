@@ -1,4 +1,5 @@
 import {SpaceShip} from "./spaceshuttle.js";
+import {Meteor} from "./meteor.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
