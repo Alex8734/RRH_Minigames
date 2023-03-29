@@ -8,13 +8,10 @@
 * Minesweeper
 * Flappybird
 
-# Spaceshooter
-
-# TicTacToe 
-## you can play against a bot or online
-
+# Space shooter
+# TicTacToe
 # Chess
 # Minesweeper 
-# Flappybird
+# Flappy bird
 
 
