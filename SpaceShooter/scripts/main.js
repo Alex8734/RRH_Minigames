@@ -5,16 +5,9 @@ export const ctx = canvas.getContext("2d");
 canvas.height = 500;
 canvas.width = 500;
 
-const ship = new SpaceShip();
-
-ship.image.onload = () => {
-    gameLoop();
-};
-let lastTime = 0;
-
 let bg1 = new Image();
 bg1.src = "./images/background.png";
-bg1.size = {x: 1024, y: 1024};
+bg1.size = {x: canvas.width, y: canvas.height};
 let bg2 = new Image();
 bg2.src = "./images/background.png";
 bg2.size = {x: canvas.width, y: canvas.height};
@@ -22,10 +15,28 @@ bg2.size = {x: canvas.width, y: canvas.height};
 bg1.pos = {x: 0, y: 0}
 bg2.pos = {x: canvas.width, y: 0}
 
+const ship = new SpaceShip();
+
+ship.image.onload = () => {
+    bg1.onload = () => {
+        bg2.onload = () => {
+            gameLoop();
+        }
+    }
+};
+let lastTime = 0;
+
 function gameLoop() {
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
+
+    console.log(bg1.pos);
+    console.log(bg2.pos);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    DrawAndMoveBackground();
 
     if (keysPressed["w"]) {
         ship.moveUp(deltaTime);
@@ -34,11 +45,6 @@ function gameLoop() {
         ship.moveDown(deltaTime);
     }
 
-    console.log(bg1.pos);
-    console.log(bg2.pos);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    DrawAndMoveBackground();
     ship.draw();
     console.log(ship.pos);
     requestAnimationFrame(gameLoop);
@@ -46,8 +52,8 @@ function gameLoop() {
 
 function DrawAndMoveBackground()
 {
-    bg1.pos.x -= 5;
-    bg2.pos.x -= 5;
+    bg1.pos.x -= 2;
+    bg2.pos.x -= 2;
 
     if (bg1.pos.x <= -500)
     {
