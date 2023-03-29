@@ -1,7 +1,7 @@
 # RRH_Minigames
 ## This is a website about minigames
 
-### planed minigames are..
+### planed minigames are:
 * A space shooter
 * TicTacToe 
 * Chess 
