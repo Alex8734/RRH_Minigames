@@ -4,7 +4,7 @@ export class SpaceShip {
     constructor() {
         this.image = new Image();
         this.image.src = "./images/shuttle.png";
-        this.size = {x: 25, y: 25};
+        this.size = {x: 40, y: 40};
         this.pos = {
             x: 50,
             y: 50,
@@ -15,7 +15,7 @@ export class SpaceShip {
     draw(){
         ctx.save();
         ctx.translate(this.pos.x, this.pos.y);
-        ctx.rotate(Math.PI / 2.7); // or any other desired angle
+
         ctx.drawImage(this.image, 0, 0, this.size.x, this.size.y);
         ctx.restore();
     }
@@ -28,7 +28,7 @@ export class SpaceShip {
     }
 
     moveDown(deltaTime) {
-        if (this.pos.y < 90) {
+        if (this.pos.y < (canvas.height - this.size.y - 1)) {
             this.pos.y += (this.speed * deltaTime);
         }
     }

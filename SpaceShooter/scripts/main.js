@@ -2,6 +2,8 @@ import {SpaceShip} from "./spaceshuttle.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
+canvas.height = 500;
+canvas.width = 500;
 
 const ship = new SpaceShip();
 
@@ -13,17 +15,18 @@ let lastTime = 0;
 
 function gameLoop() {
     let currentTime = performance.now();
-    let deltaTime = (currentTime - lastTime) / 1000;
+    let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
 
     if (keysPressed["w"]) {
-        ship.moveUp();
+        ship.moveUp(deltaTime);
     }
     if (keysPressed["s"]) {
-        ship.moveDown();
+        ship.moveDown(deltaTime);
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ship.draw();
+    console.log(ship.pos);
     requestAnimationFrame(gameLoop);
 }
 
