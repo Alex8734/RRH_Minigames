@@ -15,5 +15,6 @@ body {
 }
 
 #canvas {
-    width: 80%;
+    background-color: grey;
+    aspect-ratio: 4/4;
 }
