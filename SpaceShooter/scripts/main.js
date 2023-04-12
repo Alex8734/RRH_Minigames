@@ -26,10 +26,11 @@ ship.image.onload = () => {
     }
 };
 let lastTime = 0;
-
+let score = 0;
 let metorites = [];
 
 function gameLoop() {
+    printUI();
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
@@ -52,11 +53,25 @@ function gameLoop() {
 
     ship.draw();
     drawMeteoritesAndMove(deltaTime);
-
     if (!checkColiding(ship))
     {
         requestAnimationFrame(gameLoop);
     }
+    else
+    {
+        ctx.save();
+        ctx.fillStyle = "red";
+        ctx.font = "100px Comic Sans MS";
+        ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
+        console.log(canvas.width/2);
+        console.log(canvas.length/2);
+        ctx.restore();
+    }
+}
+
+function printUI(score)
+{
+
 }
 
 function drawMeteoritesAndMove(deltatime)
