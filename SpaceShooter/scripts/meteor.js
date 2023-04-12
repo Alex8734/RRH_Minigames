@@ -5,7 +5,7 @@ export class Meteor{
         this.image = new Image();
         this.image.src = "./images/asteroids/meteor.png";
         this.speed = 0.2;
-        this.size = {x: 50, y: 50}
+        this.size = {x: 40, y: 40}
         this.pos = {
             x: x,
             y: y,

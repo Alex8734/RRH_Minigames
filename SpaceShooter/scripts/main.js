@@ -52,7 +52,11 @@ function gameLoop() {
 
     ship.draw();
     drawMeteoritesAndMove(deltaTime);
-    requestAnimationFrame(gameLoop);
+
+    if (!checkColiding(ship))
+    {
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 function drawMeteoritesAndMove(deltatime)
@@ -106,6 +110,30 @@ function handleKeyDown(event) {
 
 function handleKeyUp(event) {
     keysPressed[event.key] = false;
+}
+
+function checkColiding(spaceship)
+{
+    for (let i = 0; i < metorites.length; i++)
+    {
+        if (checkSquareCollision(spaceship.pos.x, spaceship.pos.y, metorites[i].pos.x, metorites[i].pos.y, spaceship.size.x))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function checkSquareCollision(x1, y1, x2, y2, side) {
+    const distX = Math.abs((x1 + side / 2) - (x2 + side / 2));
+    const distY = Math.abs((y1 + side / 2) - (y2 + side / 2));
+    const halfSide = side / 2;
+
+    if (distX <= halfSide && distY <= halfSide) {
+        return true; // collision detected
+    }
+    return false; // no collision
 }
 
 window.addEventListener("keydown", handleKeyDown);
