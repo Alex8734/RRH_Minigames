@@ -61,7 +61,8 @@ function gameLoop() {
     {
         ctx.save();
         ctx.fillStyle = "red";
-        ctx.font = "100px Comic Sans MS";
+        ctx.font = "80px Comic Sans MS";
+        ctx.textAlign = "center";
         ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
         console.log(canvas.width/2);
         console.log(canvas.length/2);
