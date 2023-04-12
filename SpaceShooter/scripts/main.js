@@ -27,6 +27,8 @@ ship.image.onload = () => {
 };
 let lastTime = 0;
 
+let metorites = [];
+
 function gameLoop() {
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
@@ -46,9 +48,20 @@ function gameLoop() {
         ship.moveDown(deltaTime);
     }
 
+    createMeteorite();
+
     ship.draw();
-    console.log(ship.pos);
+    drawMeteoritesAndMove(deltaTime);
     requestAnimationFrame(gameLoop);
+}
+
+function drawMeteoritesAndMove(deltatime)
+{
+    for (let i = 0; i < metorites.length; i++)
+    {
+        metorites[i].fall(deltatime);
+        metorites[i].draw();
+    }
 }
 
 function DrawAndMoveBackground()
@@ -69,8 +82,21 @@ function DrawAndMoveBackground()
     ctx.drawImage(bg2, bg2.pos.x, bg2.pos.y, canvas.width, canvas.height);
 }
 
-window.addEventListener("keydown", handleKeyDown);
-window.addEventListener("keyup", handleKeyUp);
+function createMeteorite(){
+    let randomNumber = Math.floor(Math.random() * 10) + 1;
+
+    if(metorites.length > 1 && metorites[0].pos.x < -10)
+    {
+        metorites[0] = metorites[1];
+    }
+
+    if (randomNumber === 1)
+    {
+        randomNumber = Math.floor((Math.random() * ((-600) - 200)) + 200)
+        metorites.push(new Meteor(500, randomNumber))
+        return;
+    }
+}
 
 let keysPressed = {};
 
@@ -81,3 +107,6 @@ function handleKeyDown(event) {
 function handleKeyUp(event) {
     keysPressed[event.key] = false;
 }
+
+window.addEventListener("keydown", handleKeyDown);
+window.addEventListener("keyup", handleKeyUp);
