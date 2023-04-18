@@ -27,7 +27,6 @@ let score = 0;
 let metorites = [];
 
 function gameLoop() {
-    printUI();
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
@@ -50,6 +49,7 @@ function gameLoop() {
 
     ship.draw();
     drawMeteoritesAndMove(deltaTime);
+    printUI(score);
     if (!checkColiding(ship))
     {
         requestAnimationFrame(gameLoop);
@@ -61,15 +61,17 @@ function gameLoop() {
         ctx.font = "80px Comic Sans MS";
         ctx.textAlign = "center";
         ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
-        console.log(canvas.width/2);
-        console.log(canvas.length/2);
         ctx.restore();
     }
 }
 
 function printUI(score)
 {
-
+    ctx.save();
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.fillText(`${score.toString()}`, 0 ,27);
+    ctx.restore();
 }
 
 function drawMeteoritesAndMove(deltatime)
