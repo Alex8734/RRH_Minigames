@@ -18,19 +18,15 @@ bg2.pos = {x: canvas.width, y: 0}
 
 const ship = new SpaceShip();
 
-ship.image.onload = () => {
-    bg1.onload = () => {
-        bg2.onload = () => {
-            gameLoop();
-        }
-    }
-};
+document.addEventListener('DOMContentLoaded', (event) =>{
+    gameLoop();
+})
+
 let lastTime = 0;
 let score = 0;
 let metorites = [];
 
 function gameLoop() {
-    printUI();
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
@@ -53,6 +49,7 @@ function gameLoop() {
 
     ship.draw();
     drawMeteoritesAndMove(deltaTime);
+    printUI(score);
     if (!checkColiding(ship))
     {
         requestAnimationFrame(gameLoop);
@@ -64,15 +61,17 @@ function gameLoop() {
         ctx.font = "80px Comic Sans MS";
         ctx.textAlign = "center";
         ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
-        console.log(canvas.width/2);
-        console.log(canvas.length/2);
         ctx.restore();
     }
 }
 
 function printUI(score)
 {
-
+    ctx.save();
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.fillText(`${score.toString()}`, 0 ,27);
+    ctx.restore();
 }
 
 function drawMeteoritesAndMove(deltatime)
@@ -103,7 +102,7 @@ function DrawAndMoveBackground()
 }
 
 function createMeteorite(){
-    let randomNumber = Math.floor(Math.random() * 10) + 1;
+    let randomNumber = Math.floor(Math.random() * 20) + 1;
 
     if(metorites.length > 1 && metorites[0].pos.x < -10)
     {
@@ -112,10 +111,27 @@ function createMeteorite(){
 
     if (randomNumber === 1)
     {
-        randomNumber = Math.floor((Math.random() * ((-600) - 200)) + 200)
+        randomNumber = Math.floor((Math.random() * ((-500) - 200)) + 200)
+        while(!checkForValidSpawn(randomNumber))
+        {
+            randomNumber = Math.floor((Math.random() * ((-500) - 200)) + 200)
+        }
         metorites.push(new Meteor(500, randomNumber))
         return;
     }
+}
+
+function checkForValidSpawn(spawnY)
+{
+    for (let i = 0; i < metorites.length; i++)
+    {
+        if (checkSquareCollision(metorites[i].pos.x, metorites[i].pos.y, 500, spawnY, 150))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 let keysPressed = {};
@@ -147,9 +163,9 @@ function checkSquareCollision(x1, y1, x2, y2, side) {
     const halfSide = side / 2;
 
     if (distX <= halfSide && distY <= halfSide) {
-        return true; // collision detected
+        return true;
     }
-    return false; // no collision
+    return false;
 }
 
 window.addEventListener("keydown", handleKeyDown);
