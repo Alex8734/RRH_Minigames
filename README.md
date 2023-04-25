@@ -7,6 +7,7 @@
 * Chess 
 * Minesweeper
 * Flappybird
+* Slither
 
 # Space shooter
 # TicTacToe
