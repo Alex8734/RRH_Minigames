@@ -14,13 +14,13 @@ export class Meteor{
 
     }
 
-    fall(deltatime)
+    fall(deltatime, timeMultiplier)
     {
         let x = this.speed;
         let y = this.velocity;
 
-        this.pos.x -= (x * deltatime);
-        this.pos.y += (y * deltatime);
+        this.pos.x -= ((x * deltatime) * timeMultiplier);
+        this.pos.y += ((y * deltatime) * timeMultiplier);
     }
 
     draw()

@@ -25,14 +25,12 @@ document.addEventListener('DOMContentLoaded', (event) =>{
 let lastTime = 0;
 let score = 0;
 let metorites = [];
+let TimeMultiplier = 1;
 
 function gameLoop() {
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
-
-    console.log(bg1.pos);
-    console.log(bg2.pos);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -45,10 +43,10 @@ function gameLoop() {
         ship.moveDown(deltaTime);
     }
 
-    createMeteorite();
+    createMeteorite(TimeMultiplier);
 
     ship.draw();
-    drawMeteoritesAndMove(deltaTime);
+    drawMeteoritesAndMove(deltaTime, TimeMultiplier);
     printUI(score);
     if (!checkColiding(ship))
     {
@@ -56,13 +54,23 @@ function gameLoop() {
     }
     else
     {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         ctx.fillStyle = "red";
         ctx.font = "80px Comic Sans MS";
         ctx.textAlign = "center";
         ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
         ctx.restore();
+        ctx.save();
+        ctx.font = "30px Comic Sans MS";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + 40);
+        ctx.restore();
     }
+
+    TimeMultiplier += 0.00001 * deltaTime;
 }
 
 function printUI(score)
@@ -74,13 +82,22 @@ function printUI(score)
     ctx.restore();
 }
 
-function drawMeteoritesAndMove(deltatime)
+function drawMeteoritesAndMove(deltatime, timeMultiplier)
 {
+    let cnt = 0;
     for (let i = 0; i < metorites.length; i++)
     {
-        metorites[i].fall(deltatime);
+        metorites[i].fall(deltatime, timeMultiplier);
         metorites[i].draw();
+
+        if (metorites[i].pos.x < -50)
+        {
+            cnt++;
+            score++;
+        }
     }
+
+    metorites.splice(0, cnt + 1);
 }
 
 function DrawAndMoveBackground()
@@ -101,21 +118,18 @@ function DrawAndMoveBackground()
     ctx.drawImage(bg2, bg2.pos.x, bg2.pos.y, canvas.width, canvas.height);
 }
 
-function createMeteorite(){
-    let randomNumber = Math.floor(Math.random() * 20) + 1;
-
-    if(metorites.length > 1 && metorites[0].pos.x < -10)
-    {
-        metorites[0] = metorites[1];
-    }
+function createMeteorite(timeMultiplier){
+    let randomNumber = Math.floor((Math.random() * Math.round(20 / timeMultiplier)) + 1);
 
     if (randomNumber === 1)
     {
         randomNumber = Math.floor((Math.random() * ((-500) - 200)) + 200)
+
         while(!checkForValidSpawn(randomNumber))
         {
             randomNumber = Math.floor((Math.random() * ((-500) - 200)) + 200)
         }
+
         metorites.push(new Meteor(500, randomNumber))
         return;
     }
