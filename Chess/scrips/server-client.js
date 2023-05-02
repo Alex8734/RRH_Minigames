@@ -6,34 +6,32 @@ export class ServerClient{
         return await fetch(this.baseURL)
             .then(response => response.json())
     }
-    
-}
 
-export class ChessClient extends ServerClient
-{
-    
-    
-    constructor()
+    async getLastMove(gameId)
     {
-        const s = super();
-        this.baseURL = `${s.baseURL}/chess`
+        return this.getAllMoves(gameId).slice(-1)
     }
-    
-    async getLastMove(gameId){
-        console.log(this.baseURL)
+
+    async getAllMoves(gameId, onError)
+    {
         const response = await fetch(`${this.baseURL}/${gameId}`);
+        if (!response.ok)
+        {
+            onError(response);
+            return;
+        }
         const game = await response.json();
-        return game.moves.slice(-1)
-    } 
-    async getAllMoves(gameId){
-        console.log(this.baseURL)
-        const response = await fetch(`${this.baseURL}/${gameId}`);
-        const game = await response.json();
-        return game.moves
+        return game.moves;
     }
-    async syncMove(gameId, move, success){
-        
-        let moves =  await this.getAllMoves(gameId)
+
+    async syncMove(gameId, move, success, onError)
+    {
+
+        let moves = await this.getAllMoves(gameId, onError)
+        if (!moves)
+        {
+            return;
+        }
         moves.push(move)
         const data = {
             'moves': moves
@@ -45,9 +43,31 @@ export class ChessClient extends ServerClient
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
-        }).then(() => success())
+        }).catch(() => onError) .then(() => success())
     }
 }
 
+export class ChessClient extends ServerClient
+{
+    
+    constructor()
+    {
+        const s = super();
+        this.baseURL = `${s.baseURL}/chess`
+    }
+    
+    
+    
+}
 
+export class TicTacToeClient extends ServerClient
+{
+    constructor()
+    {
+        const s = super();
+        this.baseURL = `${s.baseURL}/tictactoe`
+    }
+    
+    
+}
 

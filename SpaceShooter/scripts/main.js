@@ -97,7 +97,7 @@ function drawMeteoritesAndMove(deltatime, timeMultiplier)
         }
     }
 
-    metorites.splice(0, cnt + 1);
+    metorites.splice(0, cnt );
 }
 
 function DrawAndMoveBackground()
