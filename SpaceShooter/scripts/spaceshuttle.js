@@ -4,12 +4,12 @@ export class SpaceShip {
     constructor() {
         this.image = new Image();
         this.image.src = "./images/shuttle.png";
-        this.size = {x: 40, y: 40};
+        this.size = {x: canvas.width / 12.5, y: canvas.width / 12.5};
         this.pos = {
-            x: 50,
-            y: 240,
+            x: canvas.width / 10,
+            y: canvas.width / 2 - this.size.x,
         }
-        this.speed = 0.25;
+        this.speed = canvas.width / 2000;
     }
 
     draw(){
@@ -28,8 +28,8 @@ export class SpaceShip {
 
     moveDown(deltaTime) {
         this.pos.y += (this.speed * deltaTime);
-        if (this.pos.y > (canvas.height - (this.size.y + 5))) {
-            this.pos.y = (canvas.height - (this.size.y + 5));
+        if (this.pos.y > (canvas.height - (this.size.y))) {
+            this.pos.y = (canvas.height - (this.size.y));
         }
     }
 }

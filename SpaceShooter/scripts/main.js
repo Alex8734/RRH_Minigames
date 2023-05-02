@@ -3,8 +3,8 @@ import {Meteor} from "./meteor.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
-canvas.height = 500;
-canvas.width = 500;
+canvas.height = 250;
+canvas.width = 250;
 
 let bg1 = new Image();
 bg1.src = "./images/background.png";
@@ -58,12 +58,12 @@ function gameLoop() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         ctx.fillStyle = "red";
-        ctx.font = "80px Comic Sans MS";
+        ctx.font = `${canvas.width / 6.25}px Comic Sans MS`;
         ctx.textAlign = "center";
         ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
         ctx.restore();
         ctx.save();
-        ctx.font = "30px Comic Sans MS";
+        ctx.font = `${canvas.width / 16}px Comic Sans MS`;
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
         ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + 40);
@@ -76,9 +76,9 @@ function gameLoop() {
 function printUI(score)
 {
     ctx.save();
-    ctx.font = "30px Comic Sans MS";
+    ctx.font = `${canvas.width / 16}px Comic Sans MS`;
     ctx.fillStyle = "white";
-    ctx.fillText(`${score.toString()}`, 0 ,27);
+    ctx.fillText(`${score.toString()}`, 0 ,canvas.width / 19);
     ctx.restore();
 }
 
@@ -97,40 +97,39 @@ function drawMeteoritesAndMove(deltatime, timeMultiplier)
         }
     }
 
-    metorites.splice(0, cnt + 1);
+    metorites.splice(0, cnt);
 }
 
 function DrawAndMoveBackground()
 {
-    bg1.pos.x -= 2;
-    bg2.pos.x -= 2;
+    bg1.pos.x -= canvas.width / 250;
+    bg2.pos.x -= canvas.width / 250;
 
-    if (bg1.pos.x <= -500)
-    {
-        bg1.pos.x = canvas.width;
+    if (bg1.pos.x <= -canvas.width) {
+        bg1.pos.x = bg2.pos.x + bg2.size.x;
     }
-    if (bg2.pos.x <= -500)
-    {
-        bg2.pos.x = canvas.width;
+    if (bg2.pos.x <= -canvas.width) {
+        bg2.pos.x = bg1.pos.x + bg1.size.x;
     }
 
-    ctx.drawImage(bg1, bg1.pos.x, bg1.pos.y, canvas.width, canvas.height);
-    ctx.drawImage(bg2, bg2.pos.x, bg2.pos.y, canvas.width, canvas.height);
+    ctx.drawImage(bg1, bg1.pos.x, bg1.pos.y, bg1.size.x, bg1.size.y);
+    ctx.drawImage(bg2, bg2.pos.x, bg2.pos.y, bg2.size.x, bg2.size.y);
 }
+
 
 function createMeteorite(timeMultiplier){
     let randomNumber = Math.floor((Math.random() * Math.round(20 / timeMultiplier)) + 1);
 
     if (randomNumber === 1)
     {
-        randomNumber = Math.floor((Math.random() * ((-500) - 200)) + 200)
+        randomNumber = Math.floor((Math.random() * ((-canvas.width) - (canvas.width / 2.5))) + (canvas.width / 2.5))
 
         while(!checkForValidSpawn(randomNumber))
         {
-            randomNumber = Math.floor((Math.random() * ((-500) - 200)) + 200)
+            randomNumber = Math.floor((Math.random() * ((-canvas.width) - (canvas.width / 2.5))) + (canvas.width / 2.5))
         }
 
-        metorites.push(new Meteor(500, randomNumber))
+        metorites.push(new Meteor(canvas.width, randomNumber))
         return;
     }
 }
@@ -139,7 +138,7 @@ function checkForValidSpawn(spawnY)
 {
     for (let i = 0; i < metorites.length; i++)
     {
-        if (checkSquareCollision(metorites[i].pos.x, metorites[i].pos.y, 500, spawnY, 150))
+        if (checkSquareCollision(metorites[i].pos.x, metorites[i].pos.y, canvas.width, spawnY, canvas.width / 3))
         {
             return false;
         }
