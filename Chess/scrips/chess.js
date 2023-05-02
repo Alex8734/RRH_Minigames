@@ -1,16 +1,4 @@
-import { ChessClient} from "./server-client.js";
-
-async function init(){
-    const game = new Game()
-    await game.client.syncMove (4,"RH7A8",
-            _ => {alert("added move successfully")}, 
-            _ => {alert("error, not added!")})
-    
-}
-
-$(async function () {
-    await init()
-})
+import { ChessClient} from "../../server/server-client.js";
 
 class Game{
     constructor()
