@@ -3,8 +3,11 @@ import {Meteor} from "./meteor.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
-canvas.height = 250;
-canvas.width = 250;
+canvas.height = 5000;
+canvas.width = 5000;
+
+console.log(canvas.width);
+console.log(canvas.height);
 
 let bg1 = new Image();
 bg1.src = "./images/background.png";
@@ -66,7 +69,7 @@ function gameLoop() {
         ctx.font = `${canvas.width / 16}px Comic Sans MS`;
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
-        ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + 40);
+        ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
         ctx.restore();
     }
 
@@ -90,14 +93,14 @@ function drawMeteoritesAndMove(deltatime, timeMultiplier)
         metorites[i].fall(deltatime, timeMultiplier);
         metorites[i].draw();
 
-        if (metorites[i].pos.x < -50)
+        if (metorites[i].pos.x < -canvas.width/10)
         {
             cnt++;
             score++;
         }
     }
 
-    metorites.splice(0, cnt );
+    metorites.splice(0, cnt);
 }
 
 function DrawAndMoveBackground()

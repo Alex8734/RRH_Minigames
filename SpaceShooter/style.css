@@ -17,4 +17,6 @@ body {
 #canvas {
     background-color: grey;
     aspect-ratio: 4/4;
+    height: 40%;
+    width: 40%;
 }
