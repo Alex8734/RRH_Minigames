@@ -1,0 +1,24 @@
+{
+  "queuingPlayers": [
+    {}
+  ],
+  "chess": [
+    {
+      "id": 3,
+      "moves": [
+        "RA1A5",
+        "QA2B3",
+        "RH7A7",
+        "RH7A7",
+        "RH7A7"
+      ]
+    },
+    {
+      "id": 4,
+      "moves": [
+        "PB2B3",
+        "RH7A8"
+      ]
+    }
+  ]
+}
