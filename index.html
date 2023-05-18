@@ -8,16 +8,58 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
           crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="menu-style.css">
 </head>
+<header>
+    <div id="logo-checkbox-container">
+        <input id="logo-button" type="checkbox">
+        <img id="logo" src="" alt="logo">
+    </div>
+    <div id="search-bar-container"><input placeholder="Search Game" class="form-control search-bar" type="text" ></div>
+    <div id="user-info">
+        <button class="btn btn-outline-warning" id="sign-in">Sign in</button>
+        <img id="profile" src="" alt="Profile">
+        <img id="settings" src="ICONS/settings(1).png" alt="Settings">
+    </div>
+</header>
 <body>
-<img id="background" src="img/backgrounds(2).png" alt="background">
+    <div id="content">
+        <div id="start-page">
 
-
+        </div>
+            <div id="filter-menu">
+                <div class="no-select dropdown-header">
+                    <img class="icon" src="ICONS/arrow-down.png">
+                    <span class="dropdown-text">Sort by</span>
+                    <img class="icon-angle-small" src="ICONS/angle-small-down.png">
+                </div>
+                <div class="dropdown">
+                    <ul class="no-select dropdown-list">
+                        <li>Players</li>
+                        <li>Release</li>
+                    </ul>
+                </div>
+                <div class="no-select dropdown-header">
+                    <img class="icon" src="ICONS/joystick.png">
+                    <span class="dropdown-text">Category</span>
+                    <img class="icon-angle-small" src="ICONS/angle-small-down.png">
+                </div>
+                <div class="dropdown">
+                    <ul class="no-select dropdown-list">
+                        <li>1 vs 1</li>
+                        <li>Space</li>
+                        <li>Drive</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
         integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
         crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
+<script src="Script/main.js"></script>
 </body>
 </html>
