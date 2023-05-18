@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             filterMenu.style.width = '15%';
         }
-
     });
 
     for (let i = 0; i < dropdownHeaders.length; i++) {
@@ -33,4 +32,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
+
+    for (let j = 0; j < dropdownLists.length; j++) {
+        let items = dropdownLists[j].children;
+
+        for (let k = 0; k < items.length; k++) {
+            items[k].addEventListener('click', function() {
+                for (let l = 0; l < items.length; l++) {
+                    if (l !== k) {
+                        items[l].classList.remove('selected');
+                    }
+                }
+                items[k].classList.add('selected');
+            });
+        }
+    }
+})

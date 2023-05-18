@@ -89,5 +89,10 @@
         color: white;
     }
 }
+.dropdown-list > li.selected {
+    color: orange;
+    animation: none;
+}
+
 
 
