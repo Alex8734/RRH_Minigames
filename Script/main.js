@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let i = 0; i < dropdownHeaders.length; i++) {
         dropdownHeaders[i].addEventListener("click", function() {
             var dropdown = dropdowns[i];
-            if (dropdown.style.height === '0px') {
+            if (dropdown.style.height > '0px') {
                 dropdown.style.height = `0px`;
             } else {
                 let childs = dropdownLists[i].childElementCount;

@@ -63,9 +63,31 @@
 }
 
 .dropdown-text {
-    width: 55%;
+    width: 60%;
     font-size: 2vw;
     position: relative;
     top: 50%;
     height: 100%;
 }
+
+.dropdown-header:hover .dropdown-text{
+    animation: blink-orange 1s infinite;
+}
+
+.dropdown-list > li:hover {
+    animation: blink-orange 1s infinite;
+}
+
+@keyframes blink-orange {
+    0% {
+        color: white;
+    }
+    50% {
+        color: orange;
+    }
+    100% {
+        color: white;
+    }
+}
+
+

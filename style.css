@@ -119,9 +119,11 @@ header {
 }
 
 #profile {
-    width: 35%;
+    height: 100%;
+    width: auto;
 }
 
 #settings {
-    width: 35%;
+    height: 100%;
+    width: auto;
 }
