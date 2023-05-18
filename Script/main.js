@@ -22,6 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 let childs = dropdownLists[i].childElementCount;
                 dropdown.style.height = `${((childs * 2.1) + 0.2)}vw`;
+
+                for(let j = 0; j < dropdownHeaders.length; j++){
+                    if (j != i)
+                    {
+                        var dropdown = dropdowns[j];
+                        dropdown.style.height = `0px`;
+                    }
+                }
             }
         });
     }
