@@ -118,7 +118,8 @@ header {
     margin-right: 5%;
 }
 
-#profile {
+#profile
+{
     height: 100%;
     width: auto;
 }

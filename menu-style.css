@@ -89,7 +89,8 @@
         color: white;
     }
 }
-.dropdown-list > li.selected {
+.dropdown-list > li.selected
+{
     color: orange;
     animation: none;
 }
