@@ -13,8 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
     checkbox.addEventListener('change', function() {
         if (checkbox.checked) {
             filterMenu.style.width = '0%';
+            gamesContainer.style.width = '100%';
         } else {
             filterMenu.style.width = '15%';
+            gamesContainer.style.width = '85%';
         }
     });
 
@@ -56,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadGames()
     {
         let games = []
-        games.push(new Game('', 'SpaceDoger', init))
+        games.push(new Game('', 'SpaceDoger', init, './Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png'))
         for (let game of games)
         {
             gamesContainer.innerHTML += game.getHtml();

@@ -1,8 +1,9 @@
 export class Game {
-    constructor(video, name, init) {
+    constructor(video, name, init, poster) {
         this.videoSrc = video;
         this.name = name;
         this.init = init;
+        this.poster = poster;
     }
 
     loadGame()
@@ -13,7 +14,7 @@ export class Game {
     getHtml()
     {
         let html = `<div class="game">
-            <video class="video" src="${this.videoSrc}"></video>
+            <video poster="${this.poster}" class="video" src="${this.videoSrc}"></video>
             <p class="game-name">
                 ${this.name}
             </p>
