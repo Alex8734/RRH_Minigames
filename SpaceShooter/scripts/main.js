@@ -1,36 +1,43 @@
 import {SpaceShip} from "./spaceshuttle.js";
 import {Meteor} from "./meteor.js";
 
-export const canvas = document.getElementById("canvas");
-export const ctx = canvas.getContext("2d");
-canvas.height = 5000;
-canvas.width = 5000;
-
-console.log(canvas.width);
-console.log(canvas.height);
-
-let bg1 = new Image();
-bg1.src = "./images/background.png";
-bg1.size = {x: canvas.width, y: canvas.height};
-let bg2 = new Image();
-bg2.src = "./images/background.png";
-bg2.size = {x: canvas.width, y: canvas.height};
-
-bg1.pos = {x: 0, y: 0}
-bg2.pos = {x: canvas.width, y: 0}
-
-const ship = new SpaceShip();
-
-document.addEventListener('DOMContentLoaded', (event) =>{
-    gameLoop();
-})
-
+let ship;
 let lastTime = 0;
 let score = 0;
 let metorites = [];
 let TimeMultiplier = 1;
 
-function gameLoop() {
+export let canvas;
+export let ctx;
+
+let bg1;
+let bg2;
+
+document.addEventListener('DOMContentLoaded', (event) =>{
+    init();
+    gameLoop();
+});
+
+function init ()
+{
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+    canvas.height = 5000;
+    canvas.width = 5000;
+
+    console.log(canvas.width);
+    console.log(canvas.height);
+    ship = new SpaceShip();
+    bg1 = new Image();
+    bg1.src = "./images/background.png";
+    bg1.size = {x: canvas.width, y: canvas.height};
+    bg2 = new Image();
+    bg2.src = "./images/background.png";
+    bg2.size = {x: canvas.width, y: canvas.height};
+    bg1.pos = {x: 0, y: 0}
+    bg2.pos = {x: canvas.width, y: 0}
+}
+export function gameLoop() {
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
