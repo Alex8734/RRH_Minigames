@@ -146,11 +146,11 @@ header {
 
 .game-name {
     position: relative;
-    top: 80%;
+    top: 75%;
     padding-left: 2%;
     color: white;
-    height: 18%;
-    width: 50%;
+    height: 25%;
+    width: 48%;
     margin: 0;
     font-size: 2vw;
     white-space: nowrap;
