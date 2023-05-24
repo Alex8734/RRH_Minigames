@@ -1,9 +1,14 @@
+import {Game} from "./Game.js";
+import {init} from "../SpaceShooter/scripts/main.js";
 document.addEventListener('DOMContentLoaded', function() {
     let checkbox = document.getElementById('logo-button');
     let filterMenu = document.getElementById('filter-menu');
     let dropdownHeaders = document.getElementsByClassName('dropdown-header')
     let dropdowns = document.getElementsByClassName('dropdown')
     let dropdownLists = document.getElementsByClassName('dropdown-list')
+    const gamesContainer = document.getElementById('start-page');
+
+    loadGames();
 
     checkbox.addEventListener('change', function() {
         if (checkbox.checked) {
@@ -45,6 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 items[k].classList.add('selected');
             });
+        }
+    }
+
+    function loadGames()
+    {
+        let games = []
+        games.push(new Game('', 'SpaceDoger', init))
+        for (let game of games)
+        {
+            gamesContainer.innerHTML += game.getHtml();
         }
     }
 })

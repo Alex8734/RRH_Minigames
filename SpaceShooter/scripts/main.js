@@ -13,11 +13,11 @@ export let ctx;
 let bg1;
 let bg2;
 
-document.addEventListener('DOMContentLoaded', (event) =>{
-    init();
-});
+//document.addEventListener('DOMContentLoaded', (event) =>{
+//    init();
+//});
 
-function init ()
+export function init ()
 {
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
@@ -37,7 +37,7 @@ function init ()
     bg2.pos = {x: canvas.width, y: 0}
     gameLoop();
 }
-export function gameLoop() {
+function gameLoop() {
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
