@@ -15,7 +15,6 @@ let bg2;
 
 document.addEventListener('DOMContentLoaded', (event) =>{
     init();
-    gameLoop();
 });
 
 function init ()
@@ -36,6 +35,7 @@ function init ()
     bg2.size = {x: canvas.width, y: canvas.height};
     bg1.pos = {x: 0, y: 0}
     bg2.pos = {x: canvas.width, y: 0}
+    gameLoop();
 }
 export function gameLoop() {
     let currentTime = performance.now();
