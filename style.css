@@ -1,14 +1,21 @@
-#background{
+:root {
+    --primary-color: rgba(255, 165, 0, 1);
+    --secondary-color: #ff8800;
+    --border-color: orange;
+    --box-shadow: rgb(255, 178, 38);
+    --settings-backroung: #ea810a;
+}
+
+#background {
     z-index: -1;
     margin: 0;
-
     width: 100%;
     position: fixed;
 }
 
 html, body {
     height: 100%;
-    background-color: #ff8800;
+    background-color: var(--secondary-color);
 }
 
 #content {
@@ -36,7 +43,7 @@ html, body {
     opacity: 0;
 }
 
-#logo{
+#logo {
     width: 100%;
     z-index: 1;
     height: 100%;
@@ -53,7 +60,7 @@ html, body {
     display: grid;
     width: 10%;
     align-items: center; /* Align items vertically in the center */
-    justify-content: center; /
+    justify-content: center;
 }
 
 ::-webkit-scrollbar {
@@ -66,7 +73,7 @@ html, body {
     float: right;
     width: 15%;
     height: 100%;
-    border-right: 2px solid rgba(255, 165, 0, 1);
+    border-right: 2px solid var(--primary-color);
     top: 0%;
     padding-top: 2%;
     transition: width 0.3s ease-in-out;
@@ -76,12 +83,12 @@ html, body {
 header {
     width: 100%;
     height: 7%;
-    background-color: rgba(255, 165, 0, 1);
+    background-color: var(--primary-color);
     display: flex;
     position: fixed;
     top: 0%;
     left: 0%;
-    box-shadow: 0px 0px 10px 10px rgba(255, 165, 0, 1);
+    box-shadow: 0px 0px 10px 10px var(--primary-color);
     z-index: 5;
 }
 
@@ -92,15 +99,14 @@ header {
     top: 25%;
     left: 15%;
     margin: 0;
-    border-color: orange!important;
-    box-shadow: 0 0 0 0rem rgb(255, 178, 38) !important;
+    border-color: var(--border-color)!important;
+    box-shadow: 0 0 0 0rem var(--box-shadow) !important;
     transition: box-shadow .15s ease-in-out !important;
 }
 
 .search-bar:focus {
-    box-shadow: 0 0 0 0.25rem rgb(255, 178, 38) !important;
+    box-shadow: 0 0 0 0.25rem var(--box-shadow) !important;
 }
-
 
 #search-bar-container {
     width: 65%;
@@ -121,6 +127,11 @@ header {
     font-size: 1.2vw;
     margin-right: 5%;
     white-space: nowrap;
+    border-color: var(--secondary-color);
+}
+
+#sign-in:hover{
+    background-color: var(--secondary-color);
 }
 
 #profile {
@@ -132,6 +143,7 @@ header {
     height: 100%;
     width: auto;
 }
+
 .game {
     width: 40%;
     background: black;
@@ -144,7 +156,7 @@ header {
 }
 
 .game:hover {
-    border: orange solid;
+    border: var(--primary-color) solid;
     scale: 105%;
 }
 

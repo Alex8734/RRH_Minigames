@@ -1,3 +1,11 @@
+:root {
+    --primary-color: rgba(255, 165, 0, 1);
+    --secondary-color: #ff8800;
+    --border-color: orange;
+    --box-shadow: rgb(255, 178, 38);
+    --settings-background: #ea810a;
+}
+
 .dropdown {
     display: block;
     list-style: none;
@@ -21,12 +29,13 @@
     z-index: 0;
     height: 4.2vw;
 }
+
 .dropdown.hide {
     z-index: 0;
     height: 0%;
 }
 
-.dropdown-list > li{
+.dropdown-list > li {
     list-style: none;
     font-size: 1.5vw;
 }
@@ -44,7 +53,7 @@
 
 .dropdown-list {
     display: block;
-    background-color: #ea810a;
+    background-color: var(--settings-background);
     position: relative;
     z-index: 1;
     color: white;
@@ -70,7 +79,7 @@
     height: 100%;
 }
 
-.dropdown-header:hover .dropdown-text{
+.dropdown-header:hover .dropdown-text {
     animation: blink-orange 1s infinite;
 }
 
@@ -89,13 +98,14 @@
         color: white;
     }
 }
+
 .dropdown-list > li.selected {
     color: orange;
     animation: none;
 }
 
 #settings-nav {
-    width: 18%;
+    width: 0%;
     height: 100%;
     transition: width 0.5s ease-in-out;
     overflow: hidden;
@@ -103,7 +113,9 @@
     top: 0;
     right: 0;
     z-index: 6;
-    background: #ea810a;
+    background: var(--settings-background);
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #designs {
@@ -111,8 +123,8 @@
     padding-left: 4%;
 }
 
-#settings-head{
-    border-bottom: orange 0.1rem solid;
+#settings-head {
+    border-bottom: var(--secondary-color) 0.1rem solid;
     margin: 0;
     padding-left: 2%;
     padding-bottom: 2%;
@@ -133,7 +145,7 @@
     aspect-ratio: 1/1;
 }
 
-.headOfSection{
+.headOfSection {
     padding-left: 2%;
     color: white;
     font-size: 2.5vw;
@@ -142,4 +154,15 @@
 #designs > label {
     display: block;
     color: white;
+}
+
+.form-check-input:checked {
+    background-color: var(--secondary-color);
+    border-color: var(--box-shadow);
+}
+
+.form-check-input:focus {
+    border-color: var(--secondary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem var(--box-shadow);
 }
