@@ -1,17 +1,17 @@
 export const canvas = document.getElementById("canvas");
-export const ctx = canvas.getContext("2d");
+export const context = canvas.getContext("2d");
 
-canvas.height = 750;
-canvas.width = 750;
+import {Game} from "./chess.js";
 
-async function init(){
-    const game = new Game()
-    await game.client.syncMove (4,"RH7A8",
-        _ => {alert("added move successfully")},
-        _ => {alert("error, not added!")})
+document.addEventListener('click', function(event) {
+    let clickX = event.x;
+    let clickY = event.y;
+});
 
+async function init() {
+    let game = new Game(600);
+    game.init();
 }
-
 $(async function () {
     await init()
 })

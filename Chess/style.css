@@ -1,9 +1,67 @@
-body{
-    display: flex;
+.chess-menu{
+    height: 100vh;
+    width: 100%;
+    background-image: url('./images/background-image.png');
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #474747;
+
+}
+
+.navbar-123 {
+    background-color: #474747;
+}
+
+.cards {
+    width: 90%;
+    height: 100%;
+    padding: 10px;
     align-content: center;
     justify-content: center;
+    display: flex;
+    flex-flow: row wrap;
 }
-button{
-    
-    color: green;
+
+.card {
+    border: 5px solid lightgray;
+    background-color: #474747;
+    color: lightgray;
+    margin: 1rem;
+    opacity: 90%;
+}
+
+.card-1 {
+    border: 5px solid #0275d8;
+}
+
+.card-2 {
+    border: 5px solid #5cb85c;
+}
+
+.card-3 {
+    border: 5px solid #d9534f;
+}
+
+.card-4 {
+    border: 5px solid #f0ad4e;
+}
+
+.fixed-left {
+    position: fixed;
+    top: 1rem;
+    left: 2rem;
+}
+
+.fixed-right {
+    position: fixed;
+    top: 1rem;
+    right: 2rem;
+}
+
+#avatar {
+    border: none;
+    cursor: pointer;
+    appearance: none;
+    background-color: inherit;
 }
