@@ -4,10 +4,6 @@ export const context = canvas.getContext("2d");
 import {Game} from "./chess.js";
 
 export let game;
-document.addEventListener('click', function(event) {
-    let clickX = event.x;
-    let clickY = event.y;
-});
 
 async function init() {
     game = new Game(600);
