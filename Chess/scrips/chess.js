@@ -213,22 +213,21 @@ export class Piece {
     move(col, row) {
 
         // Only allow the current player to make a move
-        if (this.clr !== this.currentPlayer) {
+        if (this.clr !== game.currentPlayer) {
             return;
         }
 
-        // Switch the current player
-        this.currentPlayer = this.currentPlayer === "white" ? "black" : "white";
         this.x = col;
         this.y = row;
-
-
 
         let lastRow = this.clr === "white" ? 0 : 7;
 
         if (this.name === "pawn" && this.y === lastRow) {
             this.name = "queen";
         }
+
+        // Switch the current player
+        game.currentPlayer = game.currentPlayer === "white" ? "black" : "white";
     }
 
     clickMe() {
@@ -473,6 +472,7 @@ export class Piece {
 
         return false;
     }
+
     calcBlockedX(from, to, y) {
         for (let i = Math.min(from, to) + 1; i < Math.max(from, to); i++) {
             for (let piece of game.pieces) {
