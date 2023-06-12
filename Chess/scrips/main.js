@@ -5,8 +5,10 @@ import {Game} from "./chess.js";
 
 export let game;
 
+let standardName = "Unknown User"
+
 async function init() {
-    game = new Game(600);
+    game = new Game(800);
     game.init();
 }
 $(async function () {
@@ -19,8 +21,8 @@ canvas.addEventListener('click', function(event) {
     let y = event.clientY - rect.top;
     // x and y are now relative to the canvas
 
-    let row = Math.floor(y / 75);
-    let col = Math.floor(x / 75);
+    let row = Math.floor(y / 100);
+    let col = Math.floor(x / 100);
     console.log(col, row);
     game.clickOn(col, row);
 });

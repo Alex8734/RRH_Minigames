@@ -4,8 +4,8 @@ import {context, game} from "./main.js";
 export class Game {
     constructor(size) {
         this.client = new ChessClient();
-        this.size = size;
-        this.fieldSize = 75;
+        this.size = 800;
+        this.fieldSize = 100;
         this.pieces = [
             new Piece("rook", 0, 0, "black"),
             new Piece("knight", 1, 0, "black"),
@@ -79,7 +79,7 @@ export class Game {
             let img = new Image();
             img.src = `./images/${piece.clr}_${piece.name}.png`;
             img.onload = function() {
-                context.drawImage(img, piece.x * 75, piece.y * 75, 75, 75);
+                context.drawImage(img, piece.x * 100, piece.y * 100, 100, 100);
             };
             img.onerror = function() {
                 console.log("Failed to load image.");
@@ -92,7 +92,7 @@ export class Game {
             let img = new Image();
             img.src = "./images/dot.png";
             img.onload = function() {
-                context.drawImage(img, dot.x * 75, dot.y * 75, 75, 75);
+                context.drawImage(img, dot.x * 100, dot.y * 100, 100, 100);
             };
             img.onerror = function() {
                 console.log("Failed to load dot.");
@@ -104,16 +104,6 @@ export class Game {
 
         for (let dot of this.dots) {
             if (dot.x === col && dot.y === row) {
-                for (let piece of this.pieces) {
-                    if (piece.x === col && piece.y === row) {
-                        console.log(piece, "was taken rn (funnymoment)");
-                        const index = this.pieces.indexOf(piece);
-                        if (index > -1) {
-                            this.pieces.splice(index, 1);
-                        }
-                        this.redraw();
-                    }
-                }
                 this.activePiece.move(col, row);
                 this.dots = [];
                 this.redraw();
@@ -154,7 +144,7 @@ export class Game {
     }
 
     copy() {
-        let newGame = new Game(600);
+        let newGame = new Game(800);
         newGame.size = this.size;
         newGame.fieldSize = this.fieldSize;
         newGame.pieces = this.pieces
@@ -215,6 +205,17 @@ export class Piece {
         // Only allow the current player to make a move
         if (this.clr !== game.currentPlayer) {
             return;
+        }
+
+        for (let piece of game.pieces) {
+            if (piece.x === col && piece.y === row) {
+                console.log(piece, "was taken rn (funnymoment)");
+                const index = game.pieces.indexOf(piece);
+                if (index > -1) {
+                    game.pieces.splice(index, 1);
+                }
+                game.redraw();
+            }
         }
 
         this.x = col;

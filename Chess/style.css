@@ -9,6 +9,22 @@
 
 }
 
+.game {
+    height: 100vh;
+    width: 100%;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #474747;
+}
+
+.board {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .navbar-123 {
     background-color: #474747;
 }
@@ -64,4 +80,17 @@
     cursor: pointer;
     appearance: none;
     background-color: inherit;
+}
+
+#canvas {
+    width: 800px;
+    height: 800px;
+}
+
+.username {
+    font-size: x-large;
+    color: whitesmoke;
+    font-weight: bold;
+    margin: 1rem;
+    width: 800px;
 }
