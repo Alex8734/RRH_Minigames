@@ -19,10 +19,6 @@ document.addEventListener('DOMContentLoaded', (event) =>{
     ctx = canvas.getContext("2d");
 
     btn.addEventListener('click', () => {
-        metorites = [];
-        TimeMultiplier = 1;
-        lastTime = 0;
-        score = 0;
         btn.style.display = 'none';
         init();
     });
@@ -30,11 +26,18 @@ document.addEventListener('DOMContentLoaded', (event) =>{
     init();
 });
 
+document.getElementById('back-to-home').addEventListener('click', function() {
+    window.location.href = '../index.html';
+});
+
 export function init ()
 {
+    metorites = [];
+    TimeMultiplier = 1;
+    lastTime = 0;
+    score = 0;
     canvas.height = 5000;
     canvas.width = 5000;
-
     console.log(canvas.width);
     console.log(canvas.height);
     ship = new SpaceShip();
@@ -49,6 +52,7 @@ export function init ()
     gameLoop();
 }
 function gameLoop() {
+    console.log(TimeMultiplier);
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
@@ -92,7 +96,7 @@ function gameLoop() {
         ctx.restore();
     }
 
-    TimeMultiplier += 0.00001 * deltaTime;
+    TimeMultiplier += (0.00001 * deltaTime);
 }
 
 function printUI(score)

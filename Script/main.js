@@ -1,5 +1,8 @@
 import {Game} from "./Game.js";
-import {init} from "../SpaceShooter/scripts/main.js";
+import {HttpClient} from "./ServerClient.js";
+
+const httpClient = new HttpClient();
+
 document.addEventListener('DOMContentLoaded', function() {
     let checkbox = document.getElementById('logo-button');
     let search = document.getElementById('input');
@@ -76,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         gamesContainer.innerHTML = '';
         let games = []
-        games.push(new Game('', 'SpaceDoger', init, './Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
+        games.push(new Game('', 'SpaceDoger', 'SpaceShooter/spaceGame.html','./Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
 
         for (let game of games)
         {
@@ -88,7 +91,86 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+document.getElementById("sign-in").addEventListener("click", function() {
+    showLoginForm();
+});
 
+// Function to show the login form
+function showLoginForm() {
+    var loginForm = document.querySelector(".login-form");
+    loginForm.style.height = '100%';
+}
+function hideLoginForm() {
+    var loginForm = document.querySelector(".login-form");
+    loginForm.style.height = '0%';
+}
+
+document.getElementById("create-account").addEventListener("click", function() {
+    event.preventDefault();
+    createAccount();
+});
+document.getElementById("login").addEventListener("click", function() {
+    event.preventDefault();
+    login();
+});
+
+function createAccount() {
+    // Retrieve the entered form data
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirm-password").value;
+
+    if (password === confirmPassword) {
+        httpClient.registerUser({ name, email, password })
+            .then(() => {
+                document.getElementById('sign-in').style.display = 'none';
+                alert('Account created successfully!');
+            })
+            .catch(error => {
+                document.getElementById('sign-in').style.display = 'block';
+                alert('error');
+            });
+    }
+    else {
+        alert("Passwords were incorrect");
+    }
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("confirm-password").value = "";
+    hideLoginForm();
+}
+
+function login()
+{
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirm-password").value;
+
+    if (password === confirmPassword) {
+        httpClient.registerUser({ name, email, password })
+            .then(() => {
+                document.getElementById('sign-in').style.display = 'none';
+                alert('Account created successfully!');
+            })
+            .catch(error => {
+                document.getElementById('sign-in').style.display = 'block';
+                alert('error');
+            });
+    }
+    else {
+        alert("Passwords were incorrect");
+    }
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("confirm-password").value = "";
+    hideLoginForm();
+}
 
 export const Category = {
     OneVOne: '1v1',
