@@ -12,9 +12,23 @@ body {
     justify-content: center;
     align-items: center;
     display: flex;
+    background-image: url("images/space2.png");
 }
 
 #canvas {
-    background-color: grey;
+    position: absolute;
+    box-shadow: 0px 0px 10px 5px black;
+    background-color: blue;
     aspect-ratio: 4/4;
+    width: 40%;
+    left: 30%;
+}
+#play-again{
+    position: absolute;
+    display: none;
+    height: 5%;
+    width: 20%;
+    top: 60%;
+    left: 40%;
+    z-index: 99;
 }

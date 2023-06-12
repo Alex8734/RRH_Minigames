@@ -4,13 +4,13 @@ export class Meteor{
     constructor(x, y) {
         this.image = new Image();
         this.image.src = "./images/asteroids/meteor.png";
-        this.speed = 0.2;
-        this.size = {x: 40, y: 40}
+        this.speed = canvas.width / 2500;
+        this.size = {x: canvas.width / 12.5, y: canvas.width / 12.5}
         this.pos = {
             x: x,
             y: y,
         }
-        this.velocity = 0.2;
+        this.velocity = canvas.width / 2500;
 
     }
 

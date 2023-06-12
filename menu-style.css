@@ -1,0 +1,168 @@
+:root {
+    --primary-color: rgba(255, 165, 0, 1);
+    --secondary-color: #ff8800;
+    --border-color: orange;
+    --box-shadow: rgb(255, 178, 38);
+    --settings-background: #ea810a;
+}
+
+.dropdown {
+    display: block;
+    list-style: none;
+    position: relative;
+    left: 0;
+    width: 100%;
+    z-index: 0;
+    transition: height 0.5s ease-in-out;
+    height: 0;
+    overflow: hidden;
+}
+
+.no-select {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+
+.dropdown.visible {
+    z-index: 0;
+    height: 4.2vw;
+}
+
+.dropdown.hide {
+    z-index: 0;
+    height: 0%;
+}
+
+.dropdown-list > li {
+    list-style: none;
+    font-size: 1.5vw;
+}
+
+.dropdown-header {
+    padding-left: 5%;
+    display: flex;
+    z-index: 1;
+    position: relative;
+    width: 95%;
+    color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropdown-list {
+    display: block;
+    background-color: var(--settings-background);
+    position: relative;
+    z-index: 1;
+    color: white;
+    padding-left: 20%;
+}
+
+.icon {
+    width: 10%;
+    filter: brightness(1000%) invert(100%);
+}
+
+.icon-angle-small {
+    height: 20%;
+    width: 22.76%;
+    filter: brightness(1000%) invert(100%);
+}
+
+.dropdown-text {
+    width: 60%;
+    font-size: 2vw;
+    position: relative;
+    top: 50%;
+    height: 100%;
+}
+
+.dropdown-header:hover .dropdown-text {
+    animation: blink-orange 1s infinite;
+}
+
+.dropdown-list > li:hover {
+    animation: blink-orange 1s infinite;
+}
+
+@keyframes blink-orange {
+    0% {
+        color: white;
+    }
+    50% {
+        color: var(--primary-color);
+    }
+    100% {
+        color: white;
+    }
+}
+
+.dropdown-list > li.selected {
+    color: var(--border-color);
+    animation: none;
+}
+
+#settings-nav {
+    width: 0%;
+    height: 100%;
+    transition: width 0.5s ease-in-out;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 6;
+    background: var(--settings-background);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#designs {
+    display: inline-block;
+    padding-left: 4%;
+}
+
+#settings-head {
+    border-bottom: var(--secondary-color) 0.1rem solid;
+    margin: 0;
+    padding-left: 2%;
+    padding-bottom: 2%;
+    width: 100%;
+    display: flex;
+}
+
+#settings-text {
+    color: white;
+    width: 80%;
+    margin: 0;
+    font-size: 3.5vw;
+}
+
+#close {
+    width: 20%;
+    padding: 0;
+    aspect-ratio: 1/1;
+}
+
+.headOfSection {
+    padding-left: 2%;
+    color: white;
+    font-size: 2.5vw;
+}
+
+#designs > label {
+    display: block;
+    color: white;
+}
+
+.form-check-input:checked {
+    background-color: var(--secondary-color);
+    border-color: var(--box-shadow);
+}
+
+.form-check-input:focus {
+    border-color: var(--secondary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem var(--box-shadow);
+}
