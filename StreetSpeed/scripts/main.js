@@ -7,6 +7,7 @@ let score = 0;
 let cars = [];
 let speedMultiplier = 1;
 let btn;
+let deleteCooldown = 0;
 export let canvas;
 export let ctx;
 
@@ -26,7 +27,7 @@ export function init ()
     canvas.width = 4000;
     console.log(canvas.width);
     console.log(canvas.height);
-    lines = [canvas.height / 4.5, canvas.height / 2.8125, canvas.height / 1.99625, canvas.height / 1.6];
+    lines = [canvas.height / 4.5, canvas.height / 2.8125, canvas.height / 1.99625, canvas.height / 1.55];
     car = new SpaceShip();
     bg1 = new Image();
     bg1.src = "./images/street2.png";
@@ -58,7 +59,7 @@ function gameLoop() {
         car.moveDown(deltaTime);
     }
 
-    createCars(speedMultiplier);
+    createCars();
 
     car.draw();
     drawCarsAndMove(deltaTime, speedMultiplier);
@@ -68,6 +69,7 @@ function gameLoop() {
         if (keysPressed["d"] && speedMultiplier < 3)
         {
             speedMultiplier += (0.00025 * deltaTime);
+            deleteCooldown++;
         }
         else
         {
@@ -86,20 +88,7 @@ function gameLoop() {
     }
     else
     {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-        ctx.fillStyle = "red";
-        ctx.font = `${canvas.width / 6.25}px Comic Sans MS`;
-        ctx.textAlign = "center";
-        ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
-        ctx.restore();
-        ctx.save();
-        ctx.font = `${canvas.width / 16}px Comic Sans MS`;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
-        ctx.restore();
+
     }
 }
 
@@ -114,31 +103,29 @@ document.addEventListener('DOMContentLoaded', (event) =>{
 
 function printUI(score)
 {
-    ctx.save();
-    ctx.font = `${canvas.width / 16}px Comic Sans MS`;
-    ctx.fillStyle = "white";
-    ctx.fillText(`${score.toString()}`, 0 ,canvas.width / 19);
-    ctx.restore();
+
 }
 
 function drawCarsAndMove(deltatime, speedMultiplier)
 {
-    let cnt = 0;
-    for (let i = 0; i < cars.length; i++)
+    if(deleteCooldown > 100)
     {
-        cars[i].drive(deltatime, speedMultiplier);
-        cars[i].draw();
-
-        if (cars[i].pos.x < (-cars[i].size.x))
+        for (let i = 0; i < cars.length; i++)
         {
-            cnt++;
-            score++;
-            cars.splice(i, 1);
-            i--;
+            cars[i].drive(deltatime, speedMultiplier);
+            cars[i].draw();
+
+            if (cars[i].pos.x < (-cars[i].size.x))
+            {
+                score++;
+                cars.splice(i, 1);
+                i--;
+            }
         }
     }
-
-    //cars.splice(0, cnt);
+    else{
+        deleteCooldown++;
+    }
 }
 
 function DrawAndMoveBackground()
@@ -161,8 +148,8 @@ function DrawAndMoveBackground()
     ctx.drawImage(bg2, bg2.pos.x, bg2.pos.y, bg2.size.x, bg2.size.y);
     ctx.drawImage(bg3, bg3.pos.x, bg3.pos.y, bg3.size.x, bg3.size.y);
 }
-function createCars(timeMultiplier){
-    let randomNumber = Math.floor((Math.random() * Math.round(20)) + 1);
+function createCars(){
+    let randomNumber = Math.floor((Math.random() * 30) + 1);
 
     if (randomNumber === 1)
     {
@@ -203,7 +190,7 @@ function checkColiding(car)
 {
     for (let i = 0; i < cars.length; i++)
     {
-        if (checkSquareCollision(car.pos.x, car.pos.y, cars[i].pos.x, cars[i].pos.y, car.size.x))
+        if (checkSquareCollision(car.pos.x, car.pos.y, cars[i].pos.x, cars[i].pos.y, car.size.x - 50))
         {
             return true;
         }
