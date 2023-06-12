@@ -3,7 +3,7 @@ import { canvas, ctx } from "./main.js";
 export class SpaceShip {
     constructor() {
         this.image = new Image();
-        this.image.src = "./images/shuttle.png";
+        this.image.src = "./images/ship.png";
         this.size = {x: canvas.width / 12.5, y: canvas.width / 12.5};
         this.pos = {
             x: canvas.width / 10,
