@@ -80,9 +80,9 @@ document.addEventListener('DOMContentLoaded', function() {
         gamesContainer.innerHTML = '';
         let games = []
         games.push(new Game('', 'Starship Dodge', 'SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
-        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/spaceDodge1.png', Category.Drive))
-        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/spaceDodge1.png', Category.Drive))
-        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/spaceDodge1.png', Category.Drive))
+        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
+        games.push(new Game('', 'Chess', 'Chess/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
+
 
         for (let game of games)
         {
