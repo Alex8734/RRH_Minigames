@@ -51,7 +51,7 @@ function gameLoop() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    DrawAndMoveBackground();
+    DrawAndMoveBackground(deltaTime);
 
     if (keysPressed["w"]) {
         car.moveUp(deltaTime);
@@ -65,6 +65,7 @@ function gameLoop() {
     car.draw();
     drawCarsAndMove(deltaTime, speedMultiplier);
     printUI(money);
+
     if (!checkColiding(car))
     {
         if (keysPressed["d"] && speedMultiplier < 3)
@@ -147,11 +148,11 @@ function drawCarsAndMove(deltatime, speedMultiplier)
     }
 }
 
-function DrawAndMoveBackground()
+function DrawAndMoveBackground(deltaTime)
 {
-    bg1.pos.x -= (canvas.height / 250) + speedMultiplier * 20;
-    bg2.pos.x -= (canvas.height / 250) + speedMultiplier * 20;
-    bg3.pos.x -= (canvas.height / 250) + speedMultiplier * 20;
+    bg1.pos.x -= (canvas.height / 250) + speedMultiplier * (deltaTime / 3);
+    bg2.pos.x -= (canvas.height / 250) + speedMultiplier * (deltaTime / 3);
+    bg3.pos.x -= (canvas.height / 250) + speedMultiplier * (deltaTime / 3);
 
     if (bg1.pos.x <= -bg1.size.x) {
         bg1.pos.x = bg3.pos.x + bg3.size.x;
