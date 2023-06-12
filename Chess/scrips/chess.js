@@ -2,7 +2,7 @@ import {ChessClient} from "../../server/server-client.js";
 import {context, game} from "./main.js";
 
 export class Game {
-    constructor(size, player1Id, player2Id, player1Name, player2Name) {
+    constructor(size, player1Id, player2Id, player1Name, player2Name, me) {
         this.size = 800;
         this.fieldSize = 100;
         this.pieces = [
@@ -40,63 +40,109 @@ export class Game {
             new Piece("pawn", 7, 6, "white"),
         ]
         this.activePiece = null;
-        this.activeField = null;
+        this.activeField = new Field(null, null);
         this.dots = [];
         this.currentPlayer = "white";
-        this.white = player1Id;
-        this.black = player2Id;
-        this.moves = 0
-        this.whiteName = player1Name;
-        this.blackName = player2Name;
+        this.myclr = me;
+        this.myName = player1Name;
+        this.opponentName = player2Name
+        this.check = false;
     }
 
     init() {
         this.redraw();
+
+        let myName = document.getElementById("thisName");
+        let oppName = document.getElementById("enemyName");
+
+        myName.innerHTML = this.myName;
+        oppName.innerHTML = this.opponentName;
     }
 
     redraw() {
-        this.drawBoard();
-        this.drawPieces();
-        this.drawDots();
+        this.drawBoard(this.myclr);
+        this.drawPieces(this.myclr);
+        this.drawDots(this.myclr);
     }
 
-    drawBoard() {
-        let isWhite = true;
+    drawBoard(clr) {
+        if (clr === "white") {
+            let isWhite = true;
 
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                if (isWhite) {
-                    context.fillStyle = "#ffce99";
-                } else {
-                    context.fillStyle = "#994f00";
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (isWhite) {
+                        context.fillStyle = "#ffce99";
+                    } else {
+                        context.fillStyle = "#994f00";
+                    }
+
+                    if (row === this.activeField.x && col === this.activeField.y) {
+                        context.fillStyle = "#bea9df";
+                    }
+                    context.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
+                    isWhite = !isWhite;
                 }
-
-                context.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
                 isWhite = !isWhite;
             }
-            isWhite = !isWhite;
+        }
+        else {
+            let isWhite = false;
+
+            for (let row = 7; row >= 0; row--) {
+                for (let col = 7; col >= 0; col--) {
+                    if (isWhite) {
+                        context.fillStyle = "#ffce99";
+                    } else {
+                        context.fillStyle = "#994f00";
+                    }
+
+                    if (7 - row === this.activeField.x && 7 - col === this.activeField.y) {
+                        context.fillStyle = "#bea9df";
+                    }
+
+                    context.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
+                    isWhite = !isWhite;
+                }
+                isWhite = !isWhite;
+            }
+        }
+
+    }
+
+    drawPieces(clr) {
+        if (clr === "white") {
+            for (let piece of this.pieces) {
+                let img = new Image();
+                img.src = `./images/${piece.clr}_${piece.name}.png`;
+                img.onload = function() {
+                    context.drawImage(img, piece.x * 100, piece.y * 100, 100, 100);
+                };
+                img.onerror = function() {
+                    console.log("Failed to load image.");
+                };
+            }
+        }
+        else {
+            for (let piece of this.pieces) {
+                let img = new Image();
+                img.src = `./images/${piece.clr}_${piece.name}.png`;
+                img.onload = function() {
+                    context.drawImage(img, 700 - piece.x * 100, 700 - piece.y * 100, 100, 100);
+                };
+                img.onerror = function() {
+                    console.log("Failed to load image.");
+                };
+            }
         }
     }
 
-    drawPieces() {
-        for (let piece of this.pieces) {
-            let img = new Image();
-            img.src = `./images/${piece.clr}_${piece.name}.png`;
-            img.onload = function() {
-                context.drawImage(img, piece.x * 100, piece.y * 100, 100, 100);
-            };
-            img.onerror = function() {
-                console.log("Failed to load image.");
-            };
-        }
-    }
-
-    drawDots() {
+    drawDots(clr) {
         for (let dot of this.dots) {
             let img = new Image();
             img.src = "./images/dot.png";
             img.onload = function() {
-                context.drawImage(img, dot.x * 100, dot.y * 100, 100, 100);
+                context.drawImage(img, 700 - dot.x * 100, 700 - dot.y * 100, 100, 100);
             };
             img.onerror = function() {
                 console.log("Failed to load dot.");
@@ -105,7 +151,7 @@ export class Game {
     }
 
     clickOn(col, row) {
-
+        this.activeField = new Field(col, row);
         for (let dot of this.dots) {
             if (dot.x === col && dot.y === row) {
                 this.activePiece.move(col, row);
@@ -159,6 +205,7 @@ export class Game {
         newGame.white = this.white;
         newGame.black = this.black;
         newGame.moves = this.moves;
+        newGame.check = this.check;
 
         return newGame;
     }
@@ -313,7 +360,6 @@ export class Piece {
 
                     }
                     if (k) { k = false; continue; }
-                    console.log(i, j, "fine ig");
                     if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
                         moves.push(new Move(this.x, this.y, i, j));
                     }
@@ -412,8 +458,7 @@ export class Piece {
     }
 
     calcMovesKing() {
-        let moves;
-        moves = [];
+        let moves = [];
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if ((Math.abs(this.x - i) === 1 || Math.abs(this.y - j) === 1) && Math.abs(this.x - i) + Math.abs(this.y - j) <= 2){
@@ -422,16 +467,38 @@ export class Piece {
                         if (piece.clr === this.clr && piece.x === i && piece.y === j) {
                             k = true;
                         }
-
                     }
                     if (k) { k = false; continue; }
-                    moves.push(new Move(this.x, this.y, i, j));
+
+                    // Check if the move would put the king in check
+                    let move = new Move(this.x, this.y, i, j);
+                    let inCheck = false;
+                    for (let piece of game.pieces) {
+                        if (piece.clr !== this.clr) {
+                            let enemyMoves = [];
+                            if(piece.name !== "king") {
+                                enemyMoves = piece.calcMoves();
+                            }
+                            for (let enemyMove of enemyMoves) {
+                                if (enemyMove.endX === i && enemyMove.endY === j) {
+                                    inCheck = true;
+                                    console.log(enemyMove);
+                                    break;
+                                }
+                            }
+                            if (inCheck) break;
+                        }
+                    }
+                    if (!inCheck) {
+                        moves.push(move);
+                    }
                 }
             }
         }
 
         return moves;
     }
+
 
     calcMovesDefault() {
         let moves;
@@ -533,5 +600,12 @@ export class Move {
         move.startY = string[1];
         move.endX = string[3];
         move.endY = string[4];
+    }
+}
+
+export class Field {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
     }
 }

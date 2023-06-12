@@ -6,9 +6,9 @@ import {Game} from "./chess.js";
 export let game;
 
 let standardName = "Unknown User";
-
+let myclr = "black";
 async function init() {
-    game = new Game(800, 0, 1, standardName, standardName);
+    game = new Game(800, 0, 1, standardName, standardName, myclr);
     game.init();
 }
 $(async function () {
@@ -23,6 +23,6 @@ canvas.addEventListener('click', function(event) {
 
     let row = Math.floor(y / 100);
     let col = Math.floor(x / 100);
-    console.log(col, row);
-    game.clickOn(col, row);
+    console.log(7 - col, 7 - row);
+    game.clickOn(7 - col, 7 - row);
 });

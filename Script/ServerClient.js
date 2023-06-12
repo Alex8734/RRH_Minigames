@@ -81,4 +81,14 @@ export class HttpClient {
         });
     }
 
+    getPlayers(gameId) {
+        fetch(`${this.address}/Chess/players`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": localStorage.getItem("token"),
+            }
+        });
+    }
+
 }
