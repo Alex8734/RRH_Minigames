@@ -19,10 +19,6 @@ document.addEventListener('DOMContentLoaded', (event) =>{
     ctx = canvas.getContext("2d");
 
     btn.addEventListener('click', () => {
-        metorites = [];
-        TimeMultiplier = 1;
-        lastTime = 0;
-        score = 0;
         btn.style.display = 'none';
         init();
     });
@@ -36,9 +32,12 @@ document.getElementById('back-to-home').addEventListener('click', function() {
 
 export function init ()
 {
+    metorites = [];
+    TimeMultiplier = 1;
+    lastTime = 0;
+    score = 0;
     canvas.height = 5000;
     canvas.width = 5000;
-
     console.log(canvas.width);
     console.log(canvas.height);
     ship = new SpaceShip();
