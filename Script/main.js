@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let dropdowns = document.getElementsByClassName('dropdown')
     let dropdownLists = document.getElementsByClassName('dropdown-list')
     const gamesContainer = document.getElementById('start-page');
-    let currentCategory = Category.None;
-    let currentSortBy = SortBy.None;
+    let currentCategory = Category.none;
+    let currentSortBy = SortBy.none;
     let searched = '';
 
-    loadGames(Category.None, SortBy.None, searched);
+    loadGames(currentCategory, currentSortBy, searched);
     printStats();
     search.addEventListener('keyup', () => {
         searched = search.value.toLowerCase();
@@ -56,12 +56,30 @@ document.addEventListener('DOMContentLoaded', function() {
         let items = dropdownLists[j].children;
         for (let k = 0; k < items.length; k++) {
             items[k].addEventListener('click', function() {
+
+                if (items[k].classList.contains('selected'))
+                {
+                    if (j === 0)
+                    {
+                        currentSortBy = sortByKeys[2]
+                    }
+                    else if (j === 1)
+                    {
+                        currentCategory = categoryKeys[3];
+                    }
+                    items[k].classList.remove('selected');
+                    loadGames(currentCategory, currentSortBy, searched);
+                    return;
+                }
+
                 for (let l = 0; l < items.length; l++) {
                     if (l !== k) {
                         items[l].classList.remove('selected');
                     }
                 }
+
                 items[k].classList.add('selected');
+
                 if (j === 0)
                 {
                     currentSortBy = sortByKeys[k]
@@ -70,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 {
                     currentCategory = categoryKeys[k];
                 }
-                loadGames(currentCategory, currentSortBy, searched)
+                loadGames(currentCategory, currentSortBy, searched);
             });
         }
     }
@@ -86,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let game of games)
         {
-            if ((category === game.category || category === Category.None) && (game.name.toLowerCase().startsWith(searched) || searched === ''))
+            if ((category === game.category || category === Category.none) && (game.name.toLowerCase().startsWith(searched) || searched === ''))
             {
                 gamesContainer.innerHTML += game.getHtml();
             }
@@ -178,13 +196,13 @@ export const Category = {
     OneVOne: '1v1',
     Space: 'Space',
     Drive: 'Drive',
-    None: 'none',
+    none: 'none',
 };
 
 const SortBy = {
     Players: 'players',
     Release: 'release',
-    None: 'none',
+    none: 'none',
 };
 const sortByKeys = Object.keys(SortBy);
 const categoryKeys = Object.keys(Category);
