@@ -59,13 +59,13 @@ html, body {
 #logo-checkbox-container {
     display: grid;
     width: 10%;
-    align-items: center; /* Align items vertically in the center */
+    align-items: center;
     justify-content: center;
 }
 
 ::-webkit-scrollbar {
     width: 0px;
-    background: transparent; /* make scrollbar transparent */
+    background: transparent;
 }
 
 #filter-menu {
@@ -76,6 +76,7 @@ html, body {
     border-right: 2px solid var(--primary-color);
     top: 0%;
     padding-top: 2%;
+    margin-top: -2%;
     transition: width 0.3s ease-in-out;
     overflow: hidden;
 }
@@ -113,6 +114,7 @@ header {
 
 #user-info {
     display: flex;
+    justify-content: flex-end;
     width: 25%;
 }
 
@@ -135,6 +137,7 @@ header {
 
 #profile {
     height: 100%;
+    aspect-ratio: 1/1;
     width: auto;
 }
 
