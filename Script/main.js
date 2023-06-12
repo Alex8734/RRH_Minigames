@@ -1,4 +1,8 @@
 import {Game} from "./Game.js";
+import {HttpClient} from "./ServerClient.js";
+
+const httpClient = new HttpClient();
+
 document.addEventListener('DOMContentLoaded', function() {
     let checkbox = document.getElementById('logo-button');
     let search = document.getElementById('input');
@@ -117,6 +121,21 @@ function createAccount() {
     var password = document.getElementById("password").value;
     var confirmPassword = document.getElementById("confirm-password").value;
 
+    if (password === confirmPassword) {
+        httpClient.registerUser({ name, email, password })
+            .then(() => {
+                document.getElementById('sign-in').style.display = 'none';
+                alert('Account created successfully!');
+            })
+            .catch(error => {
+                document.getElementById('sign-in').style.display = 'block';
+                alert('error');
+            });
+    }
+    else {
+        alert("Passwords were incorrect");
+    }
+
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";
     document.getElementById("password").value = "";
@@ -130,6 +149,21 @@ function login()
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
     var confirmPassword = document.getElementById("confirm-password").value;
+
+    if (password === confirmPassword) {
+        httpClient.registerUser({ name, email, password })
+            .then(() => {
+                document.getElementById('sign-in').style.display = 'none';
+                alert('Account created successfully!');
+            })
+            .catch(error => {
+                document.getElementById('sign-in').style.display = 'block';
+                alert('error');
+            });
+    }
+    else {
+        alert("Passwords were incorrect");
+    }
 
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";

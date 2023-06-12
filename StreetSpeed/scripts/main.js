@@ -9,7 +9,7 @@ let speedMultiplier = 1;
 let deleteCooldown = 0;
 export let canvas;
 export let ctx;
-
+let moneyStatus = document.getElementById('money');
 let bg1;
 let bg2;
 let bg3;
@@ -17,6 +17,7 @@ let playButton = document.getElementById('play-again');
 let changeButton = document.getElementById('change-car');
 let keysPressed = {};
 let lines;
+
 export function init ()
 {
     cars = [];
@@ -84,6 +85,7 @@ function gameLoop() {
             }
         }
 
+        moneyStatus.textContent = '$ ' + money;
         requestAnimationFrame(gameLoop);
     }
     else
@@ -91,8 +93,21 @@ function gameLoop() {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.save();
+
         playButton.style.display = 'block';
-        changeButton.style.display = 'block';
+
+        ctx.fillStyle = "red";
+        ctx.font = `${canvas.width / 6.25}px Comic Sans MS`;
+        ctx.textAlign = "center";
+        ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
+        ctx.restore();
+        ctx.save();
+        ctx.font = `${canvas.width / 16}px Comic Sans MS`;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText(`You collected ${money}$`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
+        ctx.restore();
+        //changeButton.style.display = 'block';
     }
 }
 
@@ -219,7 +234,7 @@ window.addEventListener("keyup", handleKeyUp);
 
 playButton.addEventListener('click', () => {
     playButton.style.display = 'none';
-    changeButton.style.display = 'none';
+    //changeButton.style.display = 'none';
     init();
 });
 
