@@ -182,25 +182,27 @@ export class Piece {
                 if ((this.x === i)) {
                     if (this.clr === "white") {
                         if (j - this.y === -1 || (this.y === 6 && j - this.y === -2)) {
+                            let k;
                             for (let piece of game.pieces) {
                                 if (piece.clr === this.clr && piece.x === i && piece.y === j) {
-                                    var k = true;
+                                    k = true;
                                 }
 
                             }
-                            if (k) { break; }
-                            console.log(1)
+                            if (k) { k = false; continue; }
                             moves.push(new Move(this.x, this.y, i, j));
                         }
                     }
                     else {
                         if (j - this.y === 1 || (this.y === 1 && j - this.y === 2)) {
+                            let k;
                             for (let piece of game.pieces) {
-                                if ((piece.x !== i || piece.y !== j) && piece.clr !== this.clr) {
-
+                                if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                                    k = true;
                                 }
 
                             }
+                            if (k) { k = false; continue; }
                             moves.push(new Move(this.x, this.y, i, j));
                         }
                     }
@@ -217,6 +219,14 @@ export class Piece {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if ((this.x === i) !== (this.y === j)) {
+                    let k;
+                    for (let piece of game.pieces) {
+                        if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                            k = true;
+                        }
+
+                    }
+                    if (k) { k = false; continue; }
                     moves.push(new Move(this.x, this.y, i, j));
                 }
             }
@@ -231,6 +241,14 @@ export class Piece {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if ((Math.abs(this.x - i) + Math.abs(this.y - j)) === 3 && (this.x !== i) && (this.y !== j)) {
+                    let k;
+                    for (let piece of game.pieces) {
+                        if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                            k = true;
+                        }
+
+                    }
+                    if (k) { k = false; continue; }
                     moves.push(new Move(this.x, this.y, i, j));
                 }
             }
@@ -246,6 +264,14 @@ export class Piece {
             for (let j = 0; j < 8; j++) {
                 if (Math.abs(this.x - i) === Math.abs(this.y - j)) {
                     if (!(this.x === i && this.y === j)) {
+                        let k;
+                        for (let piece of game.pieces) {
+                            if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                                k = true;
+                            }
+
+                        }
+                        if (k) { k = false; continue; }
                         moves.push(new Move(this.x, this.y, i, j));
                     }
                 }
@@ -261,10 +287,26 @@ export class Piece {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if ((this.x === i) !== (this.y === j)) {
+                    let k;
+                    for (let piece of game.pieces) {
+                        if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                            k = true;
+                        }
+
+                    }
+                    if (k) { k = false; continue; }
                     moves.push(new Move(this.x, this.y, i, j));
                 }
                 if (Math.abs(this.x - i) === Math.abs(this.y - j)) {
                     if (!(this.x === i && this.y === j)) {
+                        let k;
+                        for (let piece of game.pieces) {
+                            if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                                k = true;
+                            }
+
+                        }
+                        if (k) { k = false; continue; }
                         moves.push(new Move(this.x, this.y, i, j));
                     }
                 }
@@ -280,6 +322,14 @@ export class Piece {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if ((Math.abs(this.x - i) === 1 || Math.abs(this.y - j) === 1) && Math.abs(this.x - i) + Math.abs(this.y - j) <= 2){
+                    let k;
+                    for (let piece of game.pieces) {
+                        if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                            k = true;
+                        }
+
+                    }
+                    if (k) { k = false; continue; }
                     moves.push(new Move(this.x, this.y, i, j));
                 }
             }
@@ -293,11 +343,48 @@ export class Piece {
         moves = [];
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
-                moves.push(new Move(this.x, this.y, j, i));
+                let k;
+                for (let piece of game.pieces) {
+                    if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                        k = true;
+                    }
+
+                }
+                if (k) { k = false; continue; }
+                moves.push(new Move(this.x, this.y, i, j));
             }
         }
 
         return moves;
+    }
+
+    calcMoveBlocked(fromX, toX, fromY, toY) {
+        if (fromX === toX) {
+            return this.calcBlockedY(fromY, toY, fromX);
+        }
+        return this.calcBlockedX(fromX, toX, fromY);
+    }
+
+    calcBlockedX(from, to, y) {
+        for (let i = Math.min(from, to); i < Math.max(from, to); i++) {
+            for (let piece in game.pieces) {
+                if (piece.x === i && piece.y === y) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    calcBlockedY(from, to, x) {
+        for (let i = Math.min(from, to); i < Math.max(from, to); i++) {
+            for (let piece in game.pieces) {
+                if (piece.y === i && piece.x === x) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 
