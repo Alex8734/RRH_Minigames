@@ -53,6 +53,7 @@ export function init ()
     gameLoop();
 }
 function gameLoop() {
+    console.log(TimeMultiplier);
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
@@ -96,7 +97,7 @@ function gameLoop() {
         ctx.restore();
     }
 
-    TimeMultiplier += 0.00001 * deltaTime;
+    TimeMultiplier += (0.00001 * deltaTime);
 }
 
 function printUI(score)
