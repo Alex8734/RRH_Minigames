@@ -102,9 +102,11 @@ function hideLoginForm() {
 }
 
 document.getElementById("create-account").addEventListener("click", function() {
+    event.preventDefault();
     createAccount();
 });
 document.getElementById("login").addEventListener("click", function() {
+    event.preventDefault();
     login();
 });
 

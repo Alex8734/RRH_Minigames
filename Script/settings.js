@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     closeButton = document.getElementById('close');
     settingNav = document.getElementById('settings-nav');
     colorRadios = document.getElementsByClassName('form-check-input');
-    changeColor(1);
     symbol.addEventListener('click', () => {
         settingNav.style.width = '18%';
     });
@@ -50,6 +49,5 @@ function changeColor(index)
             document.documentElement.style.setProperty('--box-shadow', 'rgba(255, 255, 255, 0.5)');
             document.documentElement.style.setProperty('--settings-background', '#ff8800');
             break;
-        // Add more cases for other color options
     }
 }
