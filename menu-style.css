@@ -92,7 +92,7 @@
         color: white;
     }
     50% {
-        color: orange;
+        color: var(--primary-color);
     }
     100% {
         color: white;
@@ -100,7 +100,7 @@
 }
 
 .dropdown-list > li.selected {
-    color: orange;
+    color: var(--border-color);
     animation: none;
 }
 

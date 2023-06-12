@@ -2,6 +2,7 @@ import {Game} from "./Game.js";
 import {init} from "../SpaceShooter/scripts/main.js";
 document.addEventListener('DOMContentLoaded', function() {
     let checkbox = document.getElementById('logo-button');
+    let search = document.getElementById('input');
     let filterMenu = document.getElementById('filter-menu');
     let dropdownHeaders = document.getElementsByClassName('dropdown-header')
     let dropdowns = document.getElementsByClassName('dropdown')
@@ -9,8 +10,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const gamesContainer = document.getElementById('start-page');
     let currentCategory = Category.None;
     let currentSortBy = SortBy.None;
+    let searched = '';
 
-    loadGames(Category.None, SortBy.None);
+    loadGames(Category.None, SortBy.None, searched);
+
+    search.addEventListener('keyup', () => {
+        searched = search.value.toLowerCase();
+        loadGames(currentCategory, currentSortBy, searched);
+    });
 
     checkbox.addEventListener('change', function() {
         if (checkbox.checked) {
@@ -60,12 +67,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 {
                     currentCategory = categoryKeys[k];
                 }
-                loadGames(currentCategory, currentSortBy)
+                loadGames(currentCategory, currentSortBy, searched)
             });
         }
     }
 
-    function loadGames(category, sortBy)
+    function loadGames(category, sortBy, searched)
     {
         gamesContainer.innerHTML = '';
         let games = []
@@ -73,13 +80,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (let game of games)
         {
-            if (category === game.category || category === Category.None)
+            if ((category === game.category || category === Category.None) && (game.name.toLowerCase().startsWith(searched) || searched === ''))
             {
                 gamesContainer.innerHTML += game.getHtml();
             }
         }
     }
-})
+});
+
+
 
 export const Category = {
     OneVOne: '1v1',

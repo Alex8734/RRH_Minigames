@@ -13,9 +13,9 @@ export let ctx;
 let bg1;
 let bg2;
 
-//document.addEventListener('DOMContentLoaded', (event) =>{
-//    init();
-//});
+document.addEventListener('DOMContentLoaded', (event) =>{
+    init();
+});
 
 export function init ()
 {
