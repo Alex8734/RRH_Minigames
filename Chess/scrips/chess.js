@@ -136,6 +136,19 @@ export class Game {
         this.dots = [];
         this.redraw();
     }
+
+    checkForMate() {
+        let kings = this.pieces.filter(piece => piece.name === "king");
+
+        for (let king of kings) {
+            let mvs = king.calcMovesKing();
+            if (mvs === []) {
+                return king.clr;
+            }
+        }
+
+        return "none";
+    }
 }
 
 export class Piece {
@@ -148,7 +161,13 @@ export class Piece {
 
     move(col, row) {
         this.x = col;
-        this.y = row
+        this.y = row;
+
+        let lastRow = this.clr === "white" ? 0 : 7;
+
+        if (this.name === "pawn" && this.y === lastRow) {
+            this.name = "queen";
+        }
     }
 
     clickMe() {
@@ -175,42 +194,33 @@ export class Piece {
     }
 
     calcMovesPawn() {
-        let moves;
-        moves = [];
-        for (let i = 0; i < 8; i++) {
-            for (let j = 0; j < 8; j++) {
-                if ((this.x === i)) {
-                    if (this.clr === "white") {
-                        if (j - this.y === -1 || (this.y === 6 && j - this.y === -2)) {
-                            let k;
-                            for (let piece of game.pieces) {
-                                if (piece.clr === this.clr && piece.x === i && piece.y === j) {
-                                    k = true;
-                                }
+        let moves = [];
+        let direction = this.clr === "white" ? -1 : 1;
+        let startRow = this.clr === "white" ? 6 : 1;
 
-                            }
-                            if (k) { k = false; continue; }
-                            if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                                moves.push(new Move(this.x, this.y, i, j));
-                            }
-                        }
-                    }
-                    else {
-                        if (j - this.y === 1 || (this.y === 1 && j - this.y === 2)) {
-                            let k;
-                            for (let piece of game.pieces) {
-                                if (piece.clr === this.clr && piece.x === i && piece.y === j) {
-                                    k = true;
-                                }
+        // Check forward moves
+        for (let i = 1; i <= 2; i++) {
+            let newRow = this.y + direction * i;
+            if (newRow < 0 || newRow > 7) continue;
+            if (i === 2 && this.y !== startRow) continue;
 
-                            }
-                            if (k) { k = false; continue; }
-                            if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                                moves.push(new Move(this.x, this.y, i, j));
-                            }
-                        }
-                    }
+            if (!game.pieces.some(piece => piece.x === this.x && piece.y === newRow)) {
+                if (!this.calcMoveBlocked(this.x, this.x, this.y, newRow)) {
+                    let move = new Move(this.x, this.y, this.x, newRow);
+                    moves.push(move);
                 }
+            }
+        }
+
+        // Check diagonal captures
+        for (let i of [-1, 1]) {
+            let newRow = this.y + direction;
+            let newCol = this.x + i;
+            if (newRow < 0 || newRow > 7 || newCol < 0 || newCol > 7) continue;
+
+            if (game.pieces.some(piece => piece.clr !== this.clr && piece.x === newCol && piece.y === newRow)) {
+                let move = new Move(this.x, this.y, newCol, newRow);
+                moves.push(move);
             }
         }
 
