@@ -1,16 +1,14 @@
 export const canvas = document.getElementById("canvas");
 export const context = canvas.getContext("2d");
 
-import {Piece} from "./chess.js";
 import {Game} from "./chess.js";
-import {ServerClient} from "../../server/server-client";
 
 export let game;
 
 let standardName = "Unknown User";
 
 async function init() {
-    game = new Game(800, 0, 1);
+    game = new Game(800, 0, 1, standardName, standardName);
     game.init();
 }
 $(async function () {

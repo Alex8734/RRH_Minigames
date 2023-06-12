@@ -2,8 +2,7 @@ import {ChessClient} from "../../server/server-client.js";
 import {context, game} from "./main.js";
 
 export class Game {
-    constructor(size, player1Id, player2Id) {
-        this.client = new ChessClient();
+    constructor(size, player1Id, player2Id, player1Name, player2Name) {
         this.size = 800;
         this.fieldSize = 100;
         this.pieces = [
@@ -46,7 +45,9 @@ export class Game {
         this.currentPlayer = "white";
         this.white = player1Id;
         this.black = player2Id;
-        this.moves = 0;
+        this.moves = 0
+        this.whiteName = player1Name;
+        this.blackName = player2Name;
     }
 
     init() {
@@ -155,6 +156,9 @@ export class Game {
         newGame.activeField = this.activeField;
         newGame.dots = this.dots;
         newGame.currentPlayer = this.currentPlayer;
+        newGame.white = this.white;
+        newGame.black = this.black;
+        newGame.moves = this.moves;
 
         return newGame;
     }
@@ -165,7 +169,8 @@ export class Game {
         let currentPlayerKing = game.pieces.find(piece => piece.name === "king" && piece.clr === currentPlayer);
 
         // Check if the king is in check
-        let isInCheck = game.pieces.some(piece => piece.clr === opponentPlayer && piece.calcMoves().some(move => move.endX === currentPlayerKing.x && move.endY === currentPlayerKing.y));
+        let isInCheck = game.pieces.some(piece => piece.clr === opponentPlayer
+            && piece.calcMoves().some(move => move.endX === currentPlayerKing.x && move.endY === currentPlayerKing.y));
 
         if (!isInCheck) {
             return false;
@@ -184,7 +189,8 @@ export class Game {
             let tempGame = game.copy();
             tempGame.makeMove(move);
             let tempCurrentPlayerKing = tempGame.pieces.find(piece => piece.name === "king" && piece.clr === currentPlayer);
-            let tempIsInCheck = tempGame.pieces.some(piece => piece.clr === opponentPlayer && piece.calcMoves().some(move => move.endX === tempCurrentPlayerKing.x && move.endY === tempCurrentPlayerKing.y));
+            let tempIsInCheck = tempGame.pieces.some(piece => piece.clr === opponentPlayer
+                && piece.calcMoves().some(move => move.endX === tempCurrentPlayerKing.x && move.endY === tempCurrentPlayerKing.y));
 
             if (!tempIsInCheck) {
                 return false;
@@ -223,7 +229,7 @@ export class Piece {
 
         this.x = col;
         this.y = row;
-        
+
         game.moves++;
 
         let lastRow = this.clr === "white" ? 0 : 7;
