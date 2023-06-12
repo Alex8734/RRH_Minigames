@@ -87,7 +87,54 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+document.getElementById("sign-in").addEventListener("click", function() {
+    showLoginForm();
+});
 
+// Function to show the login form
+function showLoginForm() {
+    var loginForm = document.querySelector(".login-form");
+    loginForm.style.height = '100%';
+}
+function hideLoginForm() {
+    var loginForm = document.querySelector(".login-form");
+    loginForm.style.height = '0%';
+}
+
+document.getElementById("create-account").addEventListener("click", function() {
+    createAccount();
+});
+document.getElementById("login").addEventListener("click", function() {
+    login();
+});
+
+function createAccount() {
+    // Retrieve the entered form data
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirm-password").value;
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("confirm-password").value = "";
+    hideLoginForm();
+}
+
+function login()
+{
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirm-password").value;
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("confirm-password").value = "";
+    hideLoginForm();
+}
 
 export const Category = {
     OneVOne: '1v1',
