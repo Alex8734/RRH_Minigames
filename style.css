@@ -22,12 +22,12 @@ html, body {
     height: 91%;
     position: relative;
     top: 9%;
-    width: 80%;
+    width: 85%;
 }
 
 #start-page {
     float: right;
-    width: 85%;
+    width: 80%;
     padding-left: 1%;
     padding-top: 2%;
     scroll-behavior: smooth;
