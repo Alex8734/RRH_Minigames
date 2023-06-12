@@ -1,9 +1,8 @@
 import {Category} from "./main.js";
 export class Game {
-    constructor(video, name, init, poster, category) {
+    constructor(video, name, poster, category) {
         this.videoSrc = video;
         this.name = name;
-        this.init = init;
         this.poster = poster;
         this.category = category;
     }

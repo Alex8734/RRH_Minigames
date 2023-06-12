@@ -32,3 +32,16 @@ body {
     left: 40%;
     z-index: 99;
 }
+
+#back-to-home {
+    position: absolute;
+    left: 5%;
+    top: 5%;
+    height: 15%;
+    aspect-ratio: 1/1;
+    background: url("images/saturn.png") no-repeat center center;
+    background-size: cover;
+    border: none;
+    cursor: pointer;
+    Color: white;
+}

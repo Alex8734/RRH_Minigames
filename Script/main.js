@@ -1,5 +1,4 @@
 import {Game} from "./Game.js";
-import {init} from "../SpaceShooter/scripts/main.js";
 document.addEventListener('DOMContentLoaded', function() {
     let checkbox = document.getElementById('logo-button');
     let search = document.getElementById('input');
@@ -76,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         gamesContainer.innerHTML = '';
         let games = []
-        games.push(new Game('', 'SpaceDoger', init, './Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
+        games.push(new Game('', 'SpaceDoger', './Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
 
         for (let game of games)
         {

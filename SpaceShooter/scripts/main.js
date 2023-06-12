@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', (event) =>{
     init();
 });
 
+document.getElementById('back-to-home').addEventListener('click', function() {
+    window.location.href = '../../index.html';
+});
+
 export function init ()
 {
     canvas.height = 5000;
