@@ -36,8 +36,8 @@ export function init ()
     TimeMultiplier = 1;
     lastTime = 0;
     score = 0;
-    canvas.height = 5000;
-    canvas.width = 5000;
+    canvas.height = 2000;
+    canvas.width = 2000;
     console.log(canvas.width);
     console.log(canvas.height);
     ship = new SpaceShip();

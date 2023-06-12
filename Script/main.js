@@ -79,7 +79,10 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         gamesContainer.innerHTML = '';
         let games = []
-        games.push(new Game('', 'SpaceDoger', 'SpaceShooter/spaceGame.html','./Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
+        games.push(new Game('', 'Starship Dodge', 'SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
+        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/spaceDodge1.png', Category.Drive))
+        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/spaceDodge1.png', Category.Drive))
+        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/spaceDodge1.png', Category.Drive))
 
         for (let game of games)
         {
@@ -95,7 +98,6 @@ document.getElementById("sign-in").addEventListener("click", function() {
     showLoginForm();
 });
 
-// Function to show the login form
 function showLoginForm() {
     var loginForm = document.querySelector(".login-form");
     loginForm.style.height = '100%';
@@ -115,7 +117,7 @@ document.getElementById("login").addEventListener("click", function() {
 });
 
 function createAccount() {
-    // Retrieve the entered form data
+
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
