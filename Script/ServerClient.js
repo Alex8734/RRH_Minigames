@@ -71,4 +71,14 @@ export class HttpClient {
             });
     }
 
+    getLastMove(gameId) {
+        fetch(`${this.address}/Chess/lastMove`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": localStorage.getItem("token"),
+            }
+        });
+    }
+
 }

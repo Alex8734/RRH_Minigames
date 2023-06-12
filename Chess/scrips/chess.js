@@ -2,7 +2,7 @@ import {ChessClient} from "../../server/server-client.js";
 import {context, game} from "./main.js";
 
 export class Game {
-    constructor(size) {
+    constructor(size, player1Id, player2Id) {
         this.client = new ChessClient();
         this.size = 800;
         this.fieldSize = 100;
@@ -44,6 +44,9 @@ export class Game {
         this.activeField = null;
         this.dots = [];
         this.currentPlayer = "white";
+        this.white = player1Id;
+        this.black = player2Id;
+        this.moves = 0;
     }
 
     init() {
@@ -220,6 +223,8 @@ export class Piece {
 
         this.x = col;
         this.y = row;
+        
+        game.moves++;
 
         let lastRow = this.clr === "white" ? 0 : 7;
 
@@ -510,5 +515,17 @@ export class Move {
         this.startY = fromY;
         this.endX = toX;
         this.endY = toY;
+    }
+
+    toString() {
+        return `${this.startX}${this.startY}-${this.endX}${this.endY}`;
+    }
+
+    static stringToMove(string) {
+        let move = new Move()
+        move.startX = string[0];
+        move.startY = string[1];
+        move.endX = string[3];
+        move.endY = string[4];
     }
 }
