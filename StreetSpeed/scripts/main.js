@@ -3,10 +3,9 @@ import {Car} from "./car.js";
 
 let car;
 let lastTime = 0;
-let score = 0;
+let money = 0;
 let cars = [];
 let speedMultiplier = 1;
-let btn;
 let deleteCooldown = 0;
 export let canvas;
 export let ctx;
@@ -14,7 +13,8 @@ export let ctx;
 let bg1;
 let bg2;
 let bg3;
-
+let playButton = document.getElementById('play-again');
+let changeButton = document.getElementById('change-car');
 let keysPressed = {};
 let lines;
 export function init ()
@@ -22,7 +22,7 @@ export function init ()
     cars = [];
     speedMultiplier = 1;
     lastTime = 0;
-    score = 0;
+    money = 0;
     canvas.height = 2250;
     canvas.width = 4000;
     console.log(canvas.width);
@@ -63,7 +63,7 @@ function gameLoop() {
 
     car.draw();
     drawCarsAndMove(deltaTime, speedMultiplier);
-    printUI(score);
+    printUI(money);
     if (!checkColiding(car))
     {
         if (keysPressed["d"] && speedMultiplier < 3)
@@ -88,12 +88,16 @@ function gameLoop() {
     }
     else
     {
-
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        playButton.style.display = 'block';
+        changeButton.style.display = 'block';
     }
 }
 
 document.addEventListener('DOMContentLoaded', (event) =>{
-    btn = document.getElementById('play-again');
+    playButton = document.getElementById('play-again');
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
 
@@ -101,7 +105,7 @@ document.addEventListener('DOMContentLoaded', (event) =>{
 });
 
 
-function printUI(score)
+function printUI(money)
 {
 
 }
@@ -117,7 +121,7 @@ function drawCarsAndMove(deltatime, speedMultiplier)
 
             if (cars[i].pos.x < (-cars[i].size.x))
             {
-                score++;
+                money++;
                 cars.splice(i, 1);
                 i--;
             }
@@ -212,3 +216,13 @@ function checkSquareCollision(x1, y1, x2, y2, side) {
 
 window.addEventListener("keydown", handleKeyDown);
 window.addEventListener("keyup", handleKeyUp);
+
+playButton.addEventListener('click', () => {
+    playButton.style.display = 'none';
+    changeButton.style.display = 'none';
+    init();
+});
+
+document.getElementById('back-to-home').addEventListener('click', function() {
+    window.location.href = '../index.html';
+});
