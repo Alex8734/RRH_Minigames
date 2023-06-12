@@ -379,28 +379,6 @@ export class Piece {
     }
 
     calcMoveBlockedDiagonal(fromX, toX, fromY, toY) {
-
-        /*let yUp = fromY - toY < 0;
-        if (toX < fromX) { yUp = !yUp }
-
-        for (let i = Math.min(fromX, toX) + 1; i < Math.max(fromX, toX); i++) {
-            if (yUp) {
-                for (let piece of game.pieces) {
-                    if (piece.x === i && piece.y === fromY + i) {
-                        return true;
-                    }
-                }
-            }
-            else {
-                for (let piece of game.pieces) {
-                    if (piece.x === i && piece.y === Math.min(fromX, toX) - i) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;*/
-
         let xDiff = Math.abs(fromX - toX);
         let yDiff = Math.abs(fromY - toY);
 
