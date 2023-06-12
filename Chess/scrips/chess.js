@@ -43,6 +43,7 @@ export class Game {
         this.activePiece = null;
         this.activeField = null;
         this.dots = [];
+        this.currentPlayer = "white";
     }
 
     init() {
@@ -137,17 +138,67 @@ export class Game {
         this.redraw();
     }
 
-    checkForMate() {
-        let kings = this.pieces.filter(piece => piece.name === "king");
+    makeMove(move) {
+        let piece = this.pieces.find(piece => piece.x === move.startX && piece.y === move.startY);
 
-        for (let king of kings) {
-            let mvs = king.calcMovesKing();
-            if (mvs === []) {
-                return king.clr;
+        // Only allow the current player to make a move
+        if (piece.clr !== this.currentPlayer) {
+            return;
+        }
+
+        // Move the piece
+        piece.move(move.startX, move.startY);
+
+        // Switch the current player
+        this.currentPlayer = this.currentPlayer === "white" ? "black" : "white";
+    }
+
+    copy() {
+        let newGame = new Game(600);
+        newGame.size = this.size;
+        newGame.fieldSize = this.fieldSize;
+        newGame.pieces = this.pieces
+        newGame.activePiece = this.activePiece;
+        newGame.activeField = this.activeField;
+        newGame.dots = this.dots;
+        newGame.currentPlayer = this.currentPlayer;
+
+        return newGame;
+    }
+
+    isCheckmate() {
+        let currentPlayer = game.currentPlayer;
+        let opponentPlayer = currentPlayer === "white" ? "black" : "white";
+        let currentPlayerKing = game.pieces.find(piece => piece.name === "king" && piece.clr === currentPlayer);
+
+        // Check if the king is in check
+        let isInCheck = game.pieces.some(piece => piece.clr === opponentPlayer && piece.calcMoves().some(move => move.endX === currentPlayerKing.x && move.endY === currentPlayerKing.y));
+
+        if (!isInCheck) {
+            return false;
+        }
+
+        // Generate all possible moves for the current player
+        let allMoves = [];
+        for (let piece of game.pieces) {
+            if (piece.clr === currentPlayer) {
+                allMoves.push(...piece.calcMoves());
             }
         }
 
-        return "none";
+        // Check if any move gets the king out of check
+        for (let move of allMoves) {
+            let tempGame = game.copy();
+            tempGame.makeMove(move);
+            let tempCurrentPlayerKing = tempGame.pieces.find(piece => piece.name === "king" && piece.clr === currentPlayer);
+            let tempIsInCheck = tempGame.pieces.some(piece => piece.clr === opponentPlayer && piece.calcMoves().some(move => move.endX === tempCurrentPlayerKing.x && move.endY === tempCurrentPlayerKing.y));
+
+            if (!tempIsInCheck) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
@@ -160,8 +211,18 @@ export class Piece {
     }
 
     move(col, row) {
+
+        // Only allow the current player to make a move
+        if (this.clr !== this.currentPlayer) {
+            return;
+        }
+
+        // Switch the current player
+        this.currentPlayer = this.currentPlayer === "white" ? "black" : "white";
         this.x = col;
         this.y = row;
+
+
 
         let lastRow = this.clr === "white" ? 0 : 7;
 
