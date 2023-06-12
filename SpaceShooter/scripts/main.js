@@ -6,7 +6,7 @@ let lastTime = 0;
 let score = 0;
 let metorites = [];
 let TimeMultiplier = 1;
-
+let btn;
 export let canvas;
 export let ctx;
 
@@ -14,13 +14,24 @@ let bg1;
 let bg2;
 
 document.addEventListener('DOMContentLoaded', (event) =>{
+    btn = document.getElementById('play-again');
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+
+    btn.addEventListener('click', () => {
+        metorites = [];
+        TimeMultiplier = 1;
+        lastTime = 0;
+        score = 0;
+        btn.style.display = 'none';
+        init();
+    });
+
     init();
 });
 
 export function init ()
 {
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
     canvas.height = 5000;
     canvas.width = 5000;
 
@@ -64,6 +75,7 @@ function gameLoop() {
     }
     else
     {
+        btn.style.display = 'block';
         ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.save();
