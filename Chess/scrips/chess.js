@@ -227,7 +227,10 @@ export class Piece {
 
                     }
                     if (k) { k = false; continue; }
-                    moves.push(new Move(this.x, this.y, i, j));
+                    console.log(i, j, "fine ig");
+                    if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
+                        moves.push(new Move(this.x, this.y, i, j));
+                    }
                 }
             }
         }
@@ -272,7 +275,9 @@ export class Piece {
 
                         }
                         if (k) { k = false; continue; }
-                        moves.push(new Move(this.x, this.y, i, j));
+                        if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
+                            moves.push(new Move(this.x, this.y, i, j));
+                        }
                     }
                 }
             }
@@ -295,7 +300,9 @@ export class Piece {
 
                     }
                     if (k) { k = false; continue; }
-                    moves.push(new Move(this.x, this.y, i, j));
+                    if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
+                        moves.push(new Move(this.x, this.y, i, j));
+                    }
                 }
                 if (Math.abs(this.x - i) === Math.abs(this.y - j)) {
                     if (!(this.x === i && this.y === j)) {
@@ -366,25 +373,25 @@ export class Piece {
     }
 
     calcBlockedX(from, to, y) {
-        for (let i = Math.min(from, to); i < Math.max(from, to); i++) {
-            for (let piece in game.pieces) {
+        for (let i = Math.min(from, to) + 1; i < Math.max(from, to); i++) {
+            for (let piece of game.pieces) {
                 if (piece.x === i && piece.y === y) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     calcBlockedY(from, to, x) {
-        for (let i = Math.min(from, to); i < Math.max(from, to); i++) {
-            for (let piece in game.pieces) {
+        for (let i = Math.min(from, to) + 1; i < Math.max(from, to); i++) {
+            for (let piece of game.pieces) {
                 if (piece.y === i && piece.x === x) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 }
 
