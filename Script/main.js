@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let searched = '';
 
     loadGames(Category.None, SortBy.None, searched);
-
+    printStats();
     search.addEventListener('keyup', () => {
         searched = search.value.toLowerCase();
         loadGames(currentCategory, currentSortBy, searched);
@@ -188,3 +188,30 @@ const SortBy = {
 };
 const sortByKeys = Object.keys(SortBy);
 const categoryKeys = Object.keys(Category);
+
+function printStats()
+{
+    let json = httpClient.getUserStats();
+    let stats = document.getElementById('stats');
+    let html = '';
+
+    for (let i = 0; i < json.length; i++)
+    {
+        if (json[i].Game == 'Chess')
+        {
+            html += `<div id="game-stats">
+                    <h2>${json[i].Game}</h2>
+                    <p>Losses: ${json[i].HighScore}<br>
+                    Wins: ${json[i].PlayCount}</p>
+                 </div>`;
+        }
+        else
+        {
+            html += `<div id="game-stats">
+                    <h2>${json[i].Game}</h2>
+                    <p>Highscore: ${json[i].HighScore}<br>
+                    Playcount: ${json[i].PlayCount}</p>
+                 </div>`;
+        }
+    }
+}
