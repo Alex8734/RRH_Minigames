@@ -105,7 +105,7 @@ export class Game {
             if (dot.x === col && dot.y === row) {
                 for (let piece of this.pieces) {
                     if (piece.x === col && piece.y === row) {
-                        console.log(piece);
+                        console.log(piece, "was taken rn (funnymoment)");
                         const index = this.pieces.indexOf(piece);
                         if (index > -1) {
                             this.pieces.splice(index, 1);
@@ -190,7 +190,9 @@ export class Piece {
 
                             }
                             if (k) { k = false; continue; }
-                            moves.push(new Move(this.x, this.y, i, j));
+                            if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
+                                moves.push(new Move(this.x, this.y, i, j));
+                            }
                         }
                     }
                     else {
@@ -203,7 +205,9 @@ export class Piece {
 
                             }
                             if (k) { k = false; continue; }
-                            moves.push(new Move(this.x, this.y, i, j));
+                            if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
+                                moves.push(new Move(this.x, this.y, i, j));
+                            }
                         }
                     }
                 }
@@ -275,7 +279,7 @@ export class Piece {
 
                         }
                         if (k) { k = false; continue; }
-                        if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
+                        if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
                             moves.push(new Move(this.x, this.y, i, j));
                         }
                     }
@@ -314,7 +318,9 @@ export class Piece {
 
                         }
                         if (k) { k = false; continue; }
-                        moves.push(new Move(this.x, this.y, i, j));
+                        if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
+                            moves.push(new Move(this.x, this.y, i, j));
+                        }
                     }
                 }
             }
@@ -372,6 +378,52 @@ export class Piece {
         return this.calcBlockedX(fromX, toX, fromY);
     }
 
+    calcMoveBlockedDiagonal(fromX, toX, fromY, toY) {
+
+        /*let yUp = fromY - toY < 0;
+        if (toX < fromX) { yUp = !yUp }
+
+        for (let i = Math.min(fromX, toX) + 1; i < Math.max(fromX, toX); i++) {
+            if (yUp) {
+                for (let piece of game.pieces) {
+                    if (piece.x === i && piece.y === fromY + i) {
+                        return true;
+                    }
+                }
+            }
+            else {
+                for (let piece of game.pieces) {
+                    if (piece.x === i && piece.y === Math.min(fromX, toX) - i) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;*/
+
+        let xDiff = Math.abs(fromX - toX);
+        let yDiff = Math.abs(fromY - toY);
+
+        if (xDiff !== yDiff) {
+            return false;
+        }
+
+        let xIncrement = fromX < toX ? 1 : -1;
+        let yIncrement = fromY < toY ? 1 : -1;
+
+        let currentX = fromX + xIncrement;
+        let currentY = fromY + yIncrement;
+
+        while (currentX !== toX) {
+            if (game.pieces.some(piece => piece.x === currentX && piece.y === currentY)) {
+                return true;
+            }
+            currentX += xIncrement;
+            currentY += yIncrement;
+        }
+
+        return false;
+    }
     calcBlockedX(from, to, y) {
         for (let i = Math.min(from, to) + 1; i < Math.max(from, to); i++) {
             for (let piece of game.pieces) {
@@ -407,6 +459,6 @@ export class Move {
         this.startX = fromX;
         this.startY = fromY;
         this.endX = toX;
-        this.endY = toY
+        this.endY = toY;
     }
 }
