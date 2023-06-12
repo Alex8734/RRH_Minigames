@@ -33,6 +33,11 @@ body {
     z-index: 99;
 }
 
+a {
+    position: absolute;
+    z-index: 88;
+}
+
 #back-to-home {
     position: absolute;
     left: 5%;

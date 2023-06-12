@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         gamesContainer.innerHTML = '';
         let games = []
-        games.push(new Game('', 'SpaceDoger', './Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
+        games.push(new Game('', 'SpaceDoger', 'SpaceShooter/spaceGame.html','./Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
 
         for (let game of games)
         {
