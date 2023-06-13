@@ -95,7 +95,7 @@
         color: white;
     }
     50% {
-        color: var(--primary-color);
+        color: var(--border-color);
     }
     100% {
         color: white;
