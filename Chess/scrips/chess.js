@@ -50,6 +50,7 @@ export class Game {
         this.check = false;
         this.gid = id;
         this.moveDone = "";
+        this.gameOver = "";
     }
 
     init() {
@@ -59,6 +60,7 @@ export class Game {
 
         let myName = document.getElementById("thisName");
         let oppName = document.getElementById("enemyName");
+        let body = document.getElementById("bdy");
 
         myName.innerHTML = this.myName;
         oppName.innerHTML = this.opponentName;
@@ -79,13 +81,27 @@ export class Game {
             else {
                 while (this.moveDone !== "") {
                     await new Promise(resolve => setTimeout(resolve, 100));
+                    if ((this.myclr  === "black" && this.gameOver === "black") || (this.myclr === "white" && this.gameOver == "white")) {
+
+                        //win
+                        body.style.backgroundColor = "green";
+
+                    }
+
+                    else if ((this.myclr  === "black" && this.gameOver === "white") || (this.myclr === "white" && this.gameOver == "black")) {
+
+                        //lose
+                        body.style.backgroundColor = "red"
+                    }
+
+
+                    if (this.gameOver ==
                 }
 
                 await this.client.pushMove(this.gid, this.moveDone);
             }
-            if (this.isCheckmate()) {
-                gameOver = true;
-            }
+
+
         }
     }*/
 
@@ -295,6 +311,12 @@ export class Piece {
 
         for (let piece of game.pieces) {
             if (piece.x === col && piece.y === row) {
+                if (piece.clr === "white" && piece.name === "king") {
+                    this.gameOver = "white";
+                }
+                if (piece.clr === "black" && piece.name === "king") {
+                    this.gameOver = "black";
+                }
                 console.log(piece, "was taken rn (funnymoment)");
                 const index = game.pieces.indexOf(piece);
                 if (index > -1) {
@@ -330,23 +352,23 @@ export class Piece {
     calcMoves(check4check = true) {
         switch (this.name) {
             case "pawn":
-                return this.calcMovesPawn(check4check);
+                return this.calcMovesPawn();
             case "rook":
-                return this.calcMovesRook(check4check);
+                return this.calcMovesRook();
             case "knight":
-                return this.calcMovesKnight(check4check);
+                return this.calcMovesKnight();
             case "bishop":
-                return this.calcMovesBishop(check4check);
+                return this.calcMovesBishop();
             case "queen":
-                return this.calcMovesQueen(check4check);
+                return this.calcMovesQueen();
             case "king":
                 return this.calcMovesKing(check4check);
             default:
-                return this.calcMovesDefault(check4check);
+                return this.calcMovesDefault();
         }
     }
 
-    calcMovesPawn(check4check = true) {
+    calcMovesPawn() {
         let moves = [];
         let direction = this.clr === "white" ? -1 : 1;
         let startRow = this.clr === "white" ? 6 : 1;
@@ -360,59 +382,7 @@ export class Piece {
             if (!game.pieces.some(piece => piece.x === this.x && piece.y === newRow)) {
                 if (!this.calcMoveBlocked(this.x, this.x, this.y, newRow)) {
                     let move = new Move(this.x, this.y, this.x, newRow);
-                    if (check4check) {
-                        // Check if the move would put the king in check
-                        let move = new Move(this.x, this.y, i, this.y);
-                        let inCheck = false;
-                        for (let piece of game.pieces) {
-                            if (piece.clr !== this.clr) {
-                                let enemyMoves = [];
-                                if(piece.name !== "king") {
-                                    enemyMoves = piece.calcMoves(false);
-                                }
-                                for (let enemyMove of enemyMoves) {
-                                    if (enemyMove.endX === i && enemyMove.endY === j) {
-                                        inCheck = true;
-                                        console.log(enemyMove);
-                                        break;
-                                    }
-                                }
-                                if (inCheck) break;
-                            }
-                        }
-                        if (!inCheck) {
-                            moves.push(move);
-                        }
-                    }
-                    else {
-                        if (check4check) {
-                            // Check if the move would put the king in check
-                            let move = new Move(this.x, this.y, i, j);
-                            let inCheck = false;
-                            for (let piece of game.pieces) {
-                                if (piece.clr !== this.clr) {
-                                    let enemyMoves = [];
-                                    if(piece.name !== "king") {
-                                        enemyMoves = piece.calcMoves(false);
-                                    }
-                                    for (let enemyMove of enemyMoves) {
-                                        if (enemyMove.endX === i && enemyMove.endY === j) {
-                                            inCheck = true;
-                                            console.log(enemyMove);
-                                            break;
-                                        }
-                                    }
-                                    if (inCheck) break;
-                                }
-                            }
-                            if (!inCheck) {
-                                moves.push(move);
-                            }
-                        }
-                        else {
-                            moves.push(new Move(this.x, this.y, i, j))
-                        }
-                    }
+                    moves.push(move);
                 }
             }
         }
@@ -432,7 +402,7 @@ export class Piece {
         return moves;
     }
 
-    calcMovesRook(check4check = true) {
+    calcMovesRook() {
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -447,33 +417,8 @@ export class Piece {
                     }
                     if (k) { k = false; continue; }
                     if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                        if (check4check) {
-                            // Check if the move would put the king in check
-                            let move = new Move(this.x, this.y, i, j);
-                            let inCheck = false;
-                            for (let piece of game.pieces) {
-                                if (piece.clr !== this.clr) {
-                                    let enemyMoves = [];
-                                    if(piece.name !== "king") {
-                                        enemyMoves = piece.calcMoves(false);
-                                    }
-                                    for (let enemyMove of enemyMoves) {
-                                        if (enemyMove.endX === i && enemyMove.endY === j) {
-                                            inCheck = true;
-                                            console.log(enemyMove);
-                                            break;
-                                        }
-                                    }
-                                    if (inCheck) break;
-                                }
-                            }
-                            if (!inCheck) {
-                                moves.push(move);
-                            }
-                        }
-                        else {
-                            moves.push(new Move(this.x, this.y, i, j))
-                        }
+                        let move = new Move(this.x, this.y, i, j);
+                        moves.push(move);
                     }
                 }
             }
@@ -482,7 +427,7 @@ export class Piece {
         return moves;
     }
 
-    calcMovesKnight(check4check = true) {
+    calcMovesKnight() {
         console.log("met")
         let moves;
         moves = [];
@@ -497,43 +442,15 @@ export class Piece {
 
                     }
                     if (k) { k = false; continue; }
-                    if (check4check) {
-                        // Check if the move would put the king in check
-                        let move = new Move(this.x, this.y, i, j);
-                        let inCheck = false;
-                        for (let piece of game.pieces) {
-                            if (piece.clr !== this.clr) {
-                                let enemyMoves = [];
-                                if(piece.name !== "king") {
-                                    enemyMoves = piece.calcMoves(false);
-                                    console.log(enemyMoves.length)
-                                }
-                                for (let enemyMove of enemyMoves) {
-                                    if (enemyMove.endX === i && enemyMove.endY === j) {
-                                        inCheck = true;
-                                        console.log(enemyMove);
-                                        break;
-                                    }
-                                }
-                                if (inCheck) break;
-                            }
-                        }
-                        if (!inCheck) {
-                            moves.push(move);
-                            console.log(moves.length);
-                        }
-                    }
-                    else {
-                        moves.push(new Move(this.x, this.y, i, j))
-                        console.log(moves.length);
-                    }
+                    let move = new Move(this.x, this.y, i, j);
+                    moves.push(move);
                 }
             }
         }
         return moves;
     }
 
-    calcMovesBishop(check4check = true) {
+    calcMovesBishop() {
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -549,33 +466,8 @@ export class Piece {
                         }
                         if (k) { k = false; continue; }
                         if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
-                            if (check4check) {
-                                // Check if the move would put the king in check
-                                let move = new Move(this.x, this.y, i, j);
-                                let inCheck = false;
-                                for (let piece of game.pieces) {
-                                    if (piece.clr !== this.clr) {
-                                        let enemyMoves = [];
-                                        if(piece.name !== "king") {
-                                            enemyMoves = piece.calcMoves(false);
-                                        }
-                                        for (let enemyMove of enemyMoves) {
-                                            if (enemyMove.endX === i && enemyMove.endY === j) {
-                                                inCheck = true;
-                                                console.log(enemyMove);
-                                                break;
-                                            }
-                                        }
-                                        if (inCheck) break;
-                                    }
-                                }
-                                if (!inCheck) {
-                                    moves.push(move);
-                                }
-                            }
-                            else {
-                                moves.push(new Move(this.x, this.y, i, j))
-                            }
+                            let move = new Move(this.x, this.y, i, j);
+                            moves.push(move);
                         }
                     }
                 }
@@ -585,7 +477,7 @@ export class Piece {
         return moves;
     }
 
-    calcMovesQueen(check4check = true) {
+    calcMovesQueen() {
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -600,33 +492,8 @@ export class Piece {
                     }
                     if (k) { k = false; continue; }
                     if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                        if (check4check) {
-                            // Check if the move would put the king in check
-                            let move = new Move(this.x, this.y, i, j);
-                            let inCheck = false;
-                            for (let piece of game.pieces) {
-                                if (piece.clr !== this.clr) {
-                                    let enemyMoves = [];
-                                    if(piece.name !== "king") {
-                                        enemyMoves = piece.calcMoves(false);
-                                    }
-                                    for (let enemyMove of enemyMoves) {
-                                        if (enemyMove.endX === i && enemyMove.endY === j) {
-                                            inCheck = true;
-                                            console.log(enemyMove);
-                                            break;
-                                        }
-                                    }
-                                    if (inCheck) break;
-                                }
-                            }
-                            if (!inCheck) {
-                                moves.push(move);
-                            }
-                        }
-                        else {
-                            moves.push(new Move(this.x, this.y, i, j))
-                        }
+                        let move = new Move(this.x, this.y, i, j);
+                        moves.push(move);
                     }
                 }
                 if (Math.abs(this.x - i) === Math.abs(this.y - j)) {
@@ -640,33 +507,8 @@ export class Piece {
                         }
                         if (k) { k = false; continue; }
                         if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
-                            if (check4check) {
-                                // Check if the move would put the king in check
-                                let move = new Move(this.x, this.y, i, j);
-                                let inCheck = false;
-                                for (let piece of game.pieces) {
-                                    if (piece.clr !== this.clr) {
-                                        let enemyMoves = [];
-                                        if(piece.name !== "king") {
-                                            enemyMoves = piece.calcMoves(false);
-                                        }
-                                        for (let enemyMove of enemyMoves) {
-                                            if (enemyMove.endX === i && enemyMove.endY === j) {
-                                                inCheck = true;
-                                                console.log(enemyMove);
-                                                break;
-                                            }
-                                        }
-                                        if (inCheck) break;
-                                    }
-                                }
-                                if (!inCheck) {
-                                    moves.push(move);
-                                }
-                            }
-                            else {
-                                moves.push(new Move(this.x, this.y, i, j))
-                            }
+                            let move = new Move(this.x, this.y, i, j);
+                            moves.push(move);
                         }
                     }
                 }
@@ -723,7 +565,7 @@ export class Piece {
         return moves;
     }
 
-    calcMovesDefault(check4check = true) {
+    calcMovesDefault() {
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -736,34 +578,8 @@ export class Piece {
 
                 }
                 if (k) { k = false; continue; }
-
-                if (check4check) {
-                    // Check if the move would put the king in check
-                    let move = new Move(this.x, this.y, i, j);
-                    let inCheck = false;
-                    for (let piece of game.pieces) {
-                        if (piece.clr !== this.clr) {
-                            let enemyMoves = [];
-                            if(piece.name !== "king") {
-                                enemyMoves = piece.calcMoves(false);
-                            }
-                            for (let enemyMove of enemyMoves) {
-                                if (enemyMove.endX === i && enemyMove.endY === j) {
-                                    inCheck = true;
-                                    console.log(enemyMove);
-                                    break;
-                                }
-                            }
-                            if (inCheck) break;
-                        }
-                    }
-                    if (!inCheck) {
-                        moves.push(move);
-                    }
-                }
-                else {
-                    moves.push(new Move(this.x, this.y, i, j))
-                }
+                let move = new Move(this.x, this.y, i, j);
+                moves.push(move);
             }
         }
 
