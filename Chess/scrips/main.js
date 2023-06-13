@@ -8,11 +8,11 @@ export const ctx = canvas.getContext("2d")
 
 let standardName = "Unknown User";
 let myclr = "black";
-async function init() {
+function init() {
     game = new Game(560, 0, 1, standardName, standardName, myclr, ctx, 0);
-    await game.init();
+    game.init();
 
-    await game.gameLoop();
+    //game.gameLoop();
 }
 $(async function () {
     await init()

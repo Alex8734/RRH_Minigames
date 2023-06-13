@@ -53,8 +53,7 @@ export class Game {
     }
 
     init() {
-        let players = this.client.getPlayers();
-        this.my
+        //let players = this.client.getPlayers();
 
         this.redraw();
 
@@ -65,7 +64,7 @@ export class Game {
         oppName.innerHTML = this.opponentName;
     }
 
-    async gameLoop() {
+    /*gameLoop() {
         let gameOver = false;
 
         while (!gameOver) {
@@ -88,7 +87,7 @@ export class Game {
                 gameOver = true;
             }
         }
-    }
+    }*/
 
     redraw() {
         this.drawBoard(this.myclr);
@@ -147,7 +146,7 @@ export class Game {
                 let img = new Image();
                 img.src = `./images/${piece.clr}_${piece.name}.png`;
                 img.onload = function() {
-                    ctx.drawImage(img, piece.x * this.fieldSize, piece.y * this.fieldSize, this.fieldSize, this.fieldSize);
+                    ctx.drawImage(img, piece.x * 70, piece.y * 70, 70, 70);
                 };
                 img.onerror = function() {
                     console.log("Failed to load image.");
@@ -159,7 +158,7 @@ export class Game {
                 let img = new Image();
                 img.src = `./images/${piece.clr}_${piece.name}.png`;
                 img.onload = function() {
-                    ctx.drawImage(img, 490 - piece.x * this.fieldSize, 490 - piece.y * this.fieldSize, this.fieldSize, this.fieldSize);
+                    ctx.drawImage(img, 490 - piece.x * 70, 490 - piece.y * 70, 70, 70);
                 };
                 img.onerror = function() {
                     console.log("Failed to load image.");
@@ -173,7 +172,7 @@ export class Game {
             let img = new Image();
             img.src = "./images/dot.png";
             img.onload = function() {
-                ctx.drawImage(img, 490 - dot.x * this.fieldSize, 490 - dot.y * this.fieldSize, this.fieldSize, this.fieldSize);
+                ctx.drawImage(img, 490 - dot.x * 70, 490 - dot.y * 70, 70, 70);
             };
             img.onerror = function() {
                 console.log("Failed to load dot.");
@@ -328,26 +327,26 @@ export class Piece {
         return this.calcMoves();
     }
 
-    calcMoves() {
+    calcMoves(check4check = true) {
         switch (this.name) {
             case "pawn":
-                return this.calcMovesPawn();
+                return this.calcMovesPawn(check4check);
             case "rook":
-                return this.calcMovesRook();
+                return this.calcMovesRook(check4check);
             case "knight":
-                return this.calcMovesKnight();
+                return this.calcMovesKnight(check4check);
             case "bishop":
-                return this.calcMovesBishop();
+                return this.calcMovesBishop(check4check);
             case "queen":
-                return this.calcMovesQueen();
+                return this.calcMovesQueen(check4check);
             case "king":
-                return this.calcMovesKing();
+                return this.calcMovesKing(check4check);
             default:
-                return this.calcMovesDefault();
+                return this.calcMovesDefault(check4check);
         }
     }
 
-    calcMovesPawn() {
+    calcMovesPawn(check4check = true) {
         let moves = [];
         let direction = this.clr === "white" ? -1 : 1;
         let startRow = this.clr === "white" ? 6 : 1;
@@ -355,13 +354,65 @@ export class Piece {
         // Check forward moves
         for (let i = 1; i <= 2; i++) {
             let newRow = this.y + direction * i;
-            if (newRow < 0 || newRow > 7) continue;
-            if (i === 2 && this.y !== startRow) continue;
+            if (newRow < 0 || newRow > 7) { continue; }
+            if (i === 2 && this.y !== startRow) { continue; }
 
             if (!game.pieces.some(piece => piece.x === this.x && piece.y === newRow)) {
                 if (!this.calcMoveBlocked(this.x, this.x, this.y, newRow)) {
                     let move = new Move(this.x, this.y, this.x, newRow);
-                    moves.push(move);
+                    if (check4check) {
+                        // Check if the move would put the king in check
+                        let move = new Move(this.x, this.y, i, this.y);
+                        let inCheck = false;
+                        for (let piece of game.pieces) {
+                            if (piece.clr !== this.clr) {
+                                let enemyMoves = [];
+                                if(piece.name !== "king") {
+                                    enemyMoves = piece.calcMoves(false);
+                                }
+                                for (let enemyMove of enemyMoves) {
+                                    if (enemyMove.endX === i && enemyMove.endY === j) {
+                                        inCheck = true;
+                                        console.log(enemyMove);
+                                        break;
+                                    }
+                                }
+                                if (inCheck) break;
+                            }
+                        }
+                        if (!inCheck) {
+                            moves.push(move);
+                        }
+                    }
+                    else {
+                        if (check4check) {
+                            // Check if the move would put the king in check
+                            let move = new Move(this.x, this.y, i, j);
+                            let inCheck = false;
+                            for (let piece of game.pieces) {
+                                if (piece.clr !== this.clr) {
+                                    let enemyMoves = [];
+                                    if(piece.name !== "king") {
+                                        enemyMoves = piece.calcMoves(false);
+                                    }
+                                    for (let enemyMove of enemyMoves) {
+                                        if (enemyMove.endX === i && enemyMove.endY === j) {
+                                            inCheck = true;
+                                            console.log(enemyMove);
+                                            break;
+                                        }
+                                    }
+                                    if (inCheck) break;
+                                }
+                            }
+                            if (!inCheck) {
+                                moves.push(move);
+                            }
+                        }
+                        else {
+                            moves.push(new Move(this.x, this.y, i, j))
+                        }
+                    }
                 }
             }
         }
@@ -381,7 +432,7 @@ export class Piece {
         return moves;
     }
 
-    calcMovesRook() {
+    calcMovesRook(check4check = true) {
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -396,7 +447,33 @@ export class Piece {
                     }
                     if (k) { k = false; continue; }
                     if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                        moves.push(new Move(this.x, this.y, i, j));
+                        if (check4check) {
+                            // Check if the move would put the king in check
+                            let move = new Move(this.x, this.y, i, j);
+                            let inCheck = false;
+                            for (let piece of game.pieces) {
+                                if (piece.clr !== this.clr) {
+                                    let enemyMoves = [];
+                                    if(piece.name !== "king") {
+                                        enemyMoves = piece.calcMoves(false);
+                                    }
+                                    for (let enemyMove of enemyMoves) {
+                                        if (enemyMove.endX === i && enemyMove.endY === j) {
+                                            inCheck = true;
+                                            console.log(enemyMove);
+                                            break;
+                                        }
+                                    }
+                                    if (inCheck) break;
+                                }
+                            }
+                            if (!inCheck) {
+                                moves.push(move);
+                            }
+                        }
+                        else {
+                            moves.push(new Move(this.x, this.y, i, j))
+                        }
                     }
                 }
             }
@@ -405,7 +482,8 @@ export class Piece {
         return moves;
     }
 
-    calcMovesKnight() {
+    calcMovesKnight(check4check = true) {
+        console.log("met")
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -419,15 +497,43 @@ export class Piece {
 
                     }
                     if (k) { k = false; continue; }
-                    moves.push(new Move(this.x, this.y, i, j));
+                    if (check4check) {
+                        // Check if the move would put the king in check
+                        let move = new Move(this.x, this.y, i, j);
+                        let inCheck = false;
+                        for (let piece of game.pieces) {
+                            if (piece.clr !== this.clr) {
+                                let enemyMoves = [];
+                                if(piece.name !== "king") {
+                                    enemyMoves = piece.calcMoves(false);
+                                    console.log(enemyMoves.length)
+                                }
+                                for (let enemyMove of enemyMoves) {
+                                    if (enemyMove.endX === i && enemyMove.endY === j) {
+                                        inCheck = true;
+                                        console.log(enemyMove);
+                                        break;
+                                    }
+                                }
+                                if (inCheck) break;
+                            }
+                        }
+                        if (!inCheck) {
+                            moves.push(move);
+                            console.log(moves.length);
+                        }
+                    }
+                    else {
+                        moves.push(new Move(this.x, this.y, i, j))
+                        console.log(moves.length);
+                    }
                 }
             }
         }
-
         return moves;
     }
 
-    calcMovesBishop() {
+    calcMovesBishop(check4check = true) {
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -443,7 +549,33 @@ export class Piece {
                         }
                         if (k) { k = false; continue; }
                         if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
-                            moves.push(new Move(this.x, this.y, i, j));
+                            if (check4check) {
+                                // Check if the move would put the king in check
+                                let move = new Move(this.x, this.y, i, j);
+                                let inCheck = false;
+                                for (let piece of game.pieces) {
+                                    if (piece.clr !== this.clr) {
+                                        let enemyMoves = [];
+                                        if(piece.name !== "king") {
+                                            enemyMoves = piece.calcMoves(false);
+                                        }
+                                        for (let enemyMove of enemyMoves) {
+                                            if (enemyMove.endX === i && enemyMove.endY === j) {
+                                                inCheck = true;
+                                                console.log(enemyMove);
+                                                break;
+                                            }
+                                        }
+                                        if (inCheck) break;
+                                    }
+                                }
+                                if (!inCheck) {
+                                    moves.push(move);
+                                }
+                            }
+                            else {
+                                moves.push(new Move(this.x, this.y, i, j))
+                            }
                         }
                     }
                 }
@@ -453,7 +585,7 @@ export class Piece {
         return moves;
     }
 
-    calcMovesQueen() {
+    calcMovesQueen(check4check = true) {
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -468,7 +600,33 @@ export class Piece {
                     }
                     if (k) { k = false; continue; }
                     if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                        moves.push(new Move(this.x, this.y, i, j));
+                        if (check4check) {
+                            // Check if the move would put the king in check
+                            let move = new Move(this.x, this.y, i, j);
+                            let inCheck = false;
+                            for (let piece of game.pieces) {
+                                if (piece.clr !== this.clr) {
+                                    let enemyMoves = [];
+                                    if(piece.name !== "king") {
+                                        enemyMoves = piece.calcMoves(false);
+                                    }
+                                    for (let enemyMove of enemyMoves) {
+                                        if (enemyMove.endX === i && enemyMove.endY === j) {
+                                            inCheck = true;
+                                            console.log(enemyMove);
+                                            break;
+                                        }
+                                    }
+                                    if (inCheck) break;
+                                }
+                            }
+                            if (!inCheck) {
+                                moves.push(move);
+                            }
+                        }
+                        else {
+                            moves.push(new Move(this.x, this.y, i, j))
+                        }
                     }
                 }
                 if (Math.abs(this.x - i) === Math.abs(this.y - j)) {
@@ -482,7 +640,33 @@ export class Piece {
                         }
                         if (k) { k = false; continue; }
                         if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
-                            moves.push(new Move(this.x, this.y, i, j));
+                            if (check4check) {
+                                // Check if the move would put the king in check
+                                let move = new Move(this.x, this.y, i, j);
+                                let inCheck = false;
+                                for (let piece of game.pieces) {
+                                    if (piece.clr !== this.clr) {
+                                        let enemyMoves = [];
+                                        if(piece.name !== "king") {
+                                            enemyMoves = piece.calcMoves(false);
+                                        }
+                                        for (let enemyMove of enemyMoves) {
+                                            if (enemyMove.endX === i && enemyMove.endY === j) {
+                                                inCheck = true;
+                                                console.log(enemyMove);
+                                                break;
+                                            }
+                                        }
+                                        if (inCheck) break;
+                                    }
+                                }
+                                if (!inCheck) {
+                                    moves.push(move);
+                                }
+                            }
+                            else {
+                                moves.push(new Move(this.x, this.y, i, j))
+                            }
                         }
                     }
                 }
@@ -492,7 +676,7 @@ export class Piece {
         return moves;
     }
 
-    calcMovesKing() {
+    calcMovesKing(check4check = true) {
         let moves = [];
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
@@ -505,6 +689,55 @@ export class Piece {
                     }
                     if (k) { k = false; continue; }
 
+                    if (check4check) {
+                        // Check if the move would put the king in check
+                        let move = new Move(this.x, this.y, i, j);
+                        let inCheck = false;
+                        for (let piece of game.pieces) {
+                            if (piece.clr !== this.clr) {
+                                let enemyMoves = [];
+                                if(piece.name !== "king") {
+                                    enemyMoves = piece.calcMoves(false);
+                                }
+                                for (let enemyMove of enemyMoves) {
+                                    if (enemyMove.endX === i && enemyMove.endY === j) {
+                                        inCheck = true;
+                                        console.log(enemyMove);
+                                        break;
+                                    }
+                                }
+                                if (inCheck) break;
+                            }
+                        }
+                        if (!inCheck) {
+                            moves.push(move);
+                        }
+                    }
+                    else {
+                        moves.push(new Move(this.x, this.y, i, j))
+                    }
+                }
+            }
+        }
+
+        return moves;
+    }
+
+    calcMovesDefault(check4check = true) {
+        let moves;
+        moves = [];
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                let k;
+                for (let piece of game.pieces) {
+                    if (piece.clr === this.clr && piece.x === i && piece.y === j) {
+                        k = true;
+                    }
+
+                }
+                if (k) { k = false; continue; }
+
+                if (check4check) {
                     // Check if the move would put the king in check
                     let move = new Move(this.x, this.y, i, j);
                     let inCheck = false;
@@ -512,7 +745,7 @@ export class Piece {
                         if (piece.clr !== this.clr) {
                             let enemyMoves = [];
                             if(piece.name !== "king") {
-                                enemyMoves = piece.calcMoves();
+                                enemyMoves = piece.calcMoves(false);
                             }
                             for (let enemyMove of enemyMoves) {
                                 if (enemyMove.endX === i && enemyMove.endY === j) {
@@ -528,27 +761,9 @@ export class Piece {
                         moves.push(move);
                     }
                 }
-            }
-        }
-
-        return moves;
-    }
-
-
-    calcMovesDefault() {
-        let moves;
-        moves = [];
-        for (let i = 0; i < 8; i++) {
-            for (let j = 0; j < 8; j++) {
-                let k;
-                for (let piece of game.pieces) {
-                    if (piece.clr === this.clr && piece.x === i && piece.y === j) {
-                        k = true;
-                    }
-
+                else {
+                    moves.push(new Move(this.x, this.y, i, j))
                 }
-                if (k) { k = false; continue; }
-                moves.push(new Move(this.x, this.y, i, j));
             }
         }
 
