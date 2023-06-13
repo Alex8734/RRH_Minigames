@@ -44,6 +44,18 @@ html, body {
     opacity: 0;
 }
 
+#filter-icon{
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    z-index: 1;
+    width: 50%;
+    padding: 0.5rem;
+    position: relative;
+    align-content: center;
+}
+
 #logo {
     width: 70%;
     z-index: 1;
@@ -57,7 +69,7 @@ html, body {
     grid-row: 1;
 }
 
-#logo-checkbox-container {
+.logo-checkbox-container {
     display: grid;
     width: 10%;
     align-items: center;
@@ -140,9 +152,11 @@ header {
     height: 100%;
     aspect-ratio: 1/1;
     width: auto;
+    padding: 0.5rem;
 }
 
 #settings {
+    padding: 0.5rem;
     height: 100%;
     width: auto;
     filter: invert(100%);
