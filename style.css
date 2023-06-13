@@ -4,6 +4,7 @@
     --border-color: #ff0000;
     --box-shadow: rgba(255, 255, 255, 0.5);
     --settings-background: #212529;
+    --transparent-background: rgba(0, 0, 0, 0.87);
 }
 
 #background {
@@ -16,6 +17,13 @@
 html, body {
     height: 100%;
     background-color: var(--secondary-color);
+    background-image: url("./Pics/background.jpg");
+    background-position: 50% 50%;
+}
+
+#colordings {
+    background-color: var(--transparent-background);
+    height: 100%;
 }
 
 #content {
@@ -86,7 +94,7 @@ html, body {
     float: right;
     width: 20%;
     height: 100%;
-    border-right: 2px solid var(--primary-color);
+    border-right: 2px solid var(--box-shadow);
     top: 0%;
     padding-top: 2%;
     margin-top: -2%;
@@ -286,12 +294,12 @@ a:hover{
     width: 15%;
     padding-top: 5%;
     position: relative;
-    border-left: 2px solid var(--primary-color);
+    border-left: 2px solid var(--box-shadow);
 }
 
 #game-stats {
     padding-left: 1rem;
-    border-bottom: 2px solid var(--primary-color);
+    border-bottom: 2px solid var(--box-shadow);
 }
 
 h2 {

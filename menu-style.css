@@ -4,6 +4,7 @@
     --border-color: #ff0000;
     --box-shadow: rgba(255, 255, 255, 0.5);
     --settings-background: #212529;
+    --transparent-background: rgba(0, 0, 0, 0.87);
 }
 
 .dropdown {
@@ -127,7 +128,7 @@
 }
 
 #settings-head {
-    border-bottom: var(--secondary-color) 0.1rem solid;
+    border-bottom: var(--box-shadow) 0.1rem solid;
     margin: 0;
     padding-left: 2%;
     padding-bottom: 2%;
