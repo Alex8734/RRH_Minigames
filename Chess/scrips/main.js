@@ -12,7 +12,7 @@ async function init() {
     game = new Game(800, 0, 1, standardName, standardName, myclr, ctx, 0);
     await game.init();
 
-    game.gameLoop();
+    await game.gameLoop();
 }
 $(async function () {
     await init()

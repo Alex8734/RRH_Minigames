@@ -49,6 +49,7 @@ export class Game {
         this.opponentName = player2Name
         this.check = false;
         this.gid = id;
+        this.moveDone = null;
     }
 
     init() {
@@ -69,17 +70,19 @@ export class Game {
 
         while (!gameOver) {
             if (this.currentPlayer !== this.myclr) {
-                //wait 4 fetch
+
                 let move = this.client.getLastMove(this.gid);
                 move = Move.stringToMove(move);
                 let piece = this.pieces.find(p => p.x === move.startX && p.y === move.startY);
 
-                piece.move(move.endX, move.endY);
-
+                piece.move(move.endX, move.endY, false);
             }
             else {
-                //wait 4 move
-                //push move to server
+                while (this.moveDone !== null) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+
+                this.client.pushMove(this.gid, moveStr);
             }
             if (this.isCheckmate()) {
                 gameOver = true;
@@ -284,7 +287,7 @@ export class Piece {
         this.clr = color;
     }
 
-    move(col, row) {
+    move(col, row, fromMe) {
 
         // Only allow the current player to make a move
         if (this.clr !== game.currentPlayer) {
@@ -315,6 +318,10 @@ export class Piece {
 
         // Switch the current player
         game.currentPlayer = game.currentPlayer === "white" ? "black" : "white";
+
+        if (fromMe) {
+            game.moveDone = new Move(this.x, this.y, col, row).toString();
+        }
     }
 
     clickMe() {

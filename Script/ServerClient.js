@@ -94,4 +94,21 @@ export class HttpClient {
         return await response.json();
     }
 
+    async pushMove(gameId, moveStr){
+        const data = {
+            gameId: gameId,
+            move: moveStr,
+        };
+        const response = await fetch(`${this.address}/Chess/lastMove`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": localStorage.getItem("token"),
+            },
+            body: JSON.stringify(data),
+        });
+
+        return  response.json();
+    }
+
 }
