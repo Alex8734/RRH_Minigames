@@ -1,8 +1,9 @@
-import {ChessClient} from "../../server/server-client.js";
-import {context, game} from "./main.js";
+import {HttpClient} from "../../Script/ServerClient.js";
+import {game, ctx} from "./main.js";
 
 export class Game {
-    constructor(size, player1Id, player2Id, player1Name, player2Name, me) {
+    constructor(size, player1Id, player2Id, player1Name, player2Name, me, id) {
+        this.client = new HttpClient();
         this.size = 800;
         this.fieldSize = 100;
         this.pieces = [
@@ -47,9 +48,13 @@ export class Game {
         this.myName = player1Name;
         this.opponentName = player2Name
         this.check = false;
+        this.gid = id;
     }
 
     init() {
+        let players = this.client.getPlayers();
+        this.my
+
         this.redraw();
 
         let myName = document.getElementById("thisName");
@@ -57,6 +62,29 @@ export class Game {
 
         myName.innerHTML = this.myName;
         oppName.innerHTML = this.opponentName;
+    }
+
+    async gameLoop() {
+        let gameOver = false;
+
+        while (!gameOver) {
+            if (this.currentPlayer !== this.myclr) {
+                //wait 4 fetch
+                let move = this.client.getLastMove(this.gid);
+                move = Move.stringToMove(move);
+                let piece = this.pieces.find(p => p.x === move.startX && p.y === move.startY);
+
+                piece.move(move.endX, move.endY);
+
+            }
+            else {
+                //wait 4 move
+                //push move to server
+            }
+            if (this.isCheckmate()) {
+                gameOver = true;
+            }
+        }
     }
 
     redraw() {
@@ -72,15 +100,15 @@ export class Game {
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     if (isWhite) {
-                        context.fillStyle = "#ffce99";
+                        ctx.fillStyle = "#ffce99";
                     } else {
-                        context.fillStyle = "#994f00";
+                        ctx.fillStyle = "#994f00";
                     }
 
                     if (row === this.activeField.x && col === this.activeField.y) {
-                        context.fillStyle = "#bea9df";
+                        ctx.fillStyle = "#bea9df";
                     }
-                    context.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
+                    ctx.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
                     isWhite = !isWhite;
                 }
                 isWhite = !isWhite;
@@ -92,16 +120,16 @@ export class Game {
             for (let row = 7; row >= 0; row--) {
                 for (let col = 7; col >= 0; col--) {
                     if (isWhite) {
-                        context.fillStyle = "#ffce99";
+                        ctx.fillStyle = "#ffce99";
                     } else {
-                        context.fillStyle = "#994f00";
+                        ctx.fillStyle = "#994f00";
                     }
 
                     if (7 - row === this.activeField.x && 7 - col === this.activeField.y) {
-                        context.fillStyle = "#bea9df";
+                        ctx.fillStyle = "#bea9df";
                     }
 
-                    context.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
+                    ctx.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
                     isWhite = !isWhite;
                 }
                 isWhite = !isWhite;
@@ -116,7 +144,7 @@ export class Game {
                 let img = new Image();
                 img.src = `./images/${piece.clr}_${piece.name}.png`;
                 img.onload = function() {
-                    context.drawImage(img, piece.x * 100, piece.y * 100, 100, 100);
+                    ctx.drawImage(img, piece.x * 100, piece.y * 100, 100, 100);
                 };
                 img.onerror = function() {
                     console.log("Failed to load image.");
@@ -128,7 +156,7 @@ export class Game {
                 let img = new Image();
                 img.src = `./images/${piece.clr}_${piece.name}.png`;
                 img.onload = function() {
-                    context.drawImage(img, 700 - piece.x * 100, 700 - piece.y * 100, 100, 100);
+                    ctx.drawImage(img, 700 - piece.x * 100, 700 - piece.y * 100, 100, 100);
                 };
                 img.onerror = function() {
                     console.log("Failed to load image.");
@@ -142,7 +170,7 @@ export class Game {
             let img = new Image();
             img.src = "./images/dot.png";
             img.onload = function() {
-                context.drawImage(img, 700 - dot.x * 100, 700 - dot.y * 100, 100, 100);
+                ctx.drawImage(img, 700 - dot.x * 100, 700 - dot.y * 100, 100, 100);
             };
             img.onerror = function() {
                 console.log("Failed to load dot.");
@@ -600,6 +628,8 @@ export class Move {
         move.startY = string[1];
         move.endX = string[3];
         move.endY = string[4];
+
+        return move;
     }
 }
 

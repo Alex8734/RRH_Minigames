@@ -1,15 +1,18 @@
-export const canvas = document.getElementById("canvas");
-export const context = canvas.getContext("2d");
-
 import {Game} from "./chess.js";
 
 export let game;
 
+const canvas = document.getElementById("canvas");
+
+export const ctx = canvas.getContext("2d")
+
 let standardName = "Unknown User";
 let myclr = "black";
 async function init() {
-    game = new Game(800, 0, 1, standardName, standardName, myclr);
-    game.init();
+    game = new Game(800, 0, 1, standardName, standardName, myclr, ctx, 0);
+    await game.init();
+
+    game.gameLoop();
 }
 $(async function () {
     await init()
@@ -26,3 +29,4 @@ canvas.addEventListener('click', function(event) {
     console.log(7 - col, 7 - row);
     game.clickOn(7 - col, 7 - row);
 });
+

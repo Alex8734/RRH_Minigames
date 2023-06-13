@@ -71,24 +71,27 @@ export class HttpClient {
             });
     }
 
-    getLastMove(gameId) {
-        fetch(`${this.address}/Chess/lastMove`, {
+    async getLastMove(gameId) {
+        const response = await fetch(`${this.address}/Chess/lastMove`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "authentication": localStorage.getItem("token"),
             }
+
         });
+        return await response.json();
     }
 
-    getPlayers(gameId) {
-        fetch(`${this.address}/Chess/players`, {
+    async getPlayers(gameId) {
+        const response = await fetch(`${this.address}/Chess/players`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "authentication": localStorage.getItem("token"),
             }
         });
+        return await response.json();
     }
 
 }
