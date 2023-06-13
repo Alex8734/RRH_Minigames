@@ -45,7 +45,7 @@ function changeColor(index)
         case 'orange':
             document.documentElement.style.setProperty('--primary-color', '#ff8800');
             document.documentElement.style.setProperty('--secondary-color', '#ff9c34');
-            document.documentElement.style.setProperty('--border-color', '#ff8800');
+            document.documentElement.style.setProperty('--border-color', '#ff0000');
             document.documentElement.style.setProperty('--box-shadow', 'rgba(255, 255, 255, 0.5)');
             document.documentElement.style.setProperty('--settings-background', '#ff8800');
             break;

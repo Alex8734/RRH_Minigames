@@ -16,7 +16,7 @@
     transition: height 0.5s ease-in-out;
     height: 0;
     overflow: hidden;
-    border-left: 0.2rem red solid;
+    border-left: 0.2rem var(--border-color) solid;
 }
 
 .no-select {
