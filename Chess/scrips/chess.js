@@ -49,7 +49,7 @@ export class Game {
         this.opponentName = player2Name
         this.check = false;
         this.gid = id;
-        this.moveDone = null;
+        this.moveDone = "";
     }
 
     init() {
@@ -78,11 +78,11 @@ export class Game {
                 piece.move(move.endX, move.endY, false);
             }
             else {
-                while (this.moveDone !== null) {
+                while (this.moveDone !== "") {
                     await new Promise(resolve => setTimeout(resolve, 100));
                 }
 
-                this.client.pushMove(this.gid, moveStr);
+                await this.client.pushMove(this.gid, this.moveDone);
             }
             if (this.isCheckmate()) {
                 gameOver = true;
