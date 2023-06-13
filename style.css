@@ -45,7 +45,7 @@ html, body {
 }
 
 #logo {
-    width: 100%;
+    width: 70%;
     z-index: 1;
     height: 100%;
     position: relative;
@@ -282,6 +282,10 @@ a:hover{
 
 h2 {
     color: white;
+}
+
+.card-title {
+    color: black;
 }
 
 p {

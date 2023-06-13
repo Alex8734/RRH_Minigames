@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             filterMenu.style.width = '0%';
             gamesContainer.style.width = '100%';
         } else {
-            filterMenu.style.width = '15%';
-            gamesContainer.style.width = '85%';
+            filterMenu.style.width = '20%';
+            gamesContainer.style.width = '80%';
         }
     });
 
