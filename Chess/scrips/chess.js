@@ -4,8 +4,8 @@ import {game, ctx} from "./main.js";
 export class Game {
     constructor(size, player1Id, player2Id, player1Name, player2Name, me, id) {
         this.client = new HttpClient();
-        this.size = 800;
-        this.fieldSize = 100;
+        this.size = 560;
+        this.fieldSize = 70;
         this.pieces = [
             new Piece("rook", 0, 0, "black"),
             new Piece("knight", 1, 0, "black"),
@@ -147,7 +147,7 @@ export class Game {
                 let img = new Image();
                 img.src = `./images/${piece.clr}_${piece.name}.png`;
                 img.onload = function() {
-                    ctx.drawImage(img, piece.x * 100, piece.y * 100, 100, 100);
+                    ctx.drawImage(img, piece.x * this.fieldSize, piece.y * this.fieldSize, this.fieldSize, this.fieldSize);
                 };
                 img.onerror = function() {
                     console.log("Failed to load image.");
@@ -159,7 +159,7 @@ export class Game {
                 let img = new Image();
                 img.src = `./images/${piece.clr}_${piece.name}.png`;
                 img.onload = function() {
-                    ctx.drawImage(img, 700 - piece.x * 100, 700 - piece.y * 100, 100, 100);
+                    ctx.drawImage(img, 490 - piece.x * this.fieldSize, 490 - piece.y * this.fieldSize, this.fieldSize, this.fieldSize);
                 };
                 img.onerror = function() {
                     console.log("Failed to load image.");
@@ -173,7 +173,7 @@ export class Game {
             let img = new Image();
             img.src = "./images/dot.png";
             img.onload = function() {
-                ctx.drawImage(img, 700 - dot.x * 100, 700 - dot.y * 100, 100, 100);
+                ctx.drawImage(img, 490 - dot.x * this.fieldSize, 490 - dot.y * this.fieldSize, this.fieldSize, this.fieldSize);
             };
             img.onerror = function() {
                 console.log("Failed to load dot.");
@@ -225,7 +225,7 @@ export class Game {
     }
 
     copy() {
-        let newGame = new Game(800);
+        let newGame = new Game(560);
         newGame.size = this.size;
         newGame.fieldSize = this.fieldSize;
         newGame.pieces = this.pieces

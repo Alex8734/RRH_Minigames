@@ -9,7 +9,7 @@ export const ctx = canvas.getContext("2d")
 let standardName = "Unknown User";
 let myclr = "black";
 async function init() {
-    game = new Game(800, 0, 1, standardName, standardName, myclr, ctx, 0);
+    game = new Game(560, 0, 1, standardName, standardName, myclr, ctx, 0);
     await game.init();
 
     await game.gameLoop();
@@ -24,8 +24,8 @@ canvas.addEventListener('click', function(event) {
     let y = event.clientY - rect.top;
     // x and y are now relative to the canvas
 
-    let row = Math.floor(y / 100);
-    let col = Math.floor(x / 100);
+    let row = Math.floor(y / 70);
+    let col = Math.floor(x / 70);
     console.log(7 - col, 7 - row);
     game.clickOn(7 - col, 7 - row);
 });
