@@ -49,6 +49,12 @@ function gameLoop() {
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
 
+    // Calculate the scaling factor based on the canvas size
+    const scalingFactor = canvas.width / 2000;
+
+    // Adjust the deltaTime based on the scaling factor
+    deltaTime *= scalingFactor;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     DrawAndMoveBackground(deltaTime);
@@ -111,6 +117,7 @@ function gameLoop() {
         //changeButton.style.display = 'block';
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', (event) =>{
     playButton = document.getElementById('play-again');
