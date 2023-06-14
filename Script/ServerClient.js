@@ -65,4 +65,44 @@ export class HttpClient {
             });
     }
 
+    async getLastMove(gameId) {
+        const response = await fetch(`${this.address}/Chess/lastMove`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": localStorage.getItem("token"),
+            }
+
+        });
+        return await response.json();
+    }
+
+    async getPlayers(gameId) {
+        const response = await fetch(`${this.address}/Chess/players`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": localStorage.getItem("token"),
+            }
+        });
+        return await response.json();
+    }
+
+    async pushMove(gameId, moveStr){
+        const data = {
+            gameId: gameId,
+            move: moveStr,
+        };
+        const response = await fetch(`${this.address}/Chess/lastMove`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "authentication": localStorage.getItem("token"),
+            },
+            body: JSON.stringify(data),
+        });
+
+        return  response.json();
+    }
+
 }

@@ -1,11 +1,11 @@
-import {ChessClient} from "../../server/server-client.js";
-import {context, game} from "./main.js";
+import {HttpClient} from "../../Script/ServerClient.js";
+import {game, ctx} from "./main.js";
 
 export class Game {
-    constructor(size) {
-        this.client = new ChessClient();
-        this.size = 800;
-        this.fieldSize = 100;
+    constructor(size, player1Id, player2Id, player1Name, player2Name, me, id) {
+        this.client = new HttpClient();
+        this.size = 560;
+        this.fieldSize = 70;
         this.pieces = [
             new Piece("rook", 0, 0, "black"),
             new Piece("knight", 1, 0, "black"),
@@ -41,58 +41,154 @@ export class Game {
             new Piece("pawn", 7, 6, "white"),
         ]
         this.activePiece = null;
-        this.activeField = null;
+        this.activeField = new Field(null, null);
         this.dots = [];
         this.currentPlayer = "white";
+        this.myclr = me;
+        this.myName = player1Name;
+        this.opponentName = player2Name
+        this.check = false;
+        this.gid = id;
+        this.moveDone = "";
+        this.gameOver = "";
     }
 
     init() {
+        //let players = this.client.getPlayers();
+
         this.redraw();
+
+        let myName = document.getElementById("thisName");
+        let oppName = document.getElementById("enemyName");
+        let body = document.getElementById("bdy");
+
+        myName.innerHTML = this.myName;
+        oppName.innerHTML = this.opponentName;
     }
 
-    redraw() {
-        this.drawBoard();
-        this.drawPieces();
-        this.drawDots();
-    }
+    /*gameLoop() {
+        let gameOver = false;
 
-    drawBoard() {
-        let isWhite = true;
+        while (!gameOver) {
+            if (this.currentPlayer !== this.myclr) {
 
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                if (isWhite) {
-                    context.fillStyle = "#ffce99";
-                } else {
-                    context.fillStyle = "#994f00";
+                let move = this.client.getLastMove(this.gid);
+                move = Move.stringToMove(move);
+                let piece = this.pieces.find(p => p.x === move.startX && p.y === move.startY);
+
+                piece.move(move.endX, move.endY, false);
+            }
+            else {
+                while (this.moveDone !== "") {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    if ((this.myclr  === "black" && this.gameOver === "black") || (this.myclr === "white" && this.gameOver == "white")) {
+
+                        //win
+                        body.style.backgroundColor = "green";
+
+                    }
+
+                    else if ((this.myclr  === "black" && this.gameOver === "white") || (this.myclr === "white" && this.gameOver == "black")) {
+
+                        //lose
+                        body.style.backgroundColor = "red"
+                    }
+
+
+                    if (this.gameOver ==
                 }
 
-                context.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
+                await this.client.pushMove(this.gid, this.moveDone);
+            }
+
+
+        }
+    }*/
+
+    redraw() {
+        this.drawBoard(this.myclr);
+        this.drawPieces(this.myclr);
+        this.drawDots(this.myclr);
+    }
+
+    drawBoard(clr) {
+        if (clr === "white") {
+            let isWhite = true;
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (isWhite) {
+                        ctx.fillStyle = "#ffce99";
+                    } else {
+                        ctx.fillStyle = "#994f00";
+                    }
+
+                    if (row === this.activeField.x && col === this.activeField.y) {
+                        ctx.fillStyle = "#bea9df";
+                    }
+                    ctx.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
+                    isWhite = !isWhite;
+                }
                 isWhite = !isWhite;
             }
-            isWhite = !isWhite;
+        }
+        else {
+            let isWhite = false;
+
+            for (let row = 7; row >= 0; row--) {
+                for (let col = 7; col >= 0; col--) {
+                    if (isWhite) {
+                        ctx.fillStyle = "#ffce99";
+                    } else {
+                        ctx.fillStyle = "#994f00";
+                    }
+
+                    if (7 - row === this.activeField.x && 7 - col === this.activeField.y) {
+                        ctx.fillStyle = "#bea9df";
+                    }
+
+                    ctx.fillRect(row * this.fieldSize, col * this.fieldSize, this.fieldSize, this.fieldSize);
+                    isWhite = !isWhite;
+                }
+                isWhite = !isWhite;
+            }
+        }
+
+    }
+
+    drawPieces(clr) {
+        if (clr === "white") {
+            for (let piece of this.pieces) {
+                let img = new Image();
+                img.src = `./images/${piece.clr}_${piece.name}.png`;
+                img.onload = function() {
+                    ctx.drawImage(img, piece.x * 70, piece.y * 70, 70, 70);
+                };
+                img.onerror = function() {
+                    console.log("Failed to load image.");
+                };
+            }
+        }
+        else {
+            for (let piece of this.pieces) {
+                let img = new Image();
+                img.src = `./images/${piece.clr}_${piece.name}.png`;
+                img.onload = function() {
+                    ctx.drawImage(img, 490 - piece.x * 70, 490 - piece.y * 70, 70, 70);
+                };
+                img.onerror = function() {
+                    console.log("Failed to load image.");
+                };
+            }
         }
     }
 
-    drawPieces() {
-        for (let piece of this.pieces) {
-            let img = new Image();
-            img.src = `./images/${piece.clr}_${piece.name}.png`;
-            img.onload = function() {
-                context.drawImage(img, piece.x * 100, piece.y * 100, 100, 100);
-            };
-            img.onerror = function() {
-                console.log("Failed to load image.");
-            };
-        }
-    }
-
-    drawDots() {
+    drawDots(clr) {
         for (let dot of this.dots) {
             let img = new Image();
             img.src = "./images/dot.png";
             img.onload = function() {
-                context.drawImage(img, dot.x * 100, dot.y * 100, 100, 100);
+                ctx.drawImage(img, 490 - dot.x * 70, 490 - dot.y * 70, 70, 70);
             };
             img.onerror = function() {
                 console.log("Failed to load dot.");
@@ -101,7 +197,7 @@ export class Game {
     }
 
     clickOn(col, row) {
-
+        this.activeField = new Field(col, row);
         for (let dot of this.dots) {
             if (dot.x === col && dot.y === row) {
                 this.activePiece.move(col, row);
@@ -144,7 +240,7 @@ export class Game {
     }
 
     copy() {
-        let newGame = new Game(800);
+        let newGame = new Game(560);
         newGame.size = this.size;
         newGame.fieldSize = this.fieldSize;
         newGame.pieces = this.pieces
@@ -152,6 +248,10 @@ export class Game {
         newGame.activeField = this.activeField;
         newGame.dots = this.dots;
         newGame.currentPlayer = this.currentPlayer;
+        newGame.white = this.white;
+        newGame.black = this.black;
+        newGame.moves = this.moves;
+        newGame.check = this.check;
 
         return newGame;
     }
@@ -162,7 +262,8 @@ export class Game {
         let currentPlayerKing = game.pieces.find(piece => piece.name === "king" && piece.clr === currentPlayer);
 
         // Check if the king is in check
-        let isInCheck = game.pieces.some(piece => piece.clr === opponentPlayer && piece.calcMoves().some(move => move.endX === currentPlayerKing.x && move.endY === currentPlayerKing.y));
+        let isInCheck = game.pieces.some(piece => piece.clr === opponentPlayer
+            && piece.calcMoves().some(move => move.endX === currentPlayerKing.x && move.endY === currentPlayerKing.y));
 
         if (!isInCheck) {
             return false;
@@ -181,7 +282,8 @@ export class Game {
             let tempGame = game.copy();
             tempGame.makeMove(move);
             let tempCurrentPlayerKing = tempGame.pieces.find(piece => piece.name === "king" && piece.clr === currentPlayer);
-            let tempIsInCheck = tempGame.pieces.some(piece => piece.clr === opponentPlayer && piece.calcMoves().some(move => move.endX === tempCurrentPlayerKing.x && move.endY === tempCurrentPlayerKing.y));
+            let tempIsInCheck = tempGame.pieces.some(piece => piece.clr === opponentPlayer
+                && piece.calcMoves().some(move => move.endX === tempCurrentPlayerKing.x && move.endY === tempCurrentPlayerKing.y));
 
             if (!tempIsInCheck) {
                 return false;
@@ -200,7 +302,7 @@ export class Piece {
         this.clr = color;
     }
 
-    move(col, row) {
+    move(col, row, fromMe) {
 
         // Only allow the current player to make a move
         if (this.clr !== game.currentPlayer) {
@@ -209,6 +311,12 @@ export class Piece {
 
         for (let piece of game.pieces) {
             if (piece.x === col && piece.y === row) {
+                if (piece.clr === "white" && piece.name === "king") {
+                    this.gameOver = "white";
+                }
+                if (piece.clr === "black" && piece.name === "king") {
+                    this.gameOver = "black";
+                }
                 console.log(piece, "was taken rn (funnymoment)");
                 const index = game.pieces.indexOf(piece);
                 if (index > -1) {
@@ -221,6 +329,8 @@ export class Piece {
         this.x = col;
         this.y = row;
 
+        game.moves++;
+
         let lastRow = this.clr === "white" ? 0 : 7;
 
         if (this.name === "pawn" && this.y === lastRow) {
@@ -229,13 +339,17 @@ export class Piece {
 
         // Switch the current player
         game.currentPlayer = game.currentPlayer === "white" ? "black" : "white";
+
+        if (fromMe) {
+            game.moveDone = new Move(this.x, this.y, col, row).toString();
+        }
     }
 
     clickMe() {
         return this.calcMoves();
     }
 
-    calcMoves() {
+    calcMoves(check4check = true) {
         switch (this.name) {
             case "pawn":
                 return this.calcMovesPawn();
@@ -248,7 +362,7 @@ export class Piece {
             case "queen":
                 return this.calcMovesQueen();
             case "king":
-                return this.calcMovesKing();
+                return this.calcMovesKing(check4check);
             default:
                 return this.calcMovesDefault();
         }
@@ -262,8 +376,8 @@ export class Piece {
         // Check forward moves
         for (let i = 1; i <= 2; i++) {
             let newRow = this.y + direction * i;
-            if (newRow < 0 || newRow > 7) continue;
-            if (i === 2 && this.y !== startRow) continue;
+            if (newRow < 0 || newRow > 7) { continue; }
+            if (i === 2 && this.y !== startRow) { continue; }
 
             if (!game.pieces.some(piece => piece.x === this.x && piece.y === newRow)) {
                 if (!this.calcMoveBlocked(this.x, this.x, this.y, newRow)) {
@@ -302,9 +416,9 @@ export class Piece {
 
                     }
                     if (k) { k = false; continue; }
-                    console.log(i, j, "fine ig");
                     if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                        moves.push(new Move(this.x, this.y, i, j));
+                        let move = new Move(this.x, this.y, i, j);
+                        moves.push(move);
                     }
                 }
             }
@@ -314,6 +428,7 @@ export class Piece {
     }
 
     calcMovesKnight() {
+        console.log("met")
         let moves;
         moves = [];
         for (let i = 0; i < 8; i++) {
@@ -327,11 +442,11 @@ export class Piece {
 
                     }
                     if (k) { k = false; continue; }
-                    moves.push(new Move(this.x, this.y, i, j));
+                    let move = new Move(this.x, this.y, i, j);
+                    moves.push(move);
                 }
             }
         }
-
         return moves;
     }
 
@@ -351,7 +466,8 @@ export class Piece {
                         }
                         if (k) { k = false; continue; }
                         if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
-                            moves.push(new Move(this.x, this.y, i, j));
+                            let move = new Move(this.x, this.y, i, j);
+                            moves.push(move);
                         }
                     }
                 }
@@ -376,7 +492,8 @@ export class Piece {
                     }
                     if (k) { k = false; continue; }
                     if (!this.calcMoveBlocked(this.x, i, this.y, j)) {
-                        moves.push(new Move(this.x, this.y, i, j));
+                        let move = new Move(this.x, this.y, i, j);
+                        moves.push(move);
                     }
                 }
                 if (Math.abs(this.x - i) === Math.abs(this.y - j)) {
@@ -390,7 +507,8 @@ export class Piece {
                         }
                         if (k) { k = false; continue; }
                         if (!this.calcMoveBlockedDiagonal(this.x, i, this.y, j)) {
-                            moves.push(new Move(this.x, this.y, i, j));
+                            let move = new Move(this.x, this.y, i, j);
+                            moves.push(move);
                         }
                     }
                 }
@@ -400,9 +518,8 @@ export class Piece {
         return moves;
     }
 
-    calcMovesKing() {
-        let moves;
-        moves = [];
+    calcMovesKing(check4check = true) {
+        let moves = [];
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if ((Math.abs(this.x - i) === 1 || Math.abs(this.y - j) === 1) && Math.abs(this.x - i) + Math.abs(this.y - j) <= 2){
@@ -411,10 +528,36 @@ export class Piece {
                         if (piece.clr === this.clr && piece.x === i && piece.y === j) {
                             k = true;
                         }
-
                     }
                     if (k) { k = false; continue; }
-                    moves.push(new Move(this.x, this.y, i, j));
+
+                    if (check4check) {
+                        // Check if the move would put the king in check
+                        let move = new Move(this.x, this.y, i, j);
+                        let inCheck = false;
+                        for (let piece of game.pieces) {
+                            if (piece.clr !== this.clr) {
+                                let enemyMoves = [];
+                                if(piece.name !== "king") {
+                                    enemyMoves = piece.calcMoves(false);
+                                }
+                                for (let enemyMove of enemyMoves) {
+                                    if (enemyMove.endX === i && enemyMove.endY === j) {
+                                        inCheck = true;
+                                        console.log(enemyMove);
+                                        break;
+                                    }
+                                }
+                                if (inCheck) break;
+                            }
+                        }
+                        if (!inCheck) {
+                            moves.push(move);
+                        }
+                    }
+                    else {
+                        moves.push(new Move(this.x, this.y, i, j))
+                    }
                 }
             }
         }
@@ -435,7 +578,8 @@ export class Piece {
 
                 }
                 if (k) { k = false; continue; }
-                moves.push(new Move(this.x, this.y, i, j));
+                let move = new Move(this.x, this.y, i, j);
+                moves.push(move);
             }
         }
 
@@ -510,5 +654,26 @@ export class Move {
         this.startY = fromY;
         this.endX = toX;
         this.endY = toY;
+    }
+
+    toString() {
+        return `${this.startX}${this.startY}-${this.endX}${this.endY}`;
+    }
+
+    static stringToMove(string) {
+        let move = new Move()
+        move.startX = string[0];
+        move.startY = string[1];
+        move.endX = string[3];
+        move.endY = string[4];
+
+        return move;
+    }
+}
+
+export class Field {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
     }
 }

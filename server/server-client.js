@@ -53,7 +53,7 @@ export class ChessClient extends ServerClient
     constructor()
     {
         const s = super();
-        this.baseURL = `${s.baseURL}/chess`
+        this.baseURL = `${s.baseURL}/chess`;
     }
     
     
