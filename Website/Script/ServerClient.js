@@ -1,68 +1,75 @@
 export class HttpClient {
 
-    address = "10.9.11.1";
+    address = "http://localhost:5001";
 
-    async getUserStats()
+    async getUserStats(onError)
     {
-        const response = await fetch(`${this.address}/User/stats`, {
+        const response = await fetch(`${this.address}/User/Stats`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "authentication": localStorage.getItem("token"),
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Host": `${this.address}`
             },
         });
-
-        return await response.json()
+        const respData = await response.json();
+        if (!response.ok){
+            onError(respData)
+        }
+        return respData
     }
 
-    login(user)
+    async loginUser(user, onError)
     {
         const data = {
-            name: user.name,
-            email: user.email,
-            password: user.password,
+            UserName: user.name,
+            Email: user.email,
+            Password: user.password,
         }
 
-        fetch(`${this.address}/User/login`, {
+        const response = await fetch(`${this.address}/User/login`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Host": `${this.address}`
             },
             body: JSON.stringify(data)
-        }).then(response => response.json())
-            .then(data => {
-                const token = data.token;
-                localStorage.setItem('token', token);
-                console.log('Token saved successfully!');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        })
+        const respData = await response.json();
+        if (!response.ok)
+        {
+            
+            onError(respData)
+            return false;
+        }
+        localStorage.setItem('token', respData.value);
+        return true;
     }
 
-    registerUser(user)
+    async registerUser(user, onError)
     {
         const data = {
-            name: user.name,
-            email: user.email,
-            password: user.password,
+            UserName: user.name,
+            Email: user.email,
+            Password: user.password,
         }
 
-        fetch(`${this.address}/User/register`, {
+        const response = await fetch(`${this.address}/User/register`, {
             method: "POST",
-                headers: {
-            "Content-Type": "application/json"
+            headers: {
+                "Content-Type": "application/json", 
+                "Host": `${this.address}`
         },
             body: JSON.stringify(data)
-        }).then(response => response.json())
-            .then(data => {
-                const token = data.token;
-                localStorage.setItem('token', token);
-                console.log('Token saved successfully!');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        })
+        const respData = await response.json();
+        if (!response.ok){
+            
+            onError(respData)
+            return false;
+        }
+        localStorage.setItem('token', respData.value);
+        return true;
     }
 
     async getLastMove(gameId) {
@@ -70,7 +77,8 @@ export class HttpClient {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "authentication": localStorage.getItem("token"),
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Host": `${this.address}`
             }
 
         });
@@ -82,7 +90,8 @@ export class HttpClient {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "authentication": localStorage.getItem("token"),
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Host": `${this.address}`
             }
         });
         return await response.json();
@@ -97,7 +106,8 @@ export class HttpClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "authentication": localStorage.getItem("token"),
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Host": `${this.address}`
             },
             body: JSON.stringify(data),
         });

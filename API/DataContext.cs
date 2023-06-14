@@ -41,28 +41,3 @@ public sealed class  DataContext : DbContext
         optionsBuilder.UseSqlite($"Data Source={_dbPath}", options => options.MigrationsAssembly("RRH_Minigames_API"));
     }
 }
-
-public static class SampleData
-{
-    public static async Task InsertSampleData(this DataContext ctx)
-    {
-        await InsertProducts(ctx);
-        await InsertMenus(ctx);
-
-        await ctx.SaveChangesAsync();
-    }
-
-    private static Task InsertMenus(DbContext ctx)
-    {
-        var today = DateTime.Today;
-
-        
-
-        return ctx.AddRangeAsync();
-    }
-
-    private static Task InsertProducts(DbContext ctx)
-    {
-        return ctx.AddRangeAsync();
-    }
-}

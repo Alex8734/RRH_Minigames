@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -18,15 +19,21 @@ public class IdentityController : ControllerBase
     private static readonly TimeSpan TokenLifetime = TimeSpan.FromHours(8);
     
     private readonly DataContext _context;
-
+    private readonly JwtSecurityTokenHandler _tokenHandler;
+    
     public IdentityController(DataContext context)
     {
         _context = context;
+        _tokenHandler = new JwtSecurityTokenHandler();
     }
 
     [HttpPost("Register")]
     public IActionResult RegisterUser([FromBody] NewUser newUser)
     {
+        if(!IsNewUserValid(newUser))
+        {
+            return BadRequest("User already exists");
+        }
         var user = new User(
             newUser.UserName,
             newUser.Password,
@@ -41,27 +48,33 @@ public class IdentityController : ControllerBase
             UserName = user.UserName
         };
         
-        if(user.Email == null) return BadRequest("Email not in valid format");
+        if(user.Email == null) return BadRequest("Invalid email");
         _context.Users.Add(dbUser);
         _context.SaveChanges();
-        
+
         return LoginUser(newUser);
     }
+
+    private bool IsNewUserValid(NewUser newUser)
+        => _context.Users
+            .Where(u => u.Email == newUser.Email || u.UserName == newUser.UserName)
+            .ToList().Count == 0;
     
     [HttpPost("Login")]
     public IActionResult LoginUser([FromBody] NewUser newUser)
     {
         var user = _context.Users.FirstOrDefault(u => u.Email == newUser.Email);
-        if(user!.Password != newUser.Password) return BadRequest("Login incorrect");
-        if(user.UserName != newUser.UserName) return BadRequest("Login incorrect");
+        if(user!.Password != newUser.Password || user.UserName != newUser.UserName)
+        {
+            return Unauthorized("Login incorrect");
+        }
         var token = GenerateToken(user);
-        return Ok(token);
+        
+        return Ok(new StringOutput(token));
     }
-
 
     private string GenerateToken( DbUser loginUser)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
         var user = new User(loginUser.UserName, loginUser.Password, loginUser.Email, loginUser.GUID);
         if(user.Email == null) return "";
         
@@ -82,8 +95,9 @@ public class IdentityController : ControllerBase
                 SecurityAlgorithms.HmacSha256Signature
             )
         };
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        
+        var token = _tokenHandler.CreateToken(tokenDescriptor);
+        return _tokenHandler.WriteToken(token);
     }
     
     public static string? GetGuidFromToken(HttpContext httpContext)

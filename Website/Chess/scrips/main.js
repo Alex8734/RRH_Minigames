@@ -29,6 +29,21 @@ function init() {
         console.log(7 - col, 7 - row);
         game.clickOn(7 - col, 7 - row);
     });
+    let main_menu = document.getElementById("main-menu");
+    let abandon = document.getElementById("abandon");
+
+    main_menu.addEventListener('click', function (event)
+    {
+
+        window.location.href = 'index.html';
+
+        return false;
+    });
+    abandon.addEventListener('click', function (event)
+    {
+
+        game.gameOver = game.myclr === "white" ? "white" : "black";
+    });
 
     //game.gameLoop();
 }
@@ -36,17 +51,5 @@ $(async function () {
     await init()
 })
 
-let main_menu = document.getElementById("main-menu");
-let abandon = document.getElementById("abandon");
 
-main_menu.addEventListener('click', function(event) {
-
-    window.location.href = 'index.html';
-
-    return false;
-});
-abandon.addEventListener('click', function(event) {
-
-    game.gameOver = game.myclr === "white" ? "white" : "black";
-});
 

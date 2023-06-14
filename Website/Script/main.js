@@ -3,7 +3,7 @@ import {HttpClient} from "./ServerClient.js";
 
 const httpClient = new HttpClient();
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     let checkbox = document.getElementById('logo-button');
     let search = document.getElementById('input');
     let filterMenu = document.getElementById('filter-menu');
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let searched = '';
 
     loadGames(currentCategory, currentSortBy, searched);
-    printStats();
+    
     search.addEventListener('keyup', () => {
         searched = search.value.toLowerCase();
         loadGames(currentCategory, currentSortBy, searched);
@@ -119,38 +119,41 @@ document.getElementById("sign-in").addEventListener("click", function() {
 function showLoginForm() {
     var loginForm = document.querySelector(".login-form");
     loginForm.style.height = '100%';
+    $("#login-info").html("")
 }
 function hideLoginForm() {
     var loginForm = document.querySelector(".login-form");
     loginForm.style.height = '0%';
+    $("#login-info").html("")
 }
 
-document.getElementById("create-account").addEventListener("click", function() {
+document.getElementById("create-account").addEventListener("click", async function() {
     event.preventDefault();
-    createAccount();
+    await createAccount();
+    await printStats();
 });
-document.getElementById("login").addEventListener("click", function() {
+document.getElementById("login").addEventListener("click", async function() {
     event.preventDefault();
-    login();
+    await login();
+    await printStats();
 });
 
-function createAccount() {
+async function createAccount() {
 
-    var name = document.getElementById("name").value;
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var confirmPassword = document.getElementById("confirm-password").value;
-
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirm-password").value;
+    let worked = false;
     if (password === confirmPassword) {
-        httpClient.registerUser({ name, email, password })
-            .then(() => {
-                document.getElementById('sign-in').style.display = 'none';
-                alert('Account created successfully!');
-            })
-            .catch(error => {
-                document.getElementById('sign-in').style.display = 'block';
-                alert('error');
-            });
+        worked = await httpClient.registerUser({ name, email, password },  (error)=>
+        {
+            $("#login-info").html(error)
+        })
+        if (worked){
+            document.getElementById('sign-in').style.display = 'none';
+            alert('Account created successfully!');
+        }
     }
     else {
         alert("Passwords were incorrect");
@@ -160,26 +163,29 @@ function createAccount() {
     document.getElementById("email").value = "";
     document.getElementById("password").value = "";
     document.getElementById("confirm-password").value = "";
-    hideLoginForm();
+    if (worked){
+        hideLoginForm();
+    }
+    
 }
 
-function login()
+async function login()
 {
-    var name = document.getElementById("name").value;
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var confirmPassword = document.getElementById("confirm-password").value;
-
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirm-password").value;
+    let worked =false;
     if (password === confirmPassword) {
-        httpClient.registerUser({ name, email, password })
-            .then(() => {
-                document.getElementById('sign-in').style.display = 'none';
-                alert('Account created successfully!');
-            })
-            .catch(error => {
-                document.getElementById('sign-in').style.display = 'block';
-                alert('error');
-            });
+        worked = await httpClient.loginUser({name, email, password},  (error) =>
+        {
+            document.getElementById("login-info").innerHTML = error;
+        })
+        if (worked)
+        {
+            document.getElementById('sign-in').style.display = 'none';
+            alert('Account logged in successfully!');
+        }
     }
     else {
         alert("Passwords were incorrect");
@@ -189,7 +195,10 @@ function login()
     document.getElementById("email").value = "";
     document.getElementById("password").value = "";
     document.getElementById("confirm-password").value = "";
-    hideLoginForm();
+    if (worked)
+    {
+        hideLoginForm();
+    }
 }
 
 export const Category = {
@@ -207,12 +216,14 @@ const SortBy = {
 const sortByKeys = Object.keys(SortBy);
 const categoryKeys = Object.keys(Category);
 
-function printStats()
+async function printStats()
 {
-    let json = httpClient.getUserStats();
     let stats = document.getElementById('stats');
     let html = '';
-
+    let json = await httpClient.getUserStats((error)=>{
+        stats.innerHTML = `<h2>loading failed...: ${error}</h2>`
+    });
+    
     for (let i = 0; i < json.length; i++)
     {
         if (json[i].Game == 'Chess')
@@ -232,4 +243,5 @@ function printStats()
                  </div>`;
         }
     }
+    stats.innerHTML = html;
 }

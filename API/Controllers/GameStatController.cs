@@ -23,23 +23,52 @@ public class GameStatController : ControllerBase
         _context = context;
     }
     [HttpPost("Stats")]
-    public IActionResult UpdatePlayerStat([FromBody] PlayerStat playerStat)
+    public IActionResult UpdatePlayerStat([FromBody] NewStat playerStat)
     {
         var userGuid = IdentityController.GetGuidFromToken(HttpContext);
         var stats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
+        var user =_context.Users.FirstOrDefault(u => u.GUID == userGuid);
         var stat = stats.FirstOrDefault(s => s.Game == playerStat.Game);
-        if (stat == null)
+        
+        if(stat != null)
         {
-            playerStat.Guid = userGuid!;
-            _context.Stats.Add(playerStat);
+            stat.PlayCount++;
+            if(playerStat.Game == AvailableGames.Chess 
+               || playerStat.Game == AvailableGames.TicTacToe)
+            {
+                stat.HighScore = playerStat.Score <= 0 ? stat.HighScore + 1 : stat.HighScore;
+            }
+            else
+            {
+                stat.HighScore = Math.Max(stat.HighScore, playerStat.Score);
+            }
+            
         }
         else
         {
-            stat.HighScore = stat.HighScore < playerStat.HighScore ? playerStat.HighScore : stat.HighScore;
-            stat.PlayCount ++;
+            var newStat = new PlayerStat()
+            {
+                Game = playerStat.Game,
+                Guid = userGuid!,
+                User = user!,
+                Id = _context.Stats.Count() +1,
+                HighScore = 0,
+                PlayCount = 1
+            };
+            if(playerStat.Game == AvailableGames.Chess 
+               || playerStat.Game == AvailableGames.TicTacToe)
+            {
+                newStat.HighScore = playerStat.Score <= 0 ? newStat.HighScore + 1 : newStat.HighScore;
+            }
+            else
+            {
+                newStat.HighScore = Math.Max(newStat.HighScore, playerStat.Score);
+            }
+            _context.Stats.Add(newStat);
         }
+        
         _context.SaveChanges();
-        return Ok();
+        return GetPlayerStat();
     }
     
     
