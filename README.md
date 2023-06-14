@@ -3,16 +3,12 @@
 
 ### planed minigames are:
 * A space shooter
+* Racing Game
 * TicTacToe 
 * Chess 
 * Minesweeper
 * Flappybird
 * Slither
-
-# Space shooter
-# TicTacToe
-# Chess
-# Minesweeper 
-# Flappy bird
+* a multiplayer Game for Class
 
 
