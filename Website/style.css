@@ -17,8 +17,13 @@
 html, body {
     height: 100%;
     background-color: var(--secondary-color);
-    background-image: url("Website/Picsound.jpg");
+    background-image: url("Pics/background.jpg");
     background-position: 50% 50%;
+}
+
+#login-info{
+    color: red;
+    font-family: Calibri, cursive ;
 }
 
 #colordings {

@@ -12,17 +12,17 @@
 </head>
 <header>
     <div class="logo-checkbox-container">
-        <img id="logo" src="Picsogo.png" alt="logo">
+        <img id="logo" src="Pics/logo.png" alt="logo">
     </div>
     <div class="logo-checkbox-container">
         <input id="logo-button" type="checkbox">
-        <img id="filter-icon" src="ICONSrichter.png" alt="logo">
+        <img id="filter-icon" src="ICONS/trichter.png" alt="logo">
     </div>
     <div id="search-bar-container"><input id="input" placeholder="Search Game" class="form-control1 search-bar" type="text" ></div>
     <div id="user-info">
         <button class="btn btn-outline-warning" id="sign-in">Sign in</button>
-        <img id="profile" src="ICONSser.png" alt="Profile">
-        <img id="settings" src="ICONSettings(1).png" alt="Settings">
+        <img id="profile" src="ICONS/user.png" alt="Profile">
+        <img id="settings" src="ICONS/settings(1).png" alt="Settings">
     </div>
 </header>
 <body>
@@ -35,9 +35,9 @@
             </div>
             <div id="filter-menu">
                 <div class="no-select dropdown-header">
-                    <img class="icon" src="ICONSrrow-down.png">
+                    <img class="icon" src="ICONS/arrow-down.png">
                     <span class="dropdown-text">Sort by</span>
-                    <img class="icon-angle-small" src="ICONSngle-small-down.png">
+                    <img class="icon-angle-small" src="ICONS/angle-small-down.png">
                 </div>
                 <div class="dropdown">
                     <ul class="no-select dropdown-list">
@@ -46,9 +46,9 @@
                     </ul>
                 </div>
                 <div class="no-select dropdown-header">
-                    <img class="icon" src="ICONSoystick.png">
+                    <img class="icon" src="ICONS/joystick.png">
                     <span class="dropdown-text">Category</span>
-                    <img class="icon-angle-small" src="ICONSngle-small-down.png">
+                    <img class="icon-angle-small" src="ICONS/angle-small-down.png">
                 </div>
                 <div class="dropdown">
                     <ul class="no-select dropdown-list" data-name="category">
@@ -63,7 +63,7 @@
     <div id="settings-nav">
         <div id="settings-head">
             <h1 id="settings-text">Settings</h1>
-            <img src="ICONScons8-close-window-50.png" id="close"></img>
+            <img src="ICONS/icons8-close-window-50.png" id="close"></img>
         </div>
         <h2 class="headOfSection">Styles</h2>
         <div id="designs">
@@ -102,8 +102,9 @@
                                 <input type="password" class="form-control" id="confirm-password" placeholder="confirm-password">
                             </div>
                             <div class="d-flex flex-row align-items-center justify-content-between">
-                                <button class="btn btn1 btn-primary1" id="create-account">Login</button>
-                                <button class="btn btn1 btn-primary1" id="login">Create Account</button>
+                                <button class="btn btn1 btn-primary1" id="login">Login</button>
+                                <h1 id="login-info"></h1>
+                                <button class="btn btn1 btn-primary1" id="create-account">Create Account</button>
                             </div>
                         </form>
                     </div>
@@ -117,7 +118,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
-<script src="Scriptain.js" defer="defer" type="module"></script>
-<script src="Scriptettings.js" defer="defer" type="module"></script>
+<script src="Script/main.js" defer="defer" type="module"></script>
+<script src="Script/settings.js" defer="defer" type="module"></script>
 </body>
 </html>

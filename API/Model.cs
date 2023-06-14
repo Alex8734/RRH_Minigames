@@ -23,11 +23,13 @@ public class PlayerStat
     public int Id { get; set; }
     [JsonIgnore]
     public string Guid { get; set; } = default!;
-    public AvailableGames Game { get; set; }
+    public AvailableGames Game { get; set; } = default!;
     public int HighScore { get; set; }
     public int PlayCount { get; set; }
     
 }
+
+public record NewStat(AvailableGames Game, int Score);
 
 public record QueueingMember(DbUser User, AvailableGames Game);
 
@@ -41,6 +43,15 @@ public class DbUser
     public List<PlayerStat> Stats { get; set; } = default!;
     //public List<string> PlayedGames { get; set; } = default!;
 }
+
+public class StringOutput
+{
+    public StringOutput(string value)
+    {
+        Value = value;
+    }
+    public string Value { get; set; } = default!;
+}   
 
 public class NewUser
 {
