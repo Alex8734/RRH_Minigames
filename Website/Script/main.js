@@ -125,14 +125,12 @@ $("#login-form").on("click", function (event)
 $("#sign-up-switch").click(function (event)
 {
     event.preventDefault();
-    document.getElementById("login-form").classList.add("card-back");
-    document.getElementById("signup-form").classList.remove("d-none");
+    $("#card-switcher").removeClass("isLogin");
+    console.log("clicked")
 });
 
 $("#sign-in-switch").click(function (event){
-    event.preventDefault()
-    document.getElementById("login-form").classList.remove("card-back");
-    document.getElementById("signup-form").classList.add("d-none");
+   $("#card-switcher").addClass("isLogin")
 })
 
 document.getElementById("sign-in").addEventListener("click", function() {
