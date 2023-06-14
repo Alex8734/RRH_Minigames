@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<RootNamespace>RRH_Minigames_API</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Pictures\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Data\.gitkeep">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Remove="Properties\launchSettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="API\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\tools\Roslyn45\csc.exe.config" />
+	  <_ContentIncludedByDefault Remove="API\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\tools\Roslyn45\vbc.exe.config" />
+	  <_ContentIncludedByDefault Remove="API\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\tools\Roslyn45\VBCSCompiler.exe.config" />
+	  <_ContentIncludedByDefault Remove="API\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\tools\RoslynLatest\csc.exe.config" />
+	  <_ContentIncludedByDefault Remove="API\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\tools\RoslynLatest\csi.exe.config" />
+	  <_ContentIncludedByDefault Remove="API\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\tools\RoslynLatest\vbc.exe.config" />
+	  <_ContentIncludedByDefault Remove="API\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\tools\RoslynLatest\VBCSCompiler.exe.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Endpoints.cs" />
+	</ItemGroup>
+
+</Project>

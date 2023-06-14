@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     display: flex;
-    background-image: url("images/space2.png");
+    background-image: url("space2.png");
 }
 
 #canvas {
@@ -44,7 +44,7 @@ a {
     top: 5%;
     height: 15%;
     aspect-ratio: 1/1;
-    background: url("images/saturn.png") no-repeat center center;
+    background: url("saturn.png") no-repeat center center;
     background-size: cover;
     border: none;
     cursor: pointer;
