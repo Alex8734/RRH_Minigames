@@ -4,18 +4,22 @@
     --border-color: #ff0000;
     --box-shadow: rgba(255, 255, 255, 0.5);
     --settings-background: #212529;
+    --transparent-background: rgba(0, 0, 0, 0.87);
 }
 
 .dropdown {
     display: block;
     list-style: none;
     position: relative;
-    left: 0;
+    left: 0%;
     width: 100%;
     z-index: 0;
     transition: height 0.5s ease-in-out;
     height: 0;
     overflow: hidden;
+    border-left: 0.2rem var(--border-color) solid;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .no-select {
@@ -92,7 +96,7 @@
         color: white;
     }
     50% {
-        color: var(--primary-color);
+        color: var(--border-color);
     }
     100% {
         color: white;
@@ -124,7 +128,7 @@
 }
 
 #settings-head {
-    border-bottom: var(--secondary-color) 0.1rem solid;
+    border-bottom: var(--box-shadow) 0.1rem solid;
     margin: 0;
     padding-left: 2%;
     padding-bottom: 2%;

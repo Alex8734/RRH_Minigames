@@ -20,12 +20,12 @@ export class Car {
 
         if (this.pos.y >= canvas.height / 1.99625)
         {
-            let speed = ((x * deltatime) - (speedMultiplier  * 30));
+            let speed = ((x * deltatime) - (speedMultiplier  * 10));
             this.pos.x += speed;
         }
         else
         {
-            this.pos.x -= ((x * deltatime) * speedMultiplier);
+            this.pos.x -= ((x * deltatime) * speedMultiplier * 2);
         }
     }
 

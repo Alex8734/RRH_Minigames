@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let dropdowns = document.getElementsByClassName('dropdown')
     let dropdownLists = document.getElementsByClassName('dropdown-list')
     const gamesContainer = document.getElementById('start-page');
-    let currentCategory = Category.None;
-    let currentSortBy = SortBy.None;
+    let currentCategory = Category.none;
+    let currentSortBy = SortBy.none;
     let searched = '';
 
-    loadGames(Category.None, SortBy.None, searched);
-
+    loadGames(currentCategory, currentSortBy, searched);
+    printStats();
     search.addEventListener('keyup', () => {
         searched = search.value.toLowerCase();
         loadGames(currentCategory, currentSortBy, searched);
@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             filterMenu.style.width = '0%';
             gamesContainer.style.width = '100%';
         } else {
-            filterMenu.style.width = '15%';
-            gamesContainer.style.width = '85%';
+            filterMenu.style.width = '20%';
+            gamesContainer.style.width = '80%';
         }
     });
 
@@ -56,12 +56,30 @@ document.addEventListener('DOMContentLoaded', function() {
         let items = dropdownLists[j].children;
         for (let k = 0; k < items.length; k++) {
             items[k].addEventListener('click', function() {
+
+                if (items[k].classList.contains('selected'))
+                {
+                    if (j === 0)
+                    {
+                        currentSortBy = sortByKeys[2]
+                    }
+                    else if (j === 1)
+                    {
+                        currentCategory = categoryKeys[3];
+                    }
+                    items[k].classList.remove('selected');
+                    loadGames(currentCategory, currentSortBy, searched);
+                    return;
+                }
+
                 for (let l = 0; l < items.length; l++) {
                     if (l !== k) {
                         items[l].classList.remove('selected');
                     }
                 }
+
                 items[k].classList.add('selected');
+
                 if (j === 0)
                 {
                     currentSortBy = sortByKeys[k]
@@ -70,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 {
                     currentCategory = categoryKeys[k];
                 }
-                loadGames(currentCategory, currentSortBy, searched)
+                loadGames(currentCategory, currentSortBy, searched);
             });
         }
     }
@@ -79,11 +97,14 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         gamesContainer.innerHTML = '';
         let games = []
-        games.push(new Game('', 'SpaceDoger', 'SpaceShooter/spaceGame.html','./Pics/games/DALL·E 2023-05-24 11.43.22 - make a cover for a game where you fly in space.png', Category.Space))
+        games.push(new Game('', 'Starship Dodge', 'SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
+        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
+        games.push(new Game('', 'Chess', 'Chess/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
+
 
         for (let game of games)
         {
-            if ((category === game.category || category === Category.None) && (game.name.toLowerCase().startsWith(searched) || searched === ''))
+            if ((category === game.category || category === Category.none) && (game.name.toLowerCase().startsWith(searched) || searched === ''))
             {
                 gamesContainer.innerHTML += game.getHtml();
             }
@@ -95,7 +116,6 @@ document.getElementById("sign-in").addEventListener("click", function() {
     showLoginForm();
 });
 
-// Function to show the login form
 function showLoginForm() {
     var loginForm = document.querySelector(".login-form");
     loginForm.style.height = '100%';
@@ -115,7 +135,7 @@ document.getElementById("login").addEventListener("click", function() {
 });
 
 function createAccount() {
-    // Retrieve the entered form data
+
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
@@ -176,13 +196,40 @@ export const Category = {
     OneVOne: '1v1',
     Space: 'Space',
     Drive: 'Drive',
-    None: 'none',
+    none: 'none',
 };
 
 const SortBy = {
     Players: 'players',
     Release: 'release',
-    None: 'none',
+    none: 'none',
 };
 const sortByKeys = Object.keys(SortBy);
 const categoryKeys = Object.keys(Category);
+
+function printStats()
+{
+    let json = httpClient.getUserStats();
+    let stats = document.getElementById('stats');
+    let html = '';
+
+    for (let i = 0; i < json.length; i++)
+    {
+        if (json[i].Game == 'Chess')
+        {
+            html += `<div id="game-stats">
+                    <h2>${json[i].Game}</h2>
+                    <p>Losses: ${json[i].HighScore}<br>
+                    Wins: ${json[i].PlayCount}</p>
+                 </div>`;
+        }
+        else
+        {
+            html += `<div id="game-stats">
+                    <h2>${json[i].Game}</h2>
+                    <p>Highscore: ${json[i].HighScore}<br>
+                    Playcount: ${json[i].PlayCount}</p>
+                 </div>`;
+        }
+    }
+}

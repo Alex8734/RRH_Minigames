@@ -2,23 +2,17 @@ export class HttpClient {
 
     address = "10.9.11.1";
 
-    getUserInfo()
+    async getUserStats()
     {
-        fetch(`${this.address}/User`, {
+        const response = await fetch(`${this.address}/User/stats`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "authentication": localStorage.getItem("token"),
             },
-        }).then(response => response.json())
-        .then(data => {
-            const token = data.token;
-            localStorage.setItem('token', token);
-            console.log('Token saved successfully!');
-        })
-        .catch(error => {
-            console.error('Error:', error);
         });
+
+        return await response.json()
     }
 
     login(user)

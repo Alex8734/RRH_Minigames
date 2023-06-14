@@ -34,6 +34,7 @@ function changeColor(index)
             document.documentElement.style.setProperty('--border-color', '#000000');
             document.documentElement.style.setProperty('--box-shadow', 'rgba(255, 255, 255, 0.5)');
             document.documentElement.style.setProperty('--settings-background', '#2605d4');
+            document.documentElement.style.setProperty('--transparent-background', 'rgba(10, 19, 122, 0.87)');
             break;
         case 'black':
             document.documentElement.style.setProperty('--primary-color', '#000000');
@@ -41,13 +42,15 @@ function changeColor(index)
             document.documentElement.style.setProperty('--border-color', '#ff0000');
             document.documentElement.style.setProperty('--box-shadow', 'rgba(255, 255, 255, 0.5)');
             document.documentElement.style.setProperty('--settings-background', '#212529');
+            document.documentElement.style.setProperty('--transparent-background', 'rgba(0, 0, 0, 0.87)');
             break;
         case 'orange':
             document.documentElement.style.setProperty('--primary-color', '#ff8800');
             document.documentElement.style.setProperty('--secondary-color', '#ff9c34');
-            document.documentElement.style.setProperty('--border-color', '#ff8800');
+            document.documentElement.style.setProperty('--border-color', '#ff0000');
             document.documentElement.style.setProperty('--box-shadow', 'rgba(255, 255, 255, 0.5)');
             document.documentElement.style.setProperty('--settings-background', '#ff8800');
+            document.documentElement.style.setProperty('--transparent-background', 'rgba(177, 114, 20, 0.87)');
             break;
     }
 }

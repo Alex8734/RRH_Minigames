@@ -24,8 +24,10 @@ export function init ()
     speedMultiplier = 1;
     lastTime = 0;
     money = 0;
-    canvas.height = 2250;
-    canvas.width = 4000;
+    canvas.height = 1125;
+    canvas.width = 2000;
+    canvas.style.height = Math.floor(canvas.clientHeight * window.devicePixelRatio) / 1.2 + 'px';
+    canvas.style.width = Math.floor(canvas.clientWidth * window.devicePixelRatio) / 1.2 + 'px';
     console.log(canvas.width);
     console.log(canvas.height);
     lines = [canvas.height / 4.5, canvas.height / 2.8125, canvas.height / 1.99625, canvas.height / 1.55];
@@ -49,9 +51,15 @@ function gameLoop() {
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
 
+    // Calculate the scaling factor based on the canvas size
+    const scalingFactor = canvas.width / 2000;
+
+    // Adjust the deltaTime based on the scaling factor
+    deltaTime *= scalingFactor;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    DrawAndMoveBackground();
+    DrawAndMoveBackground(deltaTime);
 
     if (keysPressed["w"]) {
         car.moveUp(deltaTime);
@@ -65,6 +73,7 @@ function gameLoop() {
     car.draw();
     drawCarsAndMove(deltaTime, speedMultiplier);
     printUI(money);
+
     if (!checkColiding(car))
     {
         if (keysPressed["d"] && speedMultiplier < 3)
@@ -111,6 +120,7 @@ function gameLoop() {
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', (event) =>{
     playButton = document.getElementById('play-again');
     canvas = document.getElementById("canvas");
@@ -147,11 +157,11 @@ function drawCarsAndMove(deltatime, speedMultiplier)
     }
 }
 
-function DrawAndMoveBackground()
+function DrawAndMoveBackground(deltaTime)
 {
-    bg1.pos.x -= (canvas.height / 250) + speedMultiplier * 20;
-    bg2.pos.x -= (canvas.height / 250) + speedMultiplier * 20;
-    bg3.pos.x -= (canvas.height / 250) + speedMultiplier * 20;
+    bg1.pos.x -= (canvas.height / 250) + speedMultiplier * (deltaTime / 3) * 2;
+    bg2.pos.x -= (canvas.height / 250) + speedMultiplier * (deltaTime / 3) * 2;
+    bg3.pos.x -= (canvas.height / 250) + speedMultiplier * (deltaTime / 3) * 2;
 
     if (bg1.pos.x <= -bg1.size.x) {
         bg1.pos.x = bg3.pos.x + bg3.size.x;
@@ -188,7 +198,7 @@ function checkForValidSpawn(spawnY)
 {
     for (let i = 0; i < cars.length; i++)
     {
-        if (checkSquareCollision(cars[i].pos.x, cars[i].pos.y, canvas.width, spawnY, cars[i].size.x))
+        if (checkSquareCollision(cars[i].pos.x, cars[i].pos.y, canvas.width, spawnY, cars[i].size.x + 20))
         {
             return false;
         }
