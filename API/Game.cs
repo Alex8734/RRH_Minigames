@@ -34,6 +34,12 @@ public static class GameManager
         return newGame;
     }
     
+    public static string GetGameId(string userGuid)
+    {
+        var game = PlayingGames.Find(g => g.Player1Guid == userGuid || g.Player2Guid == userGuid);
+        return game?.GameId ?? "";
+    }
+    
     public static DbUser? EndGame(Game game, DataContext ctx)
     {
         PlayingGames.Remove(game);
