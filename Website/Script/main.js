@@ -3,6 +3,21 @@ import {HttpClient} from "./ServerClient.js";
 
 const httpClient = new HttpClient();
 
+export const Category = {
+    OneVOne: '1v1',
+    Space: 'Space',
+    Drive: 'Drive',
+    none: 'none',
+};
+
+const SortBy = {
+    Players: 'players',
+    Release: 'release',
+    none: 'none',
+};
+const sortByKeys = Object.keys(SortBy);
+const categoryKeys = Object.keys(Category);
+
 document.addEventListener('DOMContentLoaded', async function() {
     let checkbox = document.getElementById('logo-button');
     let search = document.getElementById('input');
@@ -122,17 +137,20 @@ $("#login-form").on("click", function (event)
     }
 });
 
+const card = document.getElementById('card');
+function flipCard() {
+    card.classList.toggle('flip');
+}
+
 $("#sign-up-switch").click(function (event)
 {
     event.preventDefault();
-    document.getElementById("login-form").classList.add("card-back");
-    document.getElementById("signup-form").classList.remove("d-none");
+    flipCard();
 });
 
 $("#sign-in-switch").click(function (event){
     event.preventDefault()
-    document.getElementById("login-form").classList.remove("card-back");
-    document.getElementById("signup-form").classList.add("d-none");
+    flipCard();
 })
 
 document.getElementById("sign-in").addEventListener("click", function() {
@@ -216,21 +234,6 @@ async function login()
         hideLoginForm();
     }
 }
-
-export const Category = {
-    OneVOne: '1v1',
-    Space: 'Space',
-    Drive: 'Drive',
-    none: 'none',
-};
-
-const SortBy = {
-    Players: 'players',
-    Release: 'release',
-    none: 'none',
-};
-const sortByKeys = Object.keys(SortBy);
-const categoryKeys = Object.keys(Category);
 
 async function printStats()
 {

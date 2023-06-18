@@ -1,11 +1,24 @@
-import {HttpClient} from "../../Script/ServerClient";
-import {game} from "../../Chess/scrips/main";
+import {HttpClient} from "../../Script/ServerClient.js";
+
+const symbol = Object.freeze({
+    X: "X",
+    O: "O",
+    Empty: "Empty"
+});
+
+const gameStatus = Object.freeze({
+    PlayerWon: "PlayerWon",
+    EnemyWon: "EnemyWon",
+    Draw: "Draw",
+    Running: "Running",
+    NoGame: "NoGame"
+});
 
 const httPClient = new HttpClient();
 let canvas;
 let ctx;
 let currentGameId = "queueing";
-let currentState = [[symbol.Empty, symbol.Empty, symbol.Empty][symbol.Empty, symbol.Empty, symbol.Empty][symbol.Empty, symbol.Empty, symbol.Empty]];
+let currentState = [[symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty]];
 let playerSymbol = symbol.X;
 let enemySymbol = symbol.O;
 let status = gameStatus.NoGame;
@@ -26,7 +39,7 @@ async function init()
 
     while(currentGameId == "queueing")
     {
-        currentGameId = httPClient.getGameID();
+        currentGameId = await httPClient.getGameID();
         status = gameStatus.Running;
     }
 
@@ -171,19 +184,5 @@ function drawSymbol(symbol, row, col) {
     ctx.fillStyle = symbolColor;
     ctx.fillText(symbol, centerX, centerY);
 }
-
-const symbol = Object.freeze({
-    X: "X",
-    O: "O",
-    Empty: "Empty"
-})
-
-const gameStatus = Object.freeze({
-    PlayerWon: "PlayerWon",
-    EnemyWon: "EnemyWon",
-    Draw: "Draw",
-    Running: "Running",
-    NoGame: "NoGame"
-})
 
 

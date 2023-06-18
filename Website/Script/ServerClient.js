@@ -121,6 +121,7 @@ export class HttpClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
             body: JSON.stringify(game)
@@ -160,6 +161,7 @@ export class HttpClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
             body: JSON.stringify(game)
