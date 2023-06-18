@@ -195,6 +195,46 @@ a {
     padding-bottom: 1%;
 }
 
+.custom-floating {
+    position: relative;
+}
+
+.custom-floating input {
+    padding-top: 1.425rem; /* Adjust the padding as needed */
+}
+
+.custom-floating label {
+    position: absolute;
+    top: 0.25rem; /* Adjust the top position as needed */
+    left: 0.7rem;
+    pointer-events: none;
+    color: #adb5bd; /* Set the color of the label */
+    transition: all 0.2s;
+}
+
+.custom-floating input:focus ~ label,
+.custom-floating input:not(:placeholder-shown) ~ label {
+    font-size: 0.775rem; /* Adjust the font size when input is focused or has value */
+    color: #6c757d; /* Set the color of the label when input is focused or has value */
+}
+
+
+.card {
+    animation: spin-card 2s ease-in-out;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+@keyframes spin-card {
+    0% {
+        transform: rotateY(0);
+    }
+    100% {
+        transform: rotateY(180deg);
+        
+    }
+}
+
 .game:hover {
     border: var(--primary-color) solid;
     scale: 105%;
@@ -221,13 +261,13 @@ a {
     bottom: -20%;
 }
 
-.login-form {
+#login-form {
     position: fixed;
-    height: 0%;
+    height: 0;
     width: 100%;
-    top: 0%;
+    top: 0;
     z-index: 100;
-    background: rgba(0, 0, 0, 0.66);
+    background: rgba(255, 255, 255, 0.3);
     overflow: hidden;
     transition: height 0.5s ease-in-out;
 }
@@ -245,22 +285,8 @@ a:hover{
     border: 0.40rem solid #f8f9fa;
     top: 10%;
 }
-.form-control{
-    background-color: #f8f9fa;
-    padding: 20px;
-    padding: 25px 15px;
-    margin-bottom: 1.3rem;
-}
 
-.form-control:focus {
 
-    color: #000000;
-    background-color: #ffffff;
-    border: 3px solid #da5767;
-    outline: 0;
-    box-shadow: none;
-
-}
 
 .btn1{
     padding: 0.6rem 1.2rem;
@@ -291,7 +317,6 @@ a:hover{
     appearance: none;
     border-radius: 0.375rem;
 }
-
 #stats {
     display: block;
     height: 100%;

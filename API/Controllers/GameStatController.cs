@@ -79,7 +79,7 @@ public class GameStatController : ControllerBase
         var userGuid = IdentityController.GetGuidFromToken(HttpContext);
         var stats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
         
-        return Ok(stats);
+        return Ok(new JsonOutput<PlayerStat[]>(stats.ToArray()));
         
         /*Console.WriteLine("UserGuid: " + userGuid);
         userGuid = Guid.NewGuid().ToString();

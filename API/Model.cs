@@ -44,13 +44,13 @@ public class DbUser
     //public List<string> PlayedGames { get; set; } = default!;
 }
 
-public class StringOutput
+public class JsonOutput<T>
 {
-    public StringOutput(string value)
+    public JsonOutput(T value)
     {
         Value = value;
     }
-    public string Value { get; set; } = default!;
+    public T Value { get; set; } = default!;
 }   
 
 public class NewUser

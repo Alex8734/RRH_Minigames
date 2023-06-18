@@ -159,14 +159,3 @@
     display: block;
     color: white;
 }
-
-.form-check-input:checked {
-    background-color: var(--secondary-color);
-    border-color: var(--box-shadow);
-}
-
-.form-check-input:focus {
-    border-color: var(--secondary-color);
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem var(--box-shadow);
-}

@@ -70,7 +70,7 @@ public class IdentityController : ControllerBase
         }
         var token = GenerateToken(user);
         
-        return Ok(new StringOutput(token));
+        return Ok(new JsonOutput<string>(token));
     }
 
     private string GenerateToken( DbUser loginUser)

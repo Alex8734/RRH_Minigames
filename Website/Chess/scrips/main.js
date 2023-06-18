@@ -4,7 +4,7 @@ export let game;
 export let ctx;
 
 let standardName = "Unknown User";
-let myclr = Math.floor(Math.random() * 2) === 1 ? "white" : "black";
+let myclr = "Black"
 function init() {
     const canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
