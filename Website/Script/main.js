@@ -168,12 +168,12 @@ export function hideLoginForm() {
     $("#login-info").html("")
 }
 
-document.getElementById("create-account").addEventListener("click", async function() {
+document.getElementById("sign-up").addEventListener("click", async function() {
     event.preventDefault();
     await createAccount();
     await printStats();
 });
-document.getElementById("login").addEventListener("click", async function() {
+document.getElementById("log-in").addEventListener("click", async function() {
     event.preventDefault();
     await login();
     await printStats();
@@ -181,10 +181,10 @@ document.getElementById("login").addEventListener("click", async function() {
 
 async function createAccount() {
 
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
+    let name = document.getElementById("username").value;
+    let email = document.getElementById("Email").value;
     let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirm-password").value;
+    let confirmPassword = document.getElementById("password-Confirm").value;
     let worked = false;
     if (password === confirmPassword) {
         worked = await httpClient.registerUser({ name, email, password },  (error)=>
@@ -200,10 +200,10 @@ async function createAccount() {
         alert("Passwords were incorrect");
     }
 
-    document.getElementById("typeEmailX").value = "";
-    document.getElementById("typeUsernameX").value = "";
-    document.getElementById("typePasswordX").value = "";
-    document.getElementById("typePasswordAgainX").value = "";
+    document.getElementById("username").value = "";
+    document.getElementById("Email").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("password-Confirm").value = "";
     if (worked){
         hideLoginForm();
     }
@@ -212,10 +212,10 @@ async function createAccount() {
 
 async function login()
 {
-    let name = document.getElementById("typeEmailX").value;
-    let password = document.getElementById("typePasswordX").value;
+    let name = document.getElementById("emailX").value;
+    let password = document.getElementById("passwordX").value;
     let worked =false;
-    worked = await httpClient.loginUser({name, email, password},  (error) =>
+    worked = await httpClient.loginUser({name, password},  (error) =>
     {
         document.getElementById("login-info").innerHTML = error;
     })
@@ -225,10 +225,9 @@ async function login()
         alert('Account logged in successfully!');
     }
 
-    document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("confirm-password").value = "";
+    document.getElementById("emailX").value = "";
+    document.getElementById("passwordX").value = "";
+
     if (worked)
     {
         hideLoginForm();
