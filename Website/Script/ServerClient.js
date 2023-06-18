@@ -1,6 +1,6 @@
 export class HttpClient {
 
-    address = "http://localhost:5000";
+    address = "http://localhost:5001";
 
     async getUserStats(onError)
     {
@@ -73,7 +73,7 @@ export class HttpClient {
     }
 
     async getLastMove(gameId) {
-        const response = await fetch(`${this.address}/Chess/lastMove`, {
+        const response = await fetch(`${this.address}/Chess/LastMove`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -143,7 +143,7 @@ export class HttpClient {
 
     async getLastMove(gameId)
     {
-        const response = await fetch(`${this.address}/Game/LastMove/${gameId}`, {
+        const response = await fetch(`${this.address}/Game/LastMove/${gameId.toString()}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -157,6 +157,11 @@ export class HttpClient {
 
     async postLastMove(gameId, move)
     {
+        const data = {
+            gameId: gameId,
+            move: move,
+        };
+
         const response = await fetch(`${this.address}/Game/LastMove`, {
             method: "POST",
             headers: {
@@ -164,7 +169,7 @@ export class HttpClient {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
-            body: JSON.stringify(game)
+            body: JSON.stringify(data)
         })
 
         const respData = await response.json();

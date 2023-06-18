@@ -17,7 +17,7 @@ const gameStatus = Object.freeze({
 const httPClient = new HttpClient();
 let canvas;
 let ctx;
-let currentGameId = "queueing";
+let currentGameId = "Queueing";
 let currentState = [[symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty]];
 let playerSymbol = symbol.X;
 let enemySymbol = symbol.O;
@@ -37,7 +37,7 @@ async function init()
 {
     await httPClient.queue("TicTacToe");
 
-    while(currentGameId === "queueing")
+    while(currentGameId === "Queueing")
     {
         currentGameId = await httPClient.getGameID();
     }
@@ -54,7 +54,7 @@ async function gameLoop()
         while(status == gameStatus.Running)
         {
             let click = await getClick();
-            await httPClient.pushMove(currentGameId, click);
+            await httPClient.postLastMove(currentGameId, click);
             updateState(click, playerSymbol);
             checkForGameFinished();
 
@@ -71,7 +71,7 @@ async function gameLoop()
             checkForGameFinished();
 
             let click = await getClick();
-            await httPClient.pushMove(currentGameId, click);
+            await httPClient.postLastMove(currentGameId, click);
             updateState(click, playerSymbol);
             checkForGameFinished();
         }
