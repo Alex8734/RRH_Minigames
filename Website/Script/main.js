@@ -214,7 +214,7 @@ async function createAccount()
 
 async function login()
 {
-    let name = document.getElementById("emailX").value;
+    let name = document.getElementById("usernameX").value;
     let password = document.getElementById("passwordX").value;
     let worked =false;
     worked = await httpClient.loginUser({name, password},  (error) =>
