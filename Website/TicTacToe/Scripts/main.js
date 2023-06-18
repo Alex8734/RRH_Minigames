@@ -42,7 +42,7 @@ async function gameLoop()
         {
             let click = await getClick();
             await httPClient.pushMove(currentGameId, click);
-            updateState(click, enemySymbol);
+            updateState(click, playerSymbol);
             checkForGameFinished();
 
             let json = await httPClient.getLastMove(currentGameId);
@@ -59,7 +59,7 @@ async function gameLoop()
 
             let click = await getClick();
             await httPClient.pushMove(currentGameId, click);
-            updateState(click, enemySymbol);
+            updateState(click, playerSymbol);
             checkForGameFinished();
         }
     }
@@ -108,17 +108,68 @@ function drawGame() {
 
 function checkForGameFinished()
 {
+    for (let row = 0; row < 3; row++) {
+        if (
+            currentState[row][0] != symbol.Empty &&
+            currentState[row][0] == currentState[row][1] &&
+            currentState[row][1] == currentState[row][2]
+        ) {
+            status = currentState[row][0] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
+            return;
+        }
+    }
 
+    for (let col = 0; col < 3; col++) {
+        if (
+            currentState[0][col] != symbol.Empty &&
+            currentState[0][col] == currentState[1][col] &&
+            currentState[1][col] == currentState[2][col]
+        ) {
+            status = currentState[0][col] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
+            return;
+        }
+    }
+
+    if (
+        currentState[0][0] != symbol.Empty &&
+        currentState[0][0] == currentState[1][1] &&
+        currentState[1][1] == currentState[2][2]
+    ) {
+        status = currentState[0][0] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
+        return;
+    }
+
+    if (
+        currentState[0][2] != symbol.Empty &&
+        currentState[0][2] == currentState[1][1] &&
+        currentState[1][1] == currentState[2][0]
+    ) {
+        status = currentState[0][2] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
+        return;
+    }
 }
 
-function updateState(coordinates, symbol)
-{
-
+function updateState(coordinates, symbol) {
+    const [row, col] = coordinates.split(":").map(Number);
+    currentState[row][col] = symbol;
+    drawSymbol(symbol, row, col);
 }
 
-function drawSymbol(symbol)
-{
+function drawSymbol(symbol, row, col) {
+    const cellWidth = canvas.width / 3;
+    const cellHeight = canvas.height / 3;
 
+    const centerX = cellWidth * col + cellWidth / 2;
+    const centerY = cellHeight * row + cellHeight / 2;
+
+    ctx.font = `${cellWidth / 2}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const symbolColor = symbol === symbol.X ? 'blue' : 'red';
+
+    ctx.fillStyle = symbolColor;
+    ctx.fillText(symbol, centerX, centerY);
 }
 
 const symbol = Object.freeze({
@@ -128,8 +179,8 @@ const symbol = Object.freeze({
 })
 
 const gameStatus = Object.freeze({
-    X: "X",
-    O: "O",
+    PlayerWon: "PlayerWon",
+    EnemyWon: "EnemyWon",
     Draw: "Draw",
     Running: "Running",
     NoGame: "NoGame"
