@@ -52,7 +52,11 @@ public class IdentityController : ControllerBase
         _context.Users.Add(dbUser);
         _context.SaveChanges();
 
-        return LoginUser(newUser);
+        return Login(new LoginUser()
+        {
+            Identity = newUser.UserName,
+            Password = newUser.Password
+        });
     }
 
     private bool IsNewUserValid(NewUser newUser)
@@ -61,10 +65,10 @@ public class IdentityController : ControllerBase
             .ToList().Count == 0;
     
     [HttpPost("Login")]
-    public IActionResult LoginUser([FromBody] NewUser newUser)
+    public IActionResult Login([FromBody] LoginUser loginUser)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Email == newUser.Email);
-        if(user!.Password != newUser.Password || user.UserName != newUser.UserName)
+        var user = _context.Users.FirstOrDefault(u => u.Email == loginUser.Identity || u.UserName == loginUser.Identity);
+        if(user == null || user!.Password != loginUser.Password)
         {
             return Unauthorized("Login incorrect");
         }
