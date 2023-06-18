@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         searched = search.value.toLowerCase();
         loadGames(currentCategory, currentSortBy, searched);
     });
-
+    
+    $("#sign-in-switch").on('click')
+    
     checkbox.addEventListener('change', function() {
         if (checkbox.checked) {
             filterMenu.style.width = '0%';
@@ -112,17 +114,38 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
+$("#login-form").on("click", function (event)
+{
+    if (!$(event.target).closest(".card-body").length)
+    {
+        hideLoginForm()
+    }
+});
+
+$("#sign-up-switch").click(function (event)
+{
+    event.preventDefault();
+    document.getElementById("login-form").classList.add("card-back");
+    document.getElementById("signup-form").classList.remove("d-none");
+});
+
+$("#sign-in-switch").click(function (event){
+    event.preventDefault()
+    document.getElementById("login-form").classList.remove("card-back");
+    document.getElementById("signup-form").classList.add("d-none");
+})
+
 document.getElementById("sign-in").addEventListener("click", function() {
     showLoginForm();
 });
 
 function showLoginForm() {
-    var loginForm = document.querySelector(".login-form");
+    var loginForm = document.querySelector("#login-form");
     loginForm.style.height = '100%';
     $("#login-info").html("")
 }
-function hideLoginForm() {
-    var loginForm = document.querySelector(".login-form");
+export function hideLoginForm() {
+    var loginForm = document.querySelector("#login-form");
     loginForm.style.height = '0%';
     $("#login-info").html("")
 }
@@ -159,10 +182,10 @@ async function createAccount() {
         alert("Passwords were incorrect");
     }
 
-    document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("confirm-password").value = "";
+    document.getElementById("typeEmailX").value = "";
+    document.getElementById("typeUsernameX").value = "";
+    document.getElementById("typePasswordX").value = "";
+    document.getElementById("typePasswordAgainX").value = "";
     if (worked){
         hideLoginForm();
     }
@@ -171,24 +194,17 @@ async function createAccount() {
 
 async function login()
 {
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirm-password").value;
+    let name = document.getElementById("typeEmailX").value;
+    let password = document.getElementById("typePasswordX").value;
     let worked =false;
-    if (password === confirmPassword) {
-        worked = await httpClient.loginUser({name, email, password},  (error) =>
-        {
-            document.getElementById("login-info").innerHTML = error;
-        })
-        if (worked)
-        {
-            document.getElementById('sign-in').style.display = 'none';
-            alert('Account logged in successfully!');
-        }
-    }
-    else {
-        alert("Passwords were incorrect");
+    worked = await httpClient.loginUser({name, email, password},  (error) =>
+    {
+        document.getElementById("login-info").innerHTML = error;
+    })
+    if (worked)
+    {
+        document.getElementById('sign-in').style.display = 'none';
+        alert('Account logged in successfully!');
     }
 
     document.getElementById("name").value = "";

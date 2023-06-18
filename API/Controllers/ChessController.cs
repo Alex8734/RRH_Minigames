@@ -38,7 +38,7 @@ public class ChessController : ControllerBase
     {
         var game = GameManager.PlayingGames.Find(g => g.GameId == gameId);
         if(game == null) return NotFound();
-        return Ok(game.Moves[^1].MoveString);
+        return Ok(new JsonOutput<string>( game.Moves[^1].MoveString));
     }
     
     [HttpGet("players")]
@@ -49,7 +49,7 @@ public class ChessController : ControllerBase
         var player1 = _context.Users.FirstOrDefault(u => u.GUID == game!.Player1Guid);
         var player2 = _context.Users.FirstOrDefault(u => u.GUID == game!.Player2Guid);
         
-        return Ok(new JsonArray{ player1!.UserName, player2!.UserName});
+        return Ok(new JsonOutput<string[]>(new[]{ player1!.UserName, player2!.UserName}));
     }
     
     [HttpGet("GameStarted")]
@@ -57,7 +57,7 @@ public class ChessController : ControllerBase
     {
         var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId);
         if(game == null) return NotFound();
-        return Ok(game.Player2Guid != null);
+        return Ok(new JsonOutput<bool>( game.Player2Guid != null));
     }
     
     [HttpPost("queue")]
@@ -68,7 +68,7 @@ public class ChessController : ControllerBase
         if(user == null) return BadRequest($"User: {userGuid} not found");
         if(!Enum.TryParse<AvailableGames>(game, out var gameEnum)) return BadRequest();
         if (!GameManager.Queue(user!, gameEnum, _context, out var newGame)) return BadRequest("already queued");
-        if(newGame == null) return Ok("Queueing");
-        return Ok(newGame.GameId);
+        if(newGame == null) return Ok(new JsonOutput<string>("Queueing"));
+        return Ok(new JsonOutput<string>(newGame.GameId));
     }
 }
