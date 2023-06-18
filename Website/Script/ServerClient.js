@@ -115,4 +115,17 @@ export class HttpClient {
         return  response.json();
     }
 
+    async queue()
+    {
+        const response = await fetch(`${this.address}/Chess/queue`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify()
+        })
+        const respData = await response.json();
+    }
+
 }
