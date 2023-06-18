@@ -9,21 +9,21 @@ namespace RRH_Minigames_API.Controllers;
 [Authorize]
 [Route("[controller]")]
 [ApiController]
-public class ChessController : ControllerBase
+public class GameController : ControllerBase
 {
     private readonly DataContext _context;
 
-    public ChessController(DataContext context)
+    public GameController(DataContext context)
     {
         _context = context;
     }
     
-    [HttpPost("lastMove")]
-    public IActionResult PostLastChessMove([FromBody] GetMoveData data)
+    [HttpPost("LastMove")]
+    public IActionResult PostLastMove([FromBody] GetMoveData data)
     {
         var game = GameManager.PlayingGames.Find(g => g.GameId == data.gameId);
         if(game == null) return NotFound();
-        game!.Moves.Add(new Move()
+        game!.Moves.Add(new Move
         {
             Game = game,
             GameId = data.gameId,
@@ -33,7 +33,7 @@ public class ChessController : ControllerBase
         _context.SaveChanges();
         return Ok();
     }
-    [HttpGet("lastMove")]
+    [HttpGet("LastMove")]
     public IActionResult GetLastMove([FromBody] string gameId)
     {
         var game = GameManager.PlayingGames.Find(g => g.GameId == gameId);
@@ -41,8 +41,8 @@ public class ChessController : ControllerBase
         return Ok(new JsonOutput<string>( game.Moves[^1].MoveString));
     }
     
-    [HttpGet("players")]
-    public IActionResult GetChessPlayers(string gameId)
+    [HttpGet("Players")]
+    public IActionResult GetPlayers(string gameId)
     {
         var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId);
         
@@ -60,14 +60,13 @@ public class ChessController : ControllerBase
         return Ok(new JsonOutput<bool>( game.Player2Guid != null));
     }
     
-    [HttpPost("queue")]
-    public IActionResult QueueChessGame([FromBody] string game)
+    [HttpPost("Queue")]
+    public IActionResult QueueGame([FromBody] AvailableGames game)
     {
         var userGuid = IdentityController.GetGuidFromToken(HttpContext);
         var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
         if(user == null) return BadRequest($"User: {userGuid} not found");
-        if(!Enum.TryParse<AvailableGames>(game, out var gameEnum)) return BadRequest();
-        if (!GameManager.Queue(user!, gameEnum, _context, out var newGame)) return BadRequest("already queued");
+        if (!GameManager.Queue(user!, game, _context, out var newGame)) return BadRequest("already queued");
         if(newGame == null) return Ok(new JsonOutput<string>("Queueing"));
         return Ok(new JsonOutput<string>(newGame.GameId));
     }
