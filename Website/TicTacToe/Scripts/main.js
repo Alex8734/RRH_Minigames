@@ -28,19 +28,19 @@ document.addEventListener('DOMContentLoaded', (event) =>{
     ctx = canvas.getContext("2d");
     canvas.height = 1500;
     canvas.width = 1500;
-    canvas.style.height = Math.floor(canvas.clientHeight * window.devicePixelRatio) / 1.2 + 'px';
-    canvas.style.width = Math.floor(canvas.clientWidth * window.devicePixelRatio) / 1.2 + 'px';
+    //canvas.style.height = Math.floor(canvas.clientHeight * window.devicePixelRatio) / 1.2 + 'px';
+    //canvas.style.width = Math.floor(canvas.clientWidth * window.devicePixelRatio) / 1.2 + 'px';
     init();
 });
 
 async function init()
 {
-    await httPClient.queue("TicTacToe");
+    //await httPClient.queue("TicTacToe");
 
-    while(currentGameId === "Queueing")
-    {
-        currentGameId = await httPClient.getGameID();
-    }
+    //while(currentGameId === "Queueing")
+    //{
+    //    currentGameId = await httPClient.getGameID();
+    //}
 
     status = gameStatus.Running;
     drawGame();
@@ -54,8 +54,8 @@ async function gameLoop()
         while(status == gameStatus.Running)
         {
             let click = await getClick();
-            await httPClient.postLastMove(currentGameId, click);
             updateState(click, playerSymbol);
+            await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();
 
             let json = await httPClient.getLastMove(currentGameId);
@@ -71,8 +71,8 @@ async function gameLoop()
             checkForGameFinished();
 
             let click = await getClick();
-            await httPClient.postLastMove(currentGameId, click);
             updateState(click, playerSymbol);
+            await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();
         }
     }
@@ -83,9 +83,8 @@ function getClick() {
         canvas.addEventListener("click", handleCanvasClick);
 
         function handleCanvasClick(event) {
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+            const x = event.clientX;
+            const y = event.clientY;
 
             const row = Math.floor(y / (canvas.height / 3));
             const col = Math.floor(x / (canvas.width / 3));

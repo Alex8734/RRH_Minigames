@@ -190,7 +190,7 @@ async function createAccount()
     if (password === confirmPassword) {
         worked = await httpClient.registerUser({ name, email, password },  (error)=>
         {
-            $("#login-info").html(error)
+            alert(error.value);
         })
         if (worked){
             document.getElementById('sign-in').style.display = 'none';
@@ -219,7 +219,7 @@ async function login()
     let worked =false;
     worked = await httpClient.loginUser({name, password},  (error) =>
     {
-        document.getElementById("login-info").innerHTML = error;
+        alert(error.value);
     })
     if (worked)
     {

@@ -143,13 +143,17 @@ export class HttpClient {
 
     async getLastMove(gameId)
     {
-        const response = await fetch(`${this.address}/Game/LastMove/${gameId.toString()}`, {
+        const data = {
+            value: gameId,
+        }
+        const response = await fetch(`${this.address}/Game/LastMove}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 "Host": `${this.address}`
-            }
+            },
+            body: JSON.stringify(data)
         });
 
         return await response.json();
