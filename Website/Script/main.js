@@ -114,9 +114,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     {
         gamesContainer.innerHTML = '';
         let games = []
-        games.push(new Game('', 'Starship Dodge', 'SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
-        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
-        games.push(new Game('', 'Chess', 'Chess/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
+        games.push(new Game('', 'Starship Dodge', './SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
+        games.push(new Game('', 'Speed On the Street', './StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
+        games.push(new Game('', 'TicTacToe', './TicTacToe/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
+        games.push(new Game('', 'Chess', './Chess/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
 
 
         for (let game of games)
@@ -179,8 +180,8 @@ document.getElementById("log-in").addEventListener("click", async function() {
     await printStats();
 });
 
-async function createAccount() {
-
+async function createAccount()
+{
     let name = document.getElementById("username").value;
     let email = document.getElementById("Email").value;
     let password = document.getElementById("password").value;
@@ -204,6 +205,7 @@ async function createAccount() {
     document.getElementById("Email").value = "";
     document.getElementById("password").value = "";
     document.getElementById("password-Confirm").value = "";
+
     if (worked){
         hideLoginForm();
     }

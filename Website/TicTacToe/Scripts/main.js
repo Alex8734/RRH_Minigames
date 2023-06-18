@@ -37,12 +37,12 @@ async function init()
 {
     await httPClient.queue("TicTacToe");
 
-    while(currentGameId == "queueing")
+    while(currentGameId === "queueing")
     {
         currentGameId = await httPClient.getGameID();
-        status = gameStatus.Running;
     }
 
+    status = gameStatus.Running;
     drawGame();
     await gameLoop();
 }

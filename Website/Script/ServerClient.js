@@ -86,7 +86,7 @@ export class HttpClient {
     }
 
     async getPlayers(gameId) {
-        const response = await fetch(`${this.address}/Chess/players`, {
+        const response = await fetch(`${this.address}/Game/players`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export class HttpClient {
             gameId: gameId,
             move: moveStr,
         };
-        const response = await fetch(`${this.address}/Chess/lastMove`, {
+        const response = await fetch(`${this.address}/Game/lastMove`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -117,7 +117,7 @@ export class HttpClient {
 
     async queue(game)
     {
-        const response = await fetch(`${this.address}/Chess/queue`, {
+        const response = await fetch(`${this.address}/Game/Queue`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -126,11 +126,11 @@ export class HttpClient {
             },
             body: JSON.stringify(game)
         })
-        const respData = await response.json();
+        return await response.json();
     }
 
     async getGameID() {
-        const response = await fetch(`${this.address}/Chess/GameStarted`, {
+        const response = await fetch(`${this.address}/Game/GameStarted`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -143,7 +143,7 @@ export class HttpClient {
 
     async getLastMove(gameId)
     {
-        const response = await fetch(`${this.address}/Chess/GameStarted/${gameId}`, {
+        const response = await fetch(`${this.address}/Game/GameStarted/${gameId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -157,7 +157,7 @@ export class HttpClient {
 
     async postLastMove(gameId, move)
     {
-        const response = await fetch(`${this.address}/Chess/queue`, {
+        const response = await fetch(`${this.address}/Game/queue`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
