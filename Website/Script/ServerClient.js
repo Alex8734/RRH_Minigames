@@ -115,7 +115,7 @@ export class HttpClient {
         return  response.json();
     }
 
-    async queue()
+    async queue(game)
     {
         const response = await fetch(`${this.address}/Chess/queue`, {
             method: "POST",
@@ -123,9 +123,48 @@ export class HttpClient {
                 "Content-Type": "application/json",
                 "Host": `${this.address}`
             },
-            body: JSON.stringify()
+            body: JSON.stringify(game)
         })
         const respData = await response.json();
     }
 
+    async getGameID() {
+        const response = await fetch(`${this.address}/Chess/GameStarted`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            }
+        });
+        return await response.json();
+    }
+
+    async getLastMove(gameId)
+    {
+        const response = await fetch(`${this.address}/Chess/GameStarted/${gameId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            }
+        });
+
+        return await response.json();
+    }
+
+    async postLastMove(gameId, move)
+    {
+        const response = await fetch(`${this.address}/Chess/queue`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(game)
+        })
+
+        const respData = await response.json();
+    }
 }
