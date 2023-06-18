@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using RRH_Minigames_API.Identity;
 
@@ -50,7 +51,7 @@ public class JsonOutput<T>
     {
         Value = value;
     }
-    public T Value { get; set; } = default!;
+    public T Value { get; set; }
 }   
 
 public class NewUser
@@ -59,7 +60,11 @@ public class NewUser
     public string Password { get; set; } = default!;
     public string? Email { get; set; } = default!;
 }
-
-public record GetMoveData(string gameId, string move);
+public class LoginUser
+{
+    public string Identity { get; set; } = default!;
+    public string Password { get; set; } = default!;
+}
+public record GetMoveData(string GameId, string Move);
 public record GetPlayerData();
 
