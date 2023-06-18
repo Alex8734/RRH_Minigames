@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', (event) =>{
 
 async function init()
 {
-    //await httPClient.queue("TicTacToe");
+    await httPClient.queue("TicTacToe");
 
-    //while(currentGameId === "Queueing")
-    //{
-    //    currentGameId = await httPClient.getGameID();
-    //}
+    while(currentGameId === "Queueing")
+    {
+        currentGameId = await httPClient.getGameID();
+    }
 
     status = gameStatus.Running;
     drawGame();
