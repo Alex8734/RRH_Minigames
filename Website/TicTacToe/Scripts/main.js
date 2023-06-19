@@ -170,6 +170,7 @@ function handleWin()
     httPClient.postUserStats("TicTacToe", 0);
     gameStatus.Draw;
     httPClient.postLastMove(currentGameId, "");
+    httPClient.endGame(currentGameId, "");
     return true;
 }
 
