@@ -26,8 +26,8 @@ export function init ()
     money = 0;
     canvas.height = 1125;
     canvas.width = 2000;
-    canvas.style.height = Math.floor(canvas.clientHeight * window.devicePixelRatio) / 1.2 + 'px';
-    canvas.style.width = Math.floor(canvas.clientWidth * window.devicePixelRatio) / 1.2 + 'px';
+    //canvas.style.height = Math.floor(canvas.clientHeight * window.devicePixelRatio) / 1.2 + 'px';
+    //canvas.style.width = Math.floor(canvas.clientWidth * window.devicePixelRatio) / 1.2 + 'px';
     console.log(canvas.width);
     console.log(canvas.height);
     lines = [canvas.height / 4.5, canvas.height / 2.8125, canvas.height / 1.99625, canvas.height / 1.55];
