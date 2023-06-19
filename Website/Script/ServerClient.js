@@ -75,7 +75,7 @@ export class HttpClient {
     }
 
     async getPlayers(gameId) {
-        const response = await fetch(`${this.address}/Game/Players`, {
+        const response = await fetch(`${this.address}/Game/Players/${gameId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export class HttpClient {
                 "Host": `${this.address}`
             },
             body: JSON.stringify(game)
-        })
+        });
         return await response.json();
     }
 
@@ -117,7 +117,7 @@ export class HttpClient {
         const data = {
             value: gameId,
         }
-        const response = await fetch(`${this.address}/Game/LastMove}`, {
+        const response = await fetch(`${this.address}/Game/LastMove`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -145,8 +145,6 @@ export class HttpClient {
                 "Host": `${this.address}`
             },
             body: JSON.stringify(data)
-        })
-
-        const respData = await response.json(); //
+        });
     }
 }
