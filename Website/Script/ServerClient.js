@@ -75,7 +75,7 @@ export class HttpClient {
     }
 
     async getPlayers(gameId) {
-        const response = await fetch(`${this.address}/Game/players`, {
+        const response = await fetch(`${this.address}/Game/Players`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export class HttpClient {
                 "Host": `${this.address}`
             }
         });
-        return await response.json().value;
+        return (await response.json()).value;
     }
 
     async queue(game)
