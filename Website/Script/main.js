@@ -4,7 +4,7 @@ import {HttpClient} from "./ServerClient.js";
 const httpClient = new HttpClient();
 export let userOrEmail = "";
 export const Category = {
-    OneVOne: '1v1',
+    OneVOne: 'OneVOne',
     Space: 'Space',
     Drive: 'Drive',
     none: 'none',
@@ -116,8 +116,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         let games = []
         games.push(new Game('', 'Starship Dodge', './SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
         games.push(new Game('', 'Speed On the Street', './StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
-        games.push(new Game('', 'TicTacToe', './TicTacToe/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
-        games.push(new Game('', 'Chess', './Chess/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
+        games.push(new Game('', 'TicTacToe', './TicTacToe/index.html','./Pics/games/apoapodasistred.png', Category.OneVOne))
+        games.push(new Game('', 'Chess', './Chess/index.html','./Pics/games/apoapodasistred.png', Category.OneVOne))
 
 
         for (let game of games)
