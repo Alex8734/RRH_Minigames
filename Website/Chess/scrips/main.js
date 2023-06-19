@@ -12,10 +12,11 @@ let standardName = "Unknown User";
 let myclr;
 async function init() {
 
+    
     const url = new URL(window.location.toLocaleString());
     const params = url.searchParams;
     const currentGameId = params.get("gid");
-
+    
     let response = await client.getPlayers(currentGameId);
     console.log(response);
     if (response[0] === sessionStorage.getItem('user'))
@@ -66,9 +67,9 @@ async function init() {
 
         return false;
     });
-    abandon.addEventListener('click', function (event)
+    abandon.addEventListener('click', async function (event)
     {
-
+        await client.EndGame(currentGameId, sessionStorage.getItem('user'), () => alert("endgame failed"))
         game.gameOver = game.myclr === "white" ? "white" : "black";
     });
 
@@ -77,6 +78,8 @@ async function init() {
 $(async function () {
     await init()
 })
+
+
 
 
 

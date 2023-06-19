@@ -50,6 +50,7 @@ export class Game {
         this.check = false;
         this.gid = id;
         this.moveDone = "";
+        this.lastMoveDone = "";
         this.gameOver = "";
         this.body = document.getElementById("bdy");
     }
@@ -69,36 +70,37 @@ export class Game {
     async gameLoop() {
         while (true) {
             // wait for a move from the server
-            let move = await this.client.getLastMove(this.gid);
-            if (move !== "") {
+            let move = (await this.client.getLastMove(this.gid)).value;
+            if (move !== "" && this.lastMoveDone !== move) {
                 console.log("got a move", move);
                 move = Move.stringToMove(move);
                 let piece = this.pieces.find(p => p.x === move.startX && p.y === move.startY);
                 piece.move(move.endX, move.endY, false);
+                this.redraw();
             }
-
-            // display the server's move
-            this.redraw();
-
+            console.log(move)
             if (this.gameOver !== "") {
                 break;
             }
-
-            while (this.moveDone === "") {
+            
+            while (this.moveDone === "" && this.currentPlayer === this.myclr) {
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
+            if (this.moveDone !== ""){
+                console.log("lol move done", this.moveDone);
+                // post the user's move to the server
+                await this.client.postLastMove(this.gid, this.moveDone);
 
-            console.log("lol move done", this.moveDone);
-            // post the user's move to the server
-            await this.client.postLastMove(this.gid, this.moveDone);
 
+                if (this.gameOver !== "")
+                {
+                    break;
+                }
 
-            if (this.gameOver !== "") {
-                break;
+                // reset moveDone
+                this.moveDone = "";
             }
-
-            // reset moveDone
-            this.moveDone = "";
+            
         }
 
         if ((this.myclr  === "black" && this.gameOver === "black") || (this.myclr === "white" && this.gameOver === "white")) {
@@ -219,7 +221,7 @@ export class Game {
         this.activeField = new Field(col, row);
         for (let dot of this.dots) {
             if (dot.x === col && dot.y === row) {
-                this.activePiece.move(col, row);
+                this.activePiece.move(col, row,true);
                 this.dots = [];
                 this.redraw();
                 return;
@@ -364,6 +366,7 @@ export class Piece {
 
         if (fromMe) {
             game.moveDone = new Move(this.x, this.y, col, row).toString();
+            game.lastMoveDone = new Move(this.x, this.y, col, row).toString();
         }
     }
 

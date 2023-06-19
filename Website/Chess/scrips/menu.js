@@ -1,5 +1,4 @@
 import {HttpClient} from "../../Script/ServerClient.js";
-import {game} from "./main.js"
 
 const client = new HttpClient();
 
