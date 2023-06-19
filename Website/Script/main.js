@@ -193,7 +193,7 @@ async function createAccount()
             alert(error.value);
         })
         if (worked){
-            document.getElementById('sign-in').style.display = 'none';
+            document.getElementById('sign-up').style.display = 'none';
         }
     }
     else {
