@@ -208,7 +208,8 @@ async function createAccount()
     if (worked){
         hideLoginForm();
     }
-    
+
+    printStats();
 }
 
 async function login()
@@ -229,6 +230,7 @@ async function login()
     {
         hideLoginForm();
     }
+    printStats();
 }
 
 async function printStats()
@@ -238,23 +240,24 @@ async function printStats()
     let json = await httpClient.getUserStats((error)=>{
         stats.innerHTML = `<h2>loading failed...: ${error}</h2>`
     });
-    
+    json = json.value;
+    console.log(json);
     for (let i = 0; i < json.length; i++)
     {
         if (json[i].Game == 'Chess')
         {
             html += `<div id="game-stats">
-                    <h2>${json[i].Game}</h2>
-                    <p>Losses: ${json[i].HighScore}<br>
-                    Wins: ${json[i].PlayCount}</p>
+                    <h2>${json[i].game}</h2>
+                    <p>Losses: ${json[i].highScore}<br>
+                    Wins: ${json[i].playCount}</p>
                  </div>`;
         }
         else
         {
             html += `<div id="game-stats">
-                    <h2>${json[i].Game}</h2>
-                    <p>Highscore: ${json[i].HighScore}<br>
-                    Playcount: ${json[i].PlayCount}</p>
+                    <h2>${json[i].game}</h2>
+                    <p>Highscore: ${json[i].highScore}<br>
+                    Playcount: ${json[i].playCount}</p>
                  </div>`;
         }
     }

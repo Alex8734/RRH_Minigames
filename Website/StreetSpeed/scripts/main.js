@@ -51,7 +51,7 @@ export function init ()
 
 const targetFrameTime = 1000 / 60; // 60Hz target refresh rate
 let gameStopped = false;
-async function gameLoop(currentTime) {
+function gameLoop(currentTime) {
     let deltaTime = currentTime - lastTime;
 
     if (deltaTime >= targetFrameTime) {
@@ -121,7 +121,7 @@ async function gameLoop(currentTime) {
             ctx.fillText(`You collected ${money}$`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
             ctx.restore();
             //changeButton.style.display = 'block';
-            await httpClient.postUserStats("CarRacing", money);
+            httpClient.postUserStats("CarRacing", money);
         }
         lastTime = currentTime - (deltaTime % targetFrameTime);
     }
