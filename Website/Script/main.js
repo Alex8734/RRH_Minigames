@@ -244,7 +244,7 @@ async function printStats()
     console.log(json);
     for (let i = 0; i < json.length; i++)
     {
-        if (json[i].Game == "Chess" || json[i].Game == "TicTacToe")
+        if (json[i].game == "Chess" || json[i].game == "TicTacToe")
         {
             html += `<div id="game-stats">
                     <h2>${json[i].game}</h2>
