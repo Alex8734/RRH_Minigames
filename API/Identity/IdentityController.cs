@@ -27,7 +27,26 @@ public class IdentityController : ControllerBase
         _context = context;
         _tokenHandler = new JwtSecurityTokenHandler();
     }
-
+    [HttpPost("RegisterAnonymous")]
+    public IActionResult RegisterAnonym()
+    {
+        var user = new AnonymousUser();
+        var dbUser = new DbUser
+        {
+            Email = user.Email,
+            GUID = user.GUID,
+            Password = user.Password,
+            Stats = user.Stats,
+            UserName = user.UserName
+        };
+        var token =GenerateToken(dbUser);
+        return Ok(JsonSerializer.Serialize(new
+        {
+            Token = token,
+            UserName = user.UserName
+        }));
+    }
+    
     [HttpPost("Register")]
     public IActionResult RegisterUser([FromBody] NewUser newUser)
     {
@@ -71,7 +90,7 @@ public class IdentityController : ControllerBase
         var user = _context.Users.FirstOrDefault(u => u.Email == loginUser.Identity || u.UserName == loginUser.Identity);
         if(user == null || user!.Password != loginUser.Password)
         {
-            return Unauthorized("Login incorrect");
+            return Unauthorized(new JsonOutput<string>("login incorrect"));
         }
         var token = GenerateToken(user);
 
@@ -85,14 +104,13 @@ public class IdentityController : ControllerBase
     private string GenerateToken( DbUser loginUser)
     {
         var user = new User(loginUser.UserName, loginUser.Password, loginUser.Email, loginUser.GUID);
-        if(user.Email == null) return "";
         
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new(JwtRegisteredClaimNames.Name, user.UserName),
-                new(JwtRegisteredClaimNames.Email, user.Email),
+                new(JwtRegisteredClaimNames.Email, user.Email ?? ""),
                 new(JwtRegisteredClaimNames.NameId, user.GUID)
             }),
             Expires = DateTime.UtcNow.Add( TokenLifetime),
