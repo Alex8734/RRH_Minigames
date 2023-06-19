@@ -8,7 +8,7 @@ export class HttpClient {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
         });
@@ -19,12 +19,31 @@ export class HttpClient {
         return respData
     }
 
+    async postUserStats(game, score)
+    {
+        const data = {
+            game: game,
+            score: score
+        }
+
+        const response = await fetch(`${this.address}/User/Stats`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(data),
+        });
+
+        return await response.json();
+    }
+
     async loginUser(user, onError)
     {
         const data = {
-            UserName: user.name,
-            Email: user.email,
-            Password: user.password,
+            Identity: user.name,
+            Password: user.password
         }
 
         const response = await fetch(`${this.address}/User/login`, {
@@ -42,7 +61,8 @@ export class HttpClient {
             onError(respData)
             return false;
         }
-        localStorage.setItem('token', respData.value);
+        sessionStorage.setItem('token', respData.Token);
+        sessionStorage.setItem('user', respData.UserName)
         return true;
     }
 
@@ -68,51 +88,81 @@ export class HttpClient {
             onError(respData)
             return false;
         }
-        localStorage.setItem('token', respData.value);
+        sessionStorage.setItem('token', respData.Token);
+        sessionStorage.setItem('user', respData.UserName)
         return true;
     }
 
-    async getLastMove(gameId) {
-        const response = await fetch(`${this.address}/Chess/lastMove`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                "Host": `${this.address}`
-            }
-
-        });
-        return await response.json();
-    }
-
     async getPlayers(gameId) {
-        const response = await fetch(`${this.address}/Chess/players`, {
+        const response = await fetch(`${this.address}/Game/Players/${gameId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             }
         });
-        return await response.json();
+        return (await response.json()).value;
     }
 
-    async pushMove(gameId, moveStr){
-        const data = {
-            gameId: gameId,
-            move: moveStr,
-        };
-        const response = await fetch(`${this.address}/Chess/lastMove`, {
+    async queue(game)
+    {
+        const response = await fetch(`${this.address}/Game/Queue`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(game)
         });
-
-        return  response.json();
+        return await response.json();
     }
 
+    async getGameID() {
+        const response = await fetch(`${this.address}/Game/GameStarted`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            }
+        });
+        return await response.json();
+    }
+
+    async getLastMove(gameId)
+    {
+        const data = {
+            value: gameId,
+        }
+        const response = await fetch(`${this.address}/Game/LastMove/${gameId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+        });
+
+        return await response.json();
+    }
+
+    async postLastMove(gameId, move)
+    {
+        const data = {
+            GameId: gameId,
+            Move: move,
+        };
+
+        const response = await fetch(`${this.address}/Game/LastMove`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(data)
+        });
+    }
 }
