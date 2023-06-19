@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -73,8 +74,12 @@ public class IdentityController : ControllerBase
             return Unauthorized("Login incorrect");
         }
         var token = GenerateToken(user);
-        
-        return Ok(new JsonOutput<string>(token));
+
+        return Ok(JsonSerializer.Serialize(new
+        {
+            Token = token,
+            UserName = user.UserName
+        }));
     }
 
     private string GenerateToken( DbUser loginUser)

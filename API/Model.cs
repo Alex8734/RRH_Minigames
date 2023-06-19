@@ -54,6 +54,13 @@ public class JsonOutput<T>
     public T Value { get; set; }
 }   
 
+public class InfoUser
+{
+    public string UserName { get; set; } = default!;
+    public string? Email { get; set; } = default!;
+    public string GUID { get; set; } = default!;
+}
+
 public class NewUser
 {
     public string UserName { get; set; } = default!;
