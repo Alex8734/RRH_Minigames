@@ -33,19 +33,19 @@ public class GameController : ControllerBase
         _context.SaveChanges();
         return Ok();
     }
-    [HttpGet("LastMove")]
-    public IActionResult GetLastMove([FromBody] JsonOutput<string> gameId)
+    [HttpGet("LastMove/{gameId}")]
+    public IActionResult GetLastMove( string gameId)
     {
-        var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId.Value);
+        var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId);
         if(game == null) return NotFound();
         if(game.Moves.Count == 0) return Ok(new JsonOutput<string>(""));
         return Ok(new JsonOutput<string>( game.Moves[^1].MoveString));
     }
     
-    [HttpGet("Players")]
-    public IActionResult GetPlayers([FromBody] JsonOutput<string> gameId)
+    [HttpGet("Players/{gameId}")]
+    public IActionResult GetPlayers(string gameId)
     {
-        var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId.Value);
+        var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId);
         if(game == null) return NotFound(new JsonOutput<string>("game not found!"));
         var player1 = _context.Users.FirstOrDefault(u => u.GUID == game!.Player1Guid);
         var player2 = _context.Users.FirstOrDefault(u => u.GUID == game!.Player2Guid);
