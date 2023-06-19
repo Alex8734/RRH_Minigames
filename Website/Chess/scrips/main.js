@@ -1,21 +1,43 @@
 import {Game} from "./chess.js";
+import {HttpClient} from "../../Script/ServerClient.js";
 
 export let game;
 export let ctx;
 
+export let canvas;
+
+const client = new HttpClient();
+
 let standardName = "Unknown User";
-let myclr = "Black"
-function init() {
-    const canvas = document.getElementById("canvas");
+let myclr;
+async function init() {
+
+    
+    const url = new URL(window.location.toLocaleString());
+    const params = url.searchParams;
+    const currentGameId = params.get("gid");
+    
+    let response = await client.getPlayers(currentGameId);
+    console.log(response);
+    if (response[0] === sessionStorage.getItem('user'))
+    {
+        myclr = "white";
+    }
+    else {
+        myclr = "black";
+    }
+
+    canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    game = new Game(560, 0, 1, standardName, standardName, myclr, ctx, 0);
+    game = new Game(560, response[0], response[1], myclr, currentGameId);
     game.init();
 
     canvas.addEventListener('click', function(event) {
+
         // Get the current URL
         let currentURL = window.location.href;
 
-        if (!(currentURL.endsWith("game.html"))) {
+        if (!(currentURL.split("?")[0].endsWith("game.html"))) {
             return;
         }
 
@@ -26,8 +48,14 @@ function init() {
 
         let row = Math.floor(y / 70);
         let col = Math.floor(x / 70);
-        console.log(7 - col, 7 - row);
-        game.clickOn(7 - col, 7 - row);
+        if (game.myclr === "white") {
+            console.log(col, row);
+            game.clickOn(col, row);
+        }
+        else {
+            console.log(7-col, 7-row);
+            game.clickOn(7-col, 7-row);
+        }
     });
     let main_menu = document.getElementById("main-menu");
     let abandon = document.getElementById("abandon");
@@ -39,17 +67,19 @@ function init() {
 
         return false;
     });
-    abandon.addEventListener('click', function (event)
+    abandon.addEventListener('click', async function (event)
     {
-
+        await client.EndGame(currentGameId, sessionStorage.getItem('user'), () => alert("endgame failed"))
         game.gameOver = game.myclr === "white" ? "white" : "black";
     });
 
-    //game.gameLoop();
+    await game.gameLoop();
 }
 $(async function () {
     await init()
 })
+
+
 
 
 
