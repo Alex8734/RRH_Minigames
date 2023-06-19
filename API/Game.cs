@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using RRH_Minigames_API.Controllers;
 using RRH_Minigames_API.Identity;
 
 namespace RRH_Minigames_API;
@@ -21,7 +22,7 @@ public static class GameManager
         if(sameGameQueuers != null)
         {
             gameStarted = StartGame(user, sameGameQueuers!.User, game, ctx);
-            QueueingPlayers.Remove(sameGameQueuers);
+            QueueingPlayers.RemoveAt(QueueingPlayers.FindIndex(u => u.Game == game));
             return true;
         }
         QueueingPlayers.Add(new QueueingMember(user, game));
@@ -47,11 +48,21 @@ public static class GameManager
         return game?.GameId ?? "";
     }
     
-    public static DbUser? EndGame(Game game, DataContext ctx)
+    public static bool EndGame(Game game, DataContext ctx)
     {
         PlayingGames.Remove(game);
+        if(game.WinnerGuid == "")
+        {
+            return true;
+        }
+        if(game.WinnerGuid == null || GetGameId(game.WinnerGuid) == "")
+        {
+            return false;
+        }
         var winner = ctx.Users.FirstOrDefault(u => u.GUID == game.WinnerGuid);
-        return winner;
+        if(winner == null) return false;
+        
+        return true;
     }
     
 }

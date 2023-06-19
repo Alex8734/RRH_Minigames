@@ -53,6 +53,16 @@ public class GameController : ControllerBase
         return Ok(new JsonOutput<string[]>(new[]{ player1!.UserName, player2!.UserName}));
     }
     
+    [HttpPost("EndGame/{gameId}")]
+    public IActionResult StopGame(string gameId, [FromBody] string winner)
+    {
+        var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId);
+        if(game == null) return NotFound(new JsonOutput<string>("game not found!"));
+        game.WinnerGuid = _context.Users.FirstOrDefault(u => u.UserName == winner)?.GUID ?? "";
+        if (!GameManager.EndGame(game, _context)) return NotFound(new JsonOutput<string>($"winner {game.WinnerGuid} not found!"));
+        return Ok();
+    }
+    
     [HttpGet("GameStarted")]
     public IActionResult CheckForGameStart()
     {

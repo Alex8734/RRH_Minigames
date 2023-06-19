@@ -81,42 +81,6 @@ public class GameStatController : ControllerBase
         
         return Ok(new JsonOutput<PlayerStat[]>(stats.ToArray()));
         
-        /*Console.WriteLine("UserGuid: " + userGuid);
-        userGuid = Guid.NewGuid().ToString();
-        var stats = new List<PlayerStat>()
-        {
-            new PlayerStat
-            {
-                Game = AvailableGames.Chess,
-                Guid = userGuid, // Assign the provided userGuid
-                Id = 1,
-                HighScore = 12,
-                PlayCount = 24
-            },
-            new PlayerStat
-            {
-                Game = AvailableGames.CarRacing,
-                Guid = userGuid, // Assign the provided userGuid
-                Id = 2,
-                HighScore = 200,
-                PlayCount = 20
-            },
-            new PlayerStat
-            {
-                Game = AvailableGames.SpaceShooter,
-                Guid = userGuid, // Assign the provided userGuid
-                Id = 3,
-                HighScore = 100,
-                PlayCount = 10
-            }
-        };
-
-        var user = new DBUser()
-        {
-            UserName = "TestUser",
-            Password = "TestPassword",
-            GUID = userGuid, // Assign the provided userGuid
-            Stats = stats
-        };*/
+        
     }
 }
