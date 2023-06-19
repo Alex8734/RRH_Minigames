@@ -1,5 +1,6 @@
 import {SpaceShip} from "./spaceshuttle.js";
 import {Meteor} from "./meteor.js";
+import {HttpClient} from "../../Script/ServerClient.js";
 
 let ship;
 let lastTime = 0;
@@ -7,6 +8,7 @@ let score = 0;
 let metorites = [];
 let TimeMultiplier = 1;
 let btn;
+const httpClient = new HttpClient();
 export let canvas;
 export let ctx;
 
