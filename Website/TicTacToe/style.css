@@ -1,3 +1,51 @@
 #canvas {
+    position: relative;
     aspect-ratio: 1/1;
+    top: 5%;
+    height: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+#play-again{
+    position: relative;
+    display: block;
+    width: 20%;
+    left: 40%;
+    z-index: 99;
+    font-size: 1vw;
+    height: 5%;
+    top: 7%;
+}
+
+#container {
+    position: absolute;
+    width: 60%;
+    height: 100%;
+    left: 20%;
+}
+
+#status-container {
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    display: flex;
+    text-align: center;
+    font-size: 2vw;
+    margin-left: 40%;
+    margin-right: 40%;
+    width: 20%;
+    height: 5%;
+    top: 7%;
+}
+
+#status {
+    margin: auto;
+    font-size: 2vw;
+}
+
+#loading-circle {
+    aspect-ratio: 1/1;
+    display: none;
+    margin: auto;
 }

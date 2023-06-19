@@ -22,14 +22,22 @@ let currentState = [[symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, s
 let playerSymbol = symbol.X;
 let enemySymbol = symbol.O;
 let status = gameStatus.NoGame;
-
+const button = document.getElementById('play-again');
+const statusBox = document.getElementById('status');
+const loadingCircle = document.getElementById('loading-circle');
 document.addEventListener('DOMContentLoaded', (event) =>{
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     canvas.height = 1500;
     canvas.width = 1500;
-    //canvas.style.height = Math.floor(canvas.clientHeight * window.devicePixelRatio) / 1.2 + 'px';
-    //canvas.style.width = Math.floor(canvas.clientWidth * window.devicePixelRatio) / 1.2 + 'px';
+
+    drawGame();
+});
+
+button.addEventListener('click', () => {
+    button.style.display = 'none';
+    loadingCircle.style.display = 'block';
+    statusBox.innerText = "Searching...";
     init();
 });
 
@@ -59,17 +67,23 @@ async function init()
 
 async function gameLoop()
 {
+    loadingCircle.style.display = 'none';
     if (playerSymbol == symbol.X)
     {
         while(status == gameStatus.Running)
         {
+            statusBox.innerText = "Its your turn! Select a field";
             let click = await getClick();
             updateState(click, playerSymbol);
             await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();
 
-            let json = click;
+            if(handleWin()){
+                break;
+            }
 
+            let json = click;
+            statusBox.innerText = "Wait for the enemy's move";
             while(json === click)
             {
                 json = (await httPClient.getLastMove(currentGameId)).value;
@@ -77,12 +91,14 @@ async function gameLoop()
 
             updateState(json, enemySymbol);
             checkForGameFinished();
+            handleWin();
         }
     }
     else {
         let click = "";
         while(status == gameStatus.Running)
         {
+            statusBox.innerText = "Wait for the enemy's move";
             let json = click;
 
             while(json === click)
@@ -92,12 +108,36 @@ async function gameLoop()
             updateState(json, enemySymbol);
             checkForGameFinished();
 
+            if(handleWin()){
+                break;
+            }
+
+            statusBox.innerText = "Its your turn! Select a field";
             click = await getClick();
             updateState(click, playerSymbol);
             await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();
+            handleWin();
         }
     }
+}
+
+function handleWin()
+{
+    if (status === gameStatus.EnemyWon)
+    {
+        statusBox.innerText = "The enemy player won. Press the button to play again";
+        button.style.display = 'block';
+        return true;
+    }
+    else if(status === gameStatus.PlayerWon)
+    {
+        statusBox.innerText = "Congratulation, you won!  Press the button to play again";
+        button.style.display = 'block';
+        return true;
+    }
+
+    return false;
 }
 
 function getClick() {
