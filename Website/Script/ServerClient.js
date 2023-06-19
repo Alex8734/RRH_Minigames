@@ -19,6 +19,26 @@ export class HttpClient {
         return respData
     }
 
+    async postUserStats(game, score)
+    {
+        const data = {
+            game: game,
+            score: score
+        }
+
+        const response = await fetch(`${this.address}/User/Stats`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(data),
+        });
+
+        return await response.json();
+    }
+
     async loginUser(user, onError)
     {
         const data = {

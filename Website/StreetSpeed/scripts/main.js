@@ -1,6 +1,8 @@
 import {SpaceShip} from "./player.js";
 import {Car} from "./car.js";
+import {HttpClient} from "../../Script/ServerClient.js";
 
+const httpClient = new HttpClient();
 let car;
 let lastTime = 0;
 let money = 0;
@@ -46,7 +48,7 @@ export function init ()
     bg3.pos = {x: (bg2.pos.x + bg2.size.x), y: 0};
     gameLoop();
 }
-function gameLoop() {
+async function gameLoop() {
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
     lastTime = currentTime;
@@ -117,6 +119,7 @@ function gameLoop() {
         ctx.fillText(`You collected ${money}$`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
         ctx.restore();
         //changeButton.style.display = 'block';
+        await httpClient.postUserStats("CarRacing", money);
     }
 }
 
