@@ -68,29 +68,31 @@ async function gameLoop()
             await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();
 
-            let json = "";
+            let json = click;
 
-            while(json === "")
+            while(json === click)
             {
-                json = await httPClient.getLastMove(currentGameId).value;
+                json = (await httPClient.getLastMove(currentGameId)).value;
             }
+
             updateState(json, enemySymbol);
             checkForGameFinished();
         }
     }
     else {
+        let click = "";
         while(status == gameStatus.Running)
         {
-            let json = "";//
+            let json = click;
 
-            while(json.value === "")
+            while(json === click)
             {
-                json.value = await httPClient.getLastMove(currentGameId);
+                json = (await httPClient.getLastMove(currentGameId)).value;
             }
             updateState(json, enemySymbol);
             checkForGameFinished();
 
-            let click = await getClick();
+            click = await getClick();
             updateState(click, playerSymbol);
             await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();

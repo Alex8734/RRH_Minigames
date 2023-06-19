@@ -117,14 +117,13 @@ export class HttpClient {
         const data = {
             value: gameId,
         }
-        const response = await fetch(`${this.address}/Game/LastMove`, {
+        const response = await fetch(`${this.address}/Game/LastMove/${gameId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
-            body: JSON.stringify(data)
         });
 
         return await response.json();
