@@ -8,7 +8,7 @@ export class HttpClient {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
         });
@@ -42,7 +42,8 @@ export class HttpClient {
             onError(respData)
             return false;
         }
-        localStorage.setItem('token', respData.value);
+        sessionStorage.setItem('token', respData.Token);
+        sessionStorage.setItem('user', respData.UserName)
         return true;
     }
 
@@ -68,21 +69,9 @@ export class HttpClient {
             onError(respData)
             return false;
         }
-        localStorage.setItem('token', respData.value);
+        sessionStorage.setItem('token', respData.Token);
+        sessionStorage.setItem('user', respData.UserName)
         return true;
-    }
-
-    async getLastMove(gameId) {
-        const response = await fetch(`${this.address}/Chess/LastMove`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                "Host": `${this.address}`
-            }
-
-        });
-        return await response.json();
     }
 
     async getPlayers(gameId) {
@@ -90,29 +79,11 @@ export class HttpClient {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             }
         });
-        return await response.json();
-    }
-
-    async pushMove(gameId, moveStr){
-        const data = {
-            gameId: gameId,
-            move: moveStr,
-        };
-        const response = await fetch(`${this.address}/Game/lastMove`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                "Host": `${this.address}`
-            },
-            body: JSON.stringify(data),
-        });
-
-        return  response.json();
+        return await response.json().value;
     }
 
     async queue(game)
@@ -121,7 +92,7 @@ export class HttpClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
             body: JSON.stringify(game)
@@ -134,7 +105,7 @@ export class HttpClient {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             }
         });
@@ -150,7 +121,7 @@ export class HttpClient {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
             body: JSON.stringify(data)
@@ -162,15 +133,15 @@ export class HttpClient {
     async postLastMove(gameId, move)
     {
         const data = {
-            gameId: gameId,
-            move: move,
+            GameId: gameId,
+            Move: move,
         };
 
         const response = await fetch(`${this.address}/Game/LastMove`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
             body: JSON.stringify(data)

@@ -2,7 +2,7 @@ import {Game} from "./Game.js";
 import {HttpClient} from "./ServerClient.js";
 
 const httpClient = new HttpClient();
-
+export let userOrEmail = "";
 export const Category = {
     OneVOne: '1v1',
     Space: 'Space',

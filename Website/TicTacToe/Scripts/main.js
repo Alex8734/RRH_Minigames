@@ -37,10 +37,15 @@ async function init()
 {
     await httPClient.queue("TicTacToe");
 
-    while(currentGameId === "Queueing")
+    while(currentGameId === 'Queueing')
     {
         currentGameId = await httPClient.getGameID();
+        currentGameId = currentGameId.value;
+        console.log(currentGameId);
     }
+
+    let response = await httPClient.getPlayers(currentGameId);
+    
 
     status = gameStatus.Running;
     drawGame();
@@ -58,7 +63,12 @@ async function gameLoop()
             await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();
 
-            let json = await httPClient.getLastMove(currentGameId);
+            let json = "";
+
+            while(json === "")
+            {
+                json = await httPClient.getLastMove(currentGameId).value;
+            }
             updateState(json, enemySymbol);
             checkForGameFinished();
         }
@@ -66,7 +76,12 @@ async function gameLoop()
     else {
         while(status == gameStatus.Running)
         {
-            let json = await httPClient.getLastMove(currentGameId);
+            let json = "";
+
+            while(json.value === "")
+            {
+                json.value = await httPClient.getLastMove(currentGameId);
+            }
             updateState(json, enemySymbol);
             checkForGameFinished();
 
