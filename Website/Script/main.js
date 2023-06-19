@@ -172,32 +172,31 @@ export function hideLoginForm() {
 document.getElementById("sign-up").addEventListener("click", async function() {
     event.preventDefault();
     await createAccount();
-    await printStats();
 });
 document.getElementById("log-in").addEventListener("click", async function() {
     event.preventDefault();
     await login();
-    await printStats();
 });
 
-async function createAccount()
-{
+async function createAccount() {
     let name = document.getElementById("username").value;
     let email = document.getElementById("Email").value;
     let password = document.getElementById("password").value;
     let confirmPassword = document.getElementById("password-Confirm").value;
     let worked = false;
+
     if (password === confirmPassword) {
-        worked = await httpClient.registerUser({ name, email, password },  (error)=>
-        {
-            alert(error.value);
-        })
-        if (worked){
+        worked = await httpClient.registerUser({ name, email, password }, (error) => {
+            if (error && error.response && error.response.status === 400 && error.response.data === "User already exists") {
+                alert("User already exists. Please choose a different email or login instead.");
+            } else {
+                alert(error);
+            }
+        });
+
+        if (worked) {
             document.getElementById('sign-up').style.display = 'none';
         }
-    }
-    else {
-        alert("Passwords were incorrect");
     }
 
     document.getElementById("username").value = "";
@@ -205,32 +204,29 @@ async function createAccount()
     document.getElementById("password").value = "";
     document.getElementById("password-Confirm").value = "";
 
-    if (worked){
+    if (worked) {
         hideLoginForm();
+        printStats();
     }
-
-    printStats();
 }
 
-async function login()
-{
+
+async function login() {
     let name = document.getElementById("usernameX").value;
     let password = document.getElementById("passwordX").value;
-    let worked =false;
-    worked = await httpClient.loginUser({name, password},  (error) =>
-    {
-        alert(error.Value);
-    })
-    if (worked)
-    {
-        document.getElementById('sign-in').style.display = 'none';
-    }
+    let worked = false;
 
-    if (worked)
-    {
+    worked = await httpClient.loginUser({ name, password });
+
+    if (worked) {
+        document.getElementById('sign-in').style.display = 'none';
         hideLoginForm();
+        printStats();
     }
-    printStats();
+    else
+    {
+        alert("login data incorrect");
+    }
 }
 
 async function printStats()

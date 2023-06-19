@@ -57,8 +57,6 @@ export class HttpClient {
         const respData = await response.json();
         if (!response.ok)
         {
-            
-            onError(respData)
             return false;
         }
         sessionStorage.setItem('token', respData.Token);
