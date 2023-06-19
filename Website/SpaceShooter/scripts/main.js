@@ -94,6 +94,7 @@ function gameLoop() {
         ctx.textAlign = "center";
         ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
         ctx.restore();
+        httpClient.postUserStats("SpaceShooter", score);
     }
 
     TimeMultiplier += (0.00001 * deltaTime);

@@ -263,3 +263,7 @@ async function printStats()
     }
     stats.innerHTML = html;
 }
+
+document.getElementById('profile').addEventListener('click', function() {
+    window.location.href = './AccountDashboard/index.html';
+});

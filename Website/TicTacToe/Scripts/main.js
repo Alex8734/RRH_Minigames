@@ -137,12 +137,14 @@ function handleWin()
     {
         statusBox.innerText = "The enemy player won. Press the button to play again";
         button.style.display = 'block';
+        httpClient.postUserStats("TicTacToe", 1);
         return true;
     }
     else if(status === gameStatus.PlayerWon)
     {
         statusBox.innerText = "Congratulation, you won!  Press the button to play again";
         button.style.display = 'block';
+        httpClient.postUserStats("TicTacToe", 0);
         return true;
     }
 
