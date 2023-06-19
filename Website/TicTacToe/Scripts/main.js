@@ -45,7 +45,12 @@ async function init()
     }
 
     let response = await httPClient.getPlayers(currentGameId);
-    
+
+    if (response[0] === sessionStorage.getItem('user'))
+    {
+        playerSymbol = symbol.O;
+        enemySymbol = symbol.X;
+    }
 
     status = gameStatus.Running;
     drawGame();
