@@ -81,7 +81,7 @@ async function gameLoop()
     else {
         while(status == gameStatus.Running)
         {
-            let json = "";
+            let json = "";//
 
             while(json.value === "")
             {

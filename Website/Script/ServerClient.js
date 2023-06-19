@@ -147,6 +147,6 @@ export class HttpClient {
             body: JSON.stringify(data)
         })
 
-        const respData = await response.json();
+        const respData = await response.json(); //
     }
 }
