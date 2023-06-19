@@ -66,6 +66,20 @@ export class HttpClient {
         return true;
     }
 
+    async endGame(gameId, winner)
+    {
+        const response = await fetch(`${this.address}/Game/EndGame/${gameId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(winner)
+        });
+        return await response.json();
+    }
+
     async registerUser(user, onError)
     {
         const data = {

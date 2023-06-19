@@ -244,12 +244,12 @@ async function printStats()
     console.log(json);
     for (let i = 0; i < json.length; i++)
     {
-        if (json[i].Game == 'Chess')
+        if (json[i].Game == "Chess" || json[i].Game == "TicTacToe")
         {
             html += `<div id="game-stats">
                     <h2>${json[i].game}</h2>
                     <p>Losses: ${json[i].highScore}<br>
-                    Wins: ${json[i].playCount}</p>
+                    Wins and draws: ${json[i].playCount}</p>
                  </div>`;
         }
         else

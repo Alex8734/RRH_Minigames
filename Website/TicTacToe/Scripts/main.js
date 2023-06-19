@@ -140,7 +140,7 @@ function handleWin()
     {
         statusBox.innerText = "The enemy player won. Press the button to play again";
         button.style.display = 'block';
-        httPClient.postUserStats("TicTacToe", 1);
+        httPClient.postUserStats("TicTacToe", -1);
         httPClient.postLastMove(currentGameId, "");
         return true;
     }
@@ -150,6 +150,7 @@ function handleWin()
         button.style.display = 'block';
         httPClient.postUserStats("TicTacToe", 0);
         httPClient.postLastMove(currentGameId, "");
+        httPClient.endGame(currentGameId, sessionStorage.getItem('user'));
         return true;
     }
 
