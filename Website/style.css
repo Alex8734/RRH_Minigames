@@ -144,6 +144,12 @@ header {
     width: 25%;
 }
 
+.switch-text{
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}
+
 #sign-in {
     position: relative;
     color: white;
@@ -218,26 +224,6 @@ a {
     color: #6c757d; /* Set the color of the label when input is focused or has value */
 }
 
-
-.card{
-    transition: all 0.8s ease;
-    backface-visibility: hidden;
-}
-.card.back{
-    transform: rotateY(-180deg);
-    position: absolute;
-}
-.card.front{
-    position: absolute;
-    height: 70%;
-}
-.isLogin .card.front{
-    transform: rotateY(180deg);
-}
-.isLogin .card.back{
-    transform: rotateY(0deg);
-}
-
 .game:hover {
     border: var(--primary-color) solid;
     scale: 105%;
@@ -272,7 +258,8 @@ a {
     z-index: 100;
     background: rgba(255, 255, 255, 0.3);
     overflow: hidden;
-    transition: height 0.5s ease-in-out;
+    transition: height 0.4s ease-in-out;
+    transform: scaleX(1);
 }
 h2{
     padding-top: 1.5rem;
@@ -346,4 +333,31 @@ h2 {
 p {
     color: white;
     padding-left: 1rem;
+}
+
+#log-in-card{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+
+#sign-up-card{
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+}
+
+#flip-card {
+    perspective: 1000px;
+}
+
+#card {
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.flip {
+    transform: rotateY(180deg);
 }

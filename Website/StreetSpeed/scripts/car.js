@@ -29,8 +29,15 @@ export class Car {
         }
     }
 
-    async draw()
-    {
-        await ctx.drawImage(this.image, this.pos.x, this.pos.y, this.size.x, this.size.y);
+    async draw() {
+        if (this.pos.y < canvas.height / 1.99625) {
+            ctx.save();
+            ctx.translate(this.pos.x + this.size.x / 2, this.pos.y + this.size.y / 2);
+            ctx.rotate(Math.PI);
+            ctx.drawImage(this.image, -this.size.x / 2, -this.size.y / 2, this.size.x, this.size.y);
+            ctx.restore();
+        } else {
+            ctx.drawImage(this.image, this.pos.x, this.pos.y, this.size.x, this.size.y);
+        }
     }
 }

@@ -2,6 +2,21 @@ import {Game} from "./Game.js";
 import {HttpClient} from "./ServerClient.js";
 
 const httpClient = new HttpClient();
+export let userOrEmail = "";
+export const Category = {
+    OneVOne: 'OneVOne',
+    Space: 'Space',
+    Drive: 'Drive',
+    none: 'none',
+};
+
+const SortBy = {
+    Players: 'players',
+    Release: 'release',
+    none: 'none',
+};
+const sortByKeys = Object.keys(SortBy);
+const categoryKeys = Object.keys(Category);
 
 document.addEventListener('DOMContentLoaded', async function() {
     let checkbox = document.getElementById('logo-button');
@@ -99,9 +114,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     {
         gamesContainer.innerHTML = '';
         let games = []
-        games.push(new Game('', 'Starship Dodge', 'SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
-        games.push(new Game('', 'Speed On the Street', 'StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
-        games.push(new Game('', 'Chess', 'Chess/index.html','./Pics/games/apoapodasistred.png', Category.Drive))
+        games.push(new Game('', 'Starship Dodge', './SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
+        games.push(new Game('', 'Speed On the Street', './StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
+        games.push(new Game('', 'TicTacToe', './TicTacToe/index.html','./Pics/games/apoapodasistred.png', Category.OneVOne))
+        games.push(new Game('', 'Chess', './Chess/index.html','./Pics/games/apoapodasistred.png', Category.OneVOne))
 
 
         for (let game of games)
@@ -122,15 +138,20 @@ $("#login-form").on("click", function (event)
     }
 });
 
+const card = document.getElementById('card');
+function flipCard() {
+    card.classList.toggle('flip');
+}
+
 $("#sign-up-switch").click(function (event)
 {
     event.preventDefault();
-    $("#card-switcher").removeClass("isLogin");
-    console.log("clicked")
+    flipCard();
 });
 
 $("#sign-in-switch").click(function (event){
-   $("#card-switcher").addClass("isLogin")
+    event.preventDefault()
+    flipCard();
 })
 
 document.getElementById("sign-in").addEventListener("click", function() {
@@ -148,87 +169,69 @@ export function hideLoginForm() {
     $("#login-info").html("")
 }
 
-document.getElementById("create-account").addEventListener("click", async function() {
+document.getElementById("sign-up").addEventListener("click", async function() {
     event.preventDefault();
     await createAccount();
     await printStats();
 });
-document.getElementById("login").addEventListener("click", async function() {
+document.getElementById("log-in").addEventListener("click", async function() {
     event.preventDefault();
     await login();
     await printStats();
 });
 
-async function createAccount() {
-
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
+async function createAccount()
+{
+    let name = document.getElementById("username").value;
+    let email = document.getElementById("Email").value;
     let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirm-password").value;
+    let confirmPassword = document.getElementById("password-Confirm").value;
     let worked = false;
     if (password === confirmPassword) {
         worked = await httpClient.registerUser({ name, email, password },  (error)=>
         {
-            $("#login-info").html(error)
+            alert(error.value);
         })
         if (worked){
-            document.getElementById('sign-in').style.display = 'none';
-            alert('Account created successfully!');
+            document.getElementById('sign-up').style.display = 'none';
         }
     }
     else {
         alert("Passwords were incorrect");
     }
 
-    document.getElementById("typeEmailX").value = "";
-    document.getElementById("typeUsernameX").value = "";
-    document.getElementById("typePasswordX").value = "";
-    document.getElementById("typePasswordAgainX").value = "";
+    document.getElementById("username").value = "";
+    document.getElementById("Email").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("password-Confirm").value = "";
+
     if (worked){
         hideLoginForm();
     }
-    
+
+    printStats();
 }
 
 async function login()
 {
-    let name = document.getElementById("typeEmailX").value;
-    let password = document.getElementById("typePasswordX").value;
+    let name = document.getElementById("usernameX").value;
+    let password = document.getElementById("passwordX").value;
     let worked =false;
-    worked = await httpClient.loginUser({name, email, password},  (error) =>
+    worked = await httpClient.loginUser({name, password},  (error) =>
     {
-        document.getElementById("login-info").innerHTML = error;
+        alert(error.Value);
     })
     if (worked)
     {
         document.getElementById('sign-in').style.display = 'none';
-        alert('Account logged in successfully!');
     }
 
-    document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("confirm-password").value = "";
     if (worked)
     {
         hideLoginForm();
     }
+    printStats();
 }
-
-export const Category = {
-    OneVOne: '1v1',
-    Space: 'Space',
-    Drive: 'Drive',
-    none: 'none',
-};
-
-const SortBy = {
-    Players: 'players',
-    Release: 'release',
-    none: 'none',
-};
-const sortByKeys = Object.keys(SortBy);
-const categoryKeys = Object.keys(Category);
 
 async function printStats()
 {
@@ -237,23 +240,24 @@ async function printStats()
     let json = await httpClient.getUserStats((error)=>{
         stats.innerHTML = `<h2>loading failed...: ${error}</h2>`
     });
-    
+    json = json.value;
+    console.log(json);
     for (let i = 0; i < json.length; i++)
     {
         if (json[i].Game == 'Chess')
         {
             html += `<div id="game-stats">
-                    <h2>${json[i].Game}</h2>
-                    <p>Losses: ${json[i].HighScore}<br>
-                    Wins: ${json[i].PlayCount}</p>
+                    <h2>${json[i].game}</h2>
+                    <p>Losses: ${json[i].highScore}<br>
+                    Wins: ${json[i].playCount}</p>
                  </div>`;
         }
         else
         {
             html += `<div id="game-stats">
-                    <h2>${json[i].Game}</h2>
-                    <p>Highscore: ${json[i].HighScore}<br>
-                    Playcount: ${json[i].PlayCount}</p>
+                    <h2>${json[i].game}</h2>
+                    <p>Highscore: ${json[i].highScore}<br>
+                    Playcount: ${json[i].playCount}</p>
                  </div>`;
         }
     }

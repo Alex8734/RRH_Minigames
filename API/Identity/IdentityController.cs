@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -26,13 +27,32 @@ public class IdentityController : ControllerBase
         _context = context;
         _tokenHandler = new JwtSecurityTokenHandler();
     }
-
+    [HttpPost("RegisterAnonymous")]
+    public IActionResult RegisterAnonym()
+    {
+        var user = new AnonymousUser();
+        var dbUser = new DbUser
+        {
+            Email = user.Email,
+            GUID = user.GUID,
+            Password = user.Password,
+            Stats = user.Stats,
+            UserName = user.UserName
+        };
+        var token =GenerateToken(dbUser);
+        return Ok(JsonSerializer.Serialize(new
+        {
+            Token = token,
+            UserName = user.UserName
+        }));
+    }
+    
     [HttpPost("Register")]
     public IActionResult RegisterUser([FromBody] NewUser newUser)
     {
         if(!IsNewUserValid(newUser))
         {
-            return BadRequest("User already exists");
+            return BadRequest(new JsonOutput<string>("User already exists"));
         }
         var user = new User(
             newUser.UserName,
@@ -48,7 +68,9 @@ public class IdentityController : ControllerBase
             UserName = user.UserName
         };
         
-        if(user.Email == null) return BadRequest("Invalid email");
+        if(user.Email == null) return BadRequest(new JsonOutput<string>("Invalid email"));
+        if(user.UserName == "") return BadRequest(new JsonOutput<string>("Invalid username"));
+        if(user.Password == "") return BadRequest(new JsonOutput<string>("Invalid password"));
         _context.Users.Add(dbUser);
         _context.SaveChanges();
 
@@ -70,24 +92,27 @@ public class IdentityController : ControllerBase
         var user = _context.Users.FirstOrDefault(u => u.Email == loginUser.Identity || u.UserName == loginUser.Identity);
         if(user == null || user!.Password != loginUser.Password)
         {
-            return Unauthorized("Login incorrect");
+            return Unauthorized(new JsonOutput<string>("login incorrect"));
         }
         var token = GenerateToken(user);
-        
-        return Ok(new JsonOutput<string>(token));
+
+        return Ok(JsonSerializer.Serialize(new
+        {
+            Token = token,
+            UserName = user.UserName
+        }));
     }
 
     private string GenerateToken( DbUser loginUser)
     {
         var user = new User(loginUser.UserName, loginUser.Password, loginUser.Email, loginUser.GUID);
-        if(user.Email == null) return "";
         
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new(JwtRegisteredClaimNames.Name, user.UserName),
-                new(JwtRegisteredClaimNames.Email, user.Email),
+                new(JwtRegisteredClaimNames.Email, user.Email ?? ""),
                 new(JwtRegisteredClaimNames.NameId, user.GUID)
             }),
             Expires = DateTime.UtcNow.Add( TokenLifetime),
