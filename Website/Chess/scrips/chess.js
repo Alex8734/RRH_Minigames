@@ -83,7 +83,7 @@ export class Game {
                 break;
             }
             
-            while (this.moveDone === "" && this.currentPlayer === this.myclr) {
+            while (this.moveDone === "" && this.currentPlayer === this.myclr && this.gameOver === "") {
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
             if (this.moveDone !== ""){
@@ -94,6 +94,7 @@ export class Game {
 
                 if (this.gameOver !== "")
                 {
+                    await this.client.EndGame(this.gid, this.opponentName, (e) => alert(e.value))
                     break;
                 }
 
@@ -349,7 +350,11 @@ export class Piece {
                 game.redraw();
             }
         }
-
+        if (fromMe)
+        {
+            game.moveDone = new Move(this.x, this.y, col, row).toString();
+            game.lastMoveDone = new Move(this.x, this.y, col, row).toString();
+        }
         this.x = col;
         this.y = row;
 
@@ -364,10 +369,7 @@ export class Piece {
         // Switch the current player
         game.currentPlayer = game.currentPlayer === "white" ? "black" : "white";
 
-        if (fromMe) {
-            game.moveDone = new Move(this.x, this.y, col, row).toString();
-            game.lastMoveDone = new Move(this.x, this.y, col, row).toString();
-        }
+        
     }
 
     clickMe() {

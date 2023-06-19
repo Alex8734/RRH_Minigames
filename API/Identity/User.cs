@@ -6,7 +6,7 @@ public class User
 {
     public User(string userName, string password, string? email = null, string? guid = null)
     { 
-        if(email != null && Regex.IsMatch(email,@"/^[\w*\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+        if(email != null && Regex.IsMatch(email,@"^[\w*\.]+@([\w-]+\.)+[\w-]{2,4}$"))
         {
             Email = email;
         }

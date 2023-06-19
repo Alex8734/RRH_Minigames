@@ -69,8 +69,8 @@ async function init() {
     });
     abandon.addEventListener('click', async function (event)
     {
-        await client.EndGame(currentGameId, sessionStorage.getItem('user'), () => alert("endgame failed"))
-        game.gameOver = game.myclr === "white" ? "white" : "black";
+        
+        game.gameOver = game.myclr === "white" ? "black" : "white";
     });
 
     await game.gameLoop();
