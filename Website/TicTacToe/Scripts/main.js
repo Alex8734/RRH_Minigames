@@ -14,6 +14,10 @@ const gameStatus = Object.freeze({
     NoGame: "NoGame"
 });
 
+document.getElementById('home-page').addEventListener('click', () => {
+    window.location.href = './../index.html';
+});
+
 const httPClient = new HttpClient();
 let canvas;
 let ctx;
@@ -82,6 +86,7 @@ async function gameLoop()
                 break;
             }
 
+            loadingCircle.style.display = 'block';
             let json = click;
             statusBox.innerText = "Wait for the enemy's move";
             while(json === click)
@@ -90,6 +95,7 @@ async function gameLoop()
             }
 
             updateState(json, enemySymbol);
+            loadingCircle.style.display = 'none';
             checkForGameFinished();
             handleWin();
         }
@@ -98,6 +104,7 @@ async function gameLoop()
         let click = "";
         while(status == gameStatus.Running)
         {
+            loadingCircle.style.display = 'block';
             statusBox.innerText = "Wait for the enemy's move";
             let json = click;
 
@@ -105,7 +112,9 @@ async function gameLoop()
             {
                 json = (await httPClient.getLastMove(currentGameId)).value;
             }
+
             updateState(json, enemySymbol);
+            loadingCircle.style.display = 'none';
             checkForGameFinished();
 
             if(handleWin()){
@@ -145,14 +154,13 @@ function getClick() {
         canvas.addEventListener("click", handleCanvasClick);
 
         function handleCanvasClick(event) {
-            const x = event.clientX;
-            const y = event.clientY;
+            const x = event.offsetX;
+            const y = event.offsetY;
 
             const row = Math.floor(y / (canvas.height / 3));
             const col = Math.floor(x / (canvas.width / 3));
 
             canvas.removeEventListener("click", handleCanvasClick);
-
             resolve(`${row}:${col}`);
         }
     });
@@ -167,7 +175,9 @@ function drawGame() {
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
     }
-    ctx.strokeStyle = "black";
+    ctx.shadowColor = "white";
+    ctx.shadowBlur = 10;
+    ctx.strokeStyle = "white";
     ctx.lineWidth = 5;
     ctx.stroke();
 
@@ -177,8 +187,12 @@ function drawGame() {
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
     }
+    ctx.shadowColor = "white";
+    ctx.shadowBlur = 10;
+    ctx.strokeStyle = "white";
     ctx.stroke();
 }
+
 
 function checkForGameFinished()
 {
@@ -240,9 +254,7 @@ function drawSymbol(symbol, row, col) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    const symbolColor = symbol === symbol.X ? 'blue' : 'red';
-
-    ctx.fillStyle = symbolColor;
+    ctx.fillStyle = 'white';
     ctx.fillText(symbol, centerX, centerY);
 }
 
