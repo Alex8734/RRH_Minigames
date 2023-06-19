@@ -48,81 +48,88 @@ export function init ()
     bg3.pos = {x: (bg2.pos.x + bg2.size.x), y: 0};
     gameLoop();
 }
-async function gameLoop() {
-    let currentTime = performance.now();
-    let deltaTime = (currentTime - lastTime);
-    lastTime = currentTime;
 
-    // Calculate the scaling factor based on the canvas size
-    const scalingFactor = canvas.width / 2000;
+const targetFrameTime = 1000 / 60; // 60Hz target refresh rate
+let gameStopped = false;
+async function gameLoop(currentTime) {
+    let deltaTime = currentTime - lastTime;
 
-    // Adjust the deltaTime based on the scaling factor
-    deltaTime *= scalingFactor;
+    if (deltaTime >= targetFrameTime) {
+        const scalingFactor = canvas.width / 2000;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Adjust the deltaTime based on the scaling factor
+        deltaTime *= scalingFactor;
 
-    DrawAndMoveBackground(deltaTime);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (keysPressed["w"]) {
-        car.moveUp(deltaTime);
-    }
-    if (keysPressed["s"]) {
-        car.moveDown(deltaTime);
-    }
+        DrawAndMoveBackground(deltaTime);
 
-    createCars();
+        if (keysPressed["w"]) {
+            car.moveUp(deltaTime);
+        }
+        if (keysPressed["s"]) {
+            car.moveDown(deltaTime);
+        }
 
-    car.draw();
-    drawCarsAndMove(deltaTime, speedMultiplier);
-    printUI(money);
+        createCars();
 
-    if (!checkColiding(car))
-    {
-        if (keysPressed["d"] && speedMultiplier < 3)
+        car.draw();
+        drawCarsAndMove(deltaTime, speedMultiplier);
+        printUI(money);
+
+        if (!checkColiding(car))
         {
-            speedMultiplier += (0.00025 * deltaTime);
-            deleteCooldown++;
+            if (keysPressed["d"] && speedMultiplier < 3)
+            {
+                speedMultiplier += (0.00025 * deltaTime);
+                deleteCooldown++;
+            }
+            else
+            {
+                speedMultiplier -= (0.00025 * deltaTime);
+                if (speedMultiplier < 1)
+                {
+                    speedMultiplier = 1;
+                }
+                else if(keysPressed["a"])
+                {
+                    speedMultiplier -= (0.00075 * deltaTime);
+                }
+            }
+
+            moneyStatus.textContent = '$ ' + money;
+            requestAnimationFrame(gameLoop);
         }
         else
         {
-            speedMultiplier -= (0.00025 * deltaTime);
-            if (speedMultiplier < 1)
-            {
-                speedMultiplier = 1;
-            }
-            else if(keysPressed["a"])
-            {
-                speedMultiplier -= (0.00075 * deltaTime);
-            }
-        }
+            gameStopped = true;
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
 
-        moneyStatus.textContent = '$ ' + money;
+            playButton.style.display = 'block';
+
+            ctx.fillStyle = "red";
+            ctx.font = `${canvas.width / 6.25}px Comic Sans MS`;
+            ctx.textAlign = "center";
+            ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
+            ctx.restore();
+            ctx.save();
+            ctx.font = `${canvas.width / 16}px Comic Sans MS`;
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText(`You collected ${money}$`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
+            ctx.restore();
+            //changeButton.style.display = 'block';
+            await httpClient.postUserStats("CarRacing", money);
+        }
+        lastTime = currentTime - (deltaTime % targetFrameTime);
+    }
+    if (!gameStopped)
+    {
         requestAnimationFrame(gameLoop);
     }
-    else
-    {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-
-        playButton.style.display = 'block';
-
-        ctx.fillStyle = "red";
-        ctx.font = `${canvas.width / 6.25}px Comic Sans MS`;
-        ctx.textAlign = "center";
-        ctx.fillText('Game Over', canvas.width/2, canvas.height/2);
-        ctx.restore();
-        ctx.save();
-        ctx.font = `${canvas.width / 16}px Comic Sans MS`;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.fillText(`You collected ${money}$`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
-        ctx.restore();
-        //changeButton.style.display = 'block';
-        await httpClient.postUserStats("CarRacing", money);
-    }
 }
-
 
 document.addEventListener('DOMContentLoaded', (event) =>{
     playButton = document.getElementById('play-again');
@@ -248,6 +255,7 @@ window.addEventListener("keyup", handleKeyUp);
 playButton.addEventListener('click', () => {
     playButton.style.display = 'none';
     //changeButton.style.display = 'none';
+    gameStopped = false;
     init();
 });
 
