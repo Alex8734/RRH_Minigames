@@ -194,7 +194,6 @@ async function createAccount()
         })
         if (worked){
             document.getElementById('sign-in').style.display = 'none';
-            alert('Account created successfully!');
         }
     }
     else {
@@ -219,16 +218,12 @@ async function login()
     let worked =false;
     worked = await httpClient.loginUser({name, password},  (error) =>
     {
-        alert(error.value);
+        alert(error.Value);
     })
     if (worked)
     {
         document.getElementById('sign-in').style.display = 'none';
-        alert('Account logged in successfully!');
     }
-
-    document.getElementById("emailX").value = "";
-    document.getElementById("passwordX").value = "";
 
     if (worked)
     {

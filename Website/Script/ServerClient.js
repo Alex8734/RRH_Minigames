@@ -42,9 +42,8 @@ export class HttpClient {
     async loginUser(user, onError)
     {
         const data = {
-            UserName: user.name,
-            Email: user.email,
-            Password: user.password,
+            Identity: user.name,
+            Password: user.password
         }
 
         const response = await fetch(`${this.address}/User/login`, {

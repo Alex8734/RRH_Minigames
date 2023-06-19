@@ -76,4 +76,14 @@ public class GameController : ControllerBase
         if(newGame == null) return Ok(new JsonOutput<string>("Queueing"));
         return Ok(new JsonOutput<string>(newGame.GameId));
     }
+    
+    [HttpPost("Dequeue")]
+    public IActionResult DequeueGame([FromBody] AvailableGames game)
+    {
+        var userGuid = IdentityController.GetGuidFromToken(HttpContext);
+        var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
+        if(user == null) return BadRequest(new JsonOutput<string>($"User: {userGuid} not found"));
+        if (!GameManager.Dequeue(user!, game)) return BadRequest(new JsonOutput<string>("nobody queued"));
+        return Ok(new JsonOutput<string>($"removed {user.UserName} from queue"));
+    }
 }

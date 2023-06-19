@@ -27,6 +27,13 @@ public static class GameManager
         QueueingPlayers.Add(new QueueingMember(user, game));
         return true;
     }
+    public static bool Dequeue(DbUser user, AvailableGames game)
+    {
+        var queueingPlayer = QueueingPlayers.FirstOrDefault(u => u.User.GUID == user.GUID && u.Game == game);
+        if(queueingPlayer == null) return false;
+        QueueingPlayers.Remove(queueingPlayer);
+        return true;
+    }
     public static Game StartGame(DbUser player1, DbUser player2, AvailableGames game, DataContext ctx)
     {
         var newGame = new Game(game, player1.GUID, player2.GUID, ctx);
