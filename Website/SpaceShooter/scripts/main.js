@@ -11,29 +11,30 @@ let btn;
 const httpClient = new HttpClient();
 export let canvas;
 export let ctx;
-
+let gameId;
 let bg1;
 let bg2;
 
-document.addEventListener('DOMContentLoaded', (event) =>{
+document.addEventListener('DOMContentLoaded', async(event) =>{
     btn = document.getElementById('play-again');
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
 
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
         btn.style.display = 'none';
-        init();
+        await init();
     });
 
-    init();
+    await init();
 });
 
 document.getElementById('back-to-home').addEventListener('click', function() {
     window.location.href = './../index.html';
 });
 
-export function init ()
+export async function init ()
 {
+    gameId = (await httpClient.startSoloGame("SpaceShooter")).value;
     metorites = [];
     TimeMultiplier = 1;
     lastTime = 0;
@@ -51,9 +52,10 @@ export function init ()
     bg2.size = {x: canvas.width, y: canvas.height};
     bg1.pos = {x: 0, y: 0}
     bg2.pos = {x: canvas.width, y: 0}
-    gameLoop();
+    
+    await gameLoop();
 }
-function gameLoop() {
+async function gameLoop() {
     console.log(TimeMultiplier);
     let currentTime = performance.now();
     let deltaTime = (currentTime - lastTime);
@@ -96,7 +98,7 @@ function gameLoop() {
         ctx.textAlign = "center";
         ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
         ctx.restore();
-        httpClient.postUserStats("SpaceShooter", score);
+        await httpClient.endSoloGame(gameId, score);
     }
 
     TimeMultiplier += (0.00001 * deltaTime);

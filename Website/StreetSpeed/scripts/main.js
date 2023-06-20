@@ -15,13 +15,15 @@ let moneyStatus = document.getElementById('money');
 let bg1;
 let bg2;
 let bg3;
+let gameId;
 let playButton = document.getElementById('play-again');
 let changeButton = document.getElementById('change-car');
 let keysPressed = {};
 let lines;
 
-export function init ()
+export async function init ()
 {
+    gameId = (await httpClient.startSoloGame("CarRacing")).value;
     cars = [];
     speedMultiplier = 1;
     lastTime = 0;
@@ -46,12 +48,12 @@ export function init ()
     bg3.src = "./images/street2.png";
     bg3.size = {x: canvas.height, y: canvas.height};
     bg3.pos = {x: (bg2.pos.x + bg2.size.x), y: 0};
-    gameLoop();
+    await gameLoop();
 }
 
 const targetFrameTime = 1000 / 60; // 60Hz target refresh rate
 let gameStopped = false;
-function gameLoop(currentTime) {
+async function gameLoop(currentTime) {
     let deltaTime = currentTime - lastTime;
     
     if (deltaTime >= targetFrameTime) {
@@ -121,7 +123,7 @@ function gameLoop(currentTime) {
             ctx.fillText(`You collected ${money}$`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
             ctx.restore();
             //changeButton.style.display = 'block';
-            httpClient.postUserStats("CarRacing", money);
+            await httpClient.endSoloGame(gameId, money);
         }
         lastTime = currentTime - (deltaTime % targetFrameTime);
     }
@@ -131,12 +133,12 @@ function gameLoop(currentTime) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', (event) =>{
+document.addEventListener('DOMContentLoaded', async (event) =>{
     playButton = document.getElementById('play-again');
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
 
-    init();
+    await init();
 });
 
 
@@ -252,11 +254,11 @@ function checkSquareCollision(x1, y1, x2, y2, side) {
 window.addEventListener("keydown", handleKeyDown);
 window.addEventListener("keyup", handleKeyUp);
 
-playButton.addEventListener('click', () => {
+playButton.addEventListener('click', async () => {
     playButton.style.display = 'none';
     //changeButton.style.display = 'none';
     gameStopped = false;
-    init();
+    await init();
 });
 
 document.getElementById('back-to-home').addEventListener('click', function() {

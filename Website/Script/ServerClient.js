@@ -179,6 +179,33 @@ export class HttpClient {
         return await response.json();
     }
 
+    async startSoloGame(game){
+        const response = await fetch(`${this.address}/Game/StartSoloGame`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(game)
+        });
+        return await response.json();
+    }
+
+    async endSoloGame(gameId, stat)
+    {
+        const response = await fetch(`${this.address}/Game/EndSoloGame/${gameId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(stat)
+        });
+        return await response.json();
+    }
+    
     async postLastMove(gameId, move)
     {
         const data = {
