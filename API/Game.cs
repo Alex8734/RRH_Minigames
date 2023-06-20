@@ -8,6 +8,7 @@ namespace RRH_Minigames_API;
 
 public static class GameManager
 {
+    public static List<SoloGame> PlayingSoloGames { get; set; } = new();
     public static List<Game> PlayingGames { get; set; } = new();
     public static List<QueueingMember> QueueingPlayers { get; set; } = new List<QueueingMember>();    
     
@@ -41,7 +42,12 @@ public static class GameManager
         PlayingGames.Add(newGame);
         return newGame;
     }
-    
+    public static Game StartSoloGame(DbUser player, AvailableGames game, DataContext ctx)
+    {
+        var newGame = new SoloGame(game, player.GUID, ctx);
+        PlayingSoloGames.Add(newGame);
+        return newGame;
+    }
     public static string GetGameId(string userGuid)
     {
         var game = PlayingGames.Find(g => g.Player1Guid == userGuid || g.Player2Guid == userGuid);
