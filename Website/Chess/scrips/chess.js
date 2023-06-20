@@ -337,10 +337,10 @@ export class Piece {
         for (let piece of game.pieces) {
             if (piece.x === col && piece.y === row) {
                 if (piece.clr === "white" && piece.name === "king") {
-                    this.gameOver = "white";
+                    game.gameOver = "black";
                 }
                 if (piece.clr === "black" && piece.name === "king") {
-                    this.gameOver = "black";
+                    game.gameOver = "white";
                 }
                 console.log(piece, "was taken rn (funnymoment)");
                 const index = game.pieces.indexOf(piece);

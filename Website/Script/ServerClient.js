@@ -1,6 +1,6 @@
 export class HttpClient {
 
-    address = "http://localhost:5001";
+    address = "http://185.91.173.10:5001";
 
     async getUserStats(onError)
     {
