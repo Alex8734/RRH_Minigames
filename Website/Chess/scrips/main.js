@@ -67,7 +67,7 @@ async function init() {
 
         return false;
     });
-    abandon.addEventListener('click', async function (event)
+    abandon.addEventListener('click', function (event)
     {
         
         game.gameOver = game.myclr === "white" ? "black" : "white";
