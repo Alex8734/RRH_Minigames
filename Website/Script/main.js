@@ -128,6 +128,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
     }
+
+    if (sessionStorage.getItem('token') !== null)
+    {
+        document.getElementById('sign-in').style.display = 'none';
+    }
 });
 
 $("#login-form").on("click", function (event)
@@ -193,7 +198,7 @@ async function createAccount()
             alert(error.value);
         })
         if (worked){
-            document.getElementById('sign-up').style.display = 'none';
+            document.getElementById('sign-in').style.display = 'none';
         }
     }
     else {
@@ -206,6 +211,7 @@ async function createAccount()
     document.getElementById("password-Confirm").value = "";
 
     if (worked){
+        flipCard()
         hideLoginForm();
     }
 
