@@ -26,8 +26,8 @@ export function init ()
     speedMultiplier = 1;
     lastTime = 0;
     money = 0;
-    canvas.height = 1125;
-    canvas.width = 2000;
+    canvas.height = 800;
+    canvas.width = 1422;
     //canvas.style.height = Math.floor(canvas.clientHeight * window.devicePixelRatio) / 1.2 + 'px';
     //canvas.style.width = Math.floor(canvas.clientWidth * window.devicePixelRatio) / 1.2 + 'px';
     console.log(canvas.width);
