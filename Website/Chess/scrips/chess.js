@@ -689,10 +689,10 @@ export class Move {
 
     static stringToMove(string) {
         let move = new Move()
-        move.startX = string[0];
-        move.startY = string[1];
-        move.endX = string[3];
-        move.endY = string[4];
+        move.startX = parseInt(string[0]);
+        move.startY = parseInt(string[1]);
+        move.endX = parseInt(string[3]);
+        move.endY = parseInt(string[4]);
 
         return move;
     }
