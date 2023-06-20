@@ -37,7 +37,7 @@ $(function (){
         }
         
         
-        while(currentGameId.split("-").length < 2)
+        while(currentGameId.split("-").length < 2 && home.disabled === true)
         {
             await client.getGameID((r)=>{
                 if (r.value.split("-").length > 2){

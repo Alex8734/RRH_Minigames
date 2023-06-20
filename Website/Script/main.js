@@ -185,29 +185,53 @@ document.getElementById("log-in").addEventListener("click", async function() {
 });
 
 async function createAccount() {
-    let name = document.getElementById("username").value;
-    let email = document.getElementById("Email").value;
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("password-Confirm").value;
+    
+    const name = document.getElementById("username");
+    const email = document.getElementById("Email");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("password-Confirm");
+    name.classList.remove("is-invalid");
+    email.classList.remove("is-invalid");
+    password.classList.remove("is-invalid");
+    confirmPassword.classList.remove("is-invalid");
     let worked = false;
 
-    if (password === confirmPassword) {
-
-        worked = await httpClient.registerUser({ name, email, password },  (error)=>
+    if (password.value === confirmPassword.value)
+    {
+        const user = {
+            name: name.value,
+            email: email.value,
+            password: password.value
+        };
+        worked = await httpClient.registerUser(user, (error) =>
         {
-            alert(error.value);
-        })
-        if (worked){
+            if (error.value === "Invalid email")
+            {
+                email.classList.add("is-invalid");
+            }
+            if (error.value === "Invalid username")
+            {
+                name.classList.add("is-invalid");
+            }
+            if (error.value === "Invalid password")
+            {
+                password.classList.add("is-invalid");
+            }
+        });
+        if (worked)
+        {
             document.getElementById('sign-in').style.display = 'none';
         }
+    } else
+    {
+        confirmPassword.classList.add("is-invalid");
     }
 
     document.getElementById("username").value = "";
     document.getElementById("Email").value = "";
     document.getElementById("password").value = "";
     document.getElementById("password-Confirm").value = "";
-
-
+    
     if (worked){
         flipCard()
         hideLoginForm();
