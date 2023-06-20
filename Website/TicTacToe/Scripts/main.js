@@ -21,8 +21,8 @@ document.getElementById('home-page').addEventListener('click', () => {
 const httPClient = new HttpClient();
 let canvas;
 let ctx;
-let currentGameId = "Queueing";
-let currentState = [[symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty]];
+let currentGameId;
+let currentState;
 let playerSymbol = symbol.X;
 let enemySymbol = symbol.O;
 let status = gameStatus.NoGame;
@@ -32,8 +32,8 @@ const loadingCircle = document.getElementById('loading-circle');
 document.addEventListener('DOMContentLoaded', (event) =>{
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    canvas.height = 1500;
-    canvas.width = 1500;
+    canvas.height = 400;
+    canvas.width = 400;
 
     drawGame();
 });
@@ -47,6 +47,8 @@ button.addEventListener('click', () => {
 
 async function init()
 {
+    currentGameId = "Queueing";
+    currentState = [[symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty]];
     await httPClient.queue("TicTacToe");
 
     while(currentGameId === 'Queueing')
@@ -111,6 +113,7 @@ async function gameLoop()
             while(json === click)
             {
                 json = (await httPClient.getLastMove(currentGameId)).value;
+                console.log(json);
             }
 
             updateState(json, enemySymbol);
@@ -137,16 +140,38 @@ function handleWin()
     {
         statusBox.innerText = "The enemy player won. Press the button to play again";
         button.style.display = 'block';
+        httPClient.postUserStats("TicTacToe", -1);
+        httPClient.postLastMove(currentGameId, "");
         return true;
     }
     else if(status === gameStatus.PlayerWon)
     {
         statusBox.innerText = "Congratulation, you won!  Press the button to play again";
         button.style.display = 'block';
+        httPClient.postUserStats("TicTacToe", 0);
+        httPClient.postLastMove(currentGameId, "");
+        httPClient.endGame(currentGameId, sessionStorage.getItem('user'));
         return true;
     }
 
-    return false;
+    for (let i = 0; i < currentState.length; i++)
+    {
+        for (let j = 0; j < currentState.length; j++)
+        {
+            if (currentState[i][j] === symbol.Empty)
+            {
+                return false;
+            }
+        }
+    }
+
+    statusBox.innerText = "Draw!  Press the button to play again";
+    button.style.display = 'block';
+    httPClient.postUserStats("TicTacToe", 0);
+    gameStatus.Draw;
+    httPClient.postLastMove(currentGameId, "");
+    httPClient.endGame(currentGameId, "");
+    return true;
 }
 
 function getClick() {

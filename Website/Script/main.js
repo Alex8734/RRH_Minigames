@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     let searched = '';
 
     loadGames(currentCategory, currentSortBy, searched);
-    
+    await httpClient.registerAnonymous();
     search.addEventListener('keyup', () => {
         searched = search.value.toLowerCase();
         loadGames(currentCategory, currentSortBy, searched);
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         let games = []
         games.push(new Game('', 'Starship Dodge', './SpaceShooter/spaceGame.html','./Pics/games/spaceDodge1.png', Category.Space))
         games.push(new Game('', 'Speed On the Street', './StreetSpeed/SpeedStreet.html','./Pics/games/speedOnTheStreet.png', Category.Drive))
-        games.push(new Game('', 'TicTacToe', './TicTacToe/index.html','./Pics/games/apoapodasistred.png', Category.OneVOne))
+        games.push(new Game('', 'TicTacToe', './TicTacToe/index.html','./Pics/games/tictactoe.png', Category.OneVOne))
         games.push(new Game('', 'Chess', './Chess/index.html','./Pics/games/apoapodasistred.png', Category.OneVOne))
 
 
@@ -177,22 +177,21 @@ export function hideLoginForm() {
 document.getElementById("sign-up").addEventListener("click", async function() {
     event.preventDefault();
     await createAccount();
-    await printStats();
 });
 document.getElementById("log-in").addEventListener("click", async function() {
     event.preventDefault();
     await login();
-    await printStats();
 });
 
-async function createAccount()
-{
+async function createAccount() {
     let name = document.getElementById("username").value;
     let email = document.getElementById("Email").value;
     let password = document.getElementById("password").value;
     let confirmPassword = document.getElementById("password-Confirm").value;
     let worked = false;
+
     if (password === confirmPassword) {
+
         worked = await httpClient.registerUser({ name, email, password },  (error)=>
         {
             alert(error.value);
@@ -201,42 +200,37 @@ async function createAccount()
             document.getElementById('sign-in').style.display = 'none';
         }
     }
-    else {
-        alert("Passwords were incorrect");
-    }
 
     document.getElementById("username").value = "";
     document.getElementById("Email").value = "";
     document.getElementById("password").value = "";
     document.getElementById("password-Confirm").value = "";
 
+
     if (worked){
         flipCard()
         hideLoginForm();
+        printStats();
     }
-
-    printStats();
 }
 
-async function login()
-{
+
+async function login() {
     let name = document.getElementById("usernameX").value;
     let password = document.getElementById("passwordX").value;
-    let worked =false;
-    worked = await httpClient.loginUser({name, password},  (error) =>
-    {
-        alert(error.Value);
-    })
-    if (worked)
-    {
-        document.getElementById('sign-in').style.display = 'none';
-    }
+    let worked = false;
 
-    if (worked)
-    {
+    worked = await httpClient.loginUser({ name, password });
+
+    if (worked) {
+        document.getElementById('sign-in').style.display = 'none';
         hideLoginForm();
+        printStats();
     }
-    printStats();
+    else
+    {
+        alert("login data incorrect");
+    }
 }
 
 async function printStats()
@@ -250,12 +244,12 @@ async function printStats()
     console.log(json);
     for (let i = 0; i < json.length; i++)
     {
-        if (json[i].Game == 'Chess')
+        if (json[i].game == "Chess" || json[i].game == "TicTacToe")
         {
             html += `<div id="game-stats">
                     <h2>${json[i].game}</h2>
                     <p>Losses: ${json[i].highScore}<br>
-                    Wins: ${json[i].playCount}</p>
+                    Wins and draws: ${json[i].playCount}</p>
                  </div>`;
         }
         else
@@ -269,3 +263,7 @@ async function printStats()
     }
     stats.innerHTML = html;
 }
+
+document.getElementById('profile').addEventListener('click', function() {
+    window.location.href = './AccountDashboard/index.html';
+});

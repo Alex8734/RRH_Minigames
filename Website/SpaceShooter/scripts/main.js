@@ -1,5 +1,6 @@
 import {SpaceShip} from "./spaceshuttle.js";
 import {Meteor} from "./meteor.js";
+import {HttpClient} from "../../Script/ServerClient.js";
 
 let ship;
 let lastTime = 0;
@@ -7,6 +8,7 @@ let score = 0;
 let metorites = [];
 let TimeMultiplier = 1;
 let btn;
+const httpClient = new HttpClient();
 export let canvas;
 export let ctx;
 
@@ -36,8 +38,8 @@ export function init ()
     TimeMultiplier = 1;
     lastTime = 0;
     score = 0;
-    canvas.height = 2000;
-    canvas.width = 2000;
+    canvas.height = 1000;
+    canvas.width = 1000;
     console.log(canvas.width);
     console.log(canvas.height);
     ship = new SpaceShip();
@@ -94,6 +96,7 @@ function gameLoop() {
         ctx.textAlign = "center";
         ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
         ctx.restore();
+        httpClient.postUserStats("SpaceShooter", score);
     }
 
     TimeMultiplier += (0.00001 * deltaTime);

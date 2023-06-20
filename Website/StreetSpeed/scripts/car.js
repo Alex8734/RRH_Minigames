@@ -25,7 +25,7 @@ export class Car {
         }
         else
         {
-            this.pos.x -= ((x * deltatime) * speedMultiplier * 2);
+            this.pos.x -= ((x * deltatime) * speedMultiplier * 3);
         }
     }
 
