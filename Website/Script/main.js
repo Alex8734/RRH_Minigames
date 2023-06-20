@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     let searched = '';
 
     loadGames(currentCategory, currentSortBy, searched);
-    
+    await httpClient.registerAnonymous();
     search.addEventListener('keyup', () => {
         searched = search.value.toLowerCase();
         loadGames(currentCategory, currentSortBy, searched);
@@ -205,6 +205,7 @@ async function createAccount() {
     document.getElementById("password-Confirm").value = "";
 
     if (worked) {
+        document.getElementById('sign-in').style.display = 'none';sm
         hideLoginForm();
         printStats();
     }

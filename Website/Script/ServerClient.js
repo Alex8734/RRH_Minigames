@@ -177,4 +177,24 @@ export class HttpClient {
             body: JSON.stringify(data)
         });
     }
+
+
+    async registerAnonymous()
+    {
+        const response = await fetch(`${this.address}/User/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Host": `${this.address}`
+            },
+        })
+        const respData = await response.json();
+        if (!response.ok)
+        {
+            return false;
+        }
+        sessionStorage.setItem('token', respData.Token);
+        sessionStorage.setItem('user', respData.UserName)
+        return true;
+    }
 }
