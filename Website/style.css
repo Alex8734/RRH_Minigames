@@ -344,20 +344,30 @@ p {
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
     transform: rotateY(180deg);
+    top: 0%;
+    padding: 0;
+    height: 100%;
 }
 
 #sign-up-card{
+    position: relative;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
+    top: 0%;
+    padding: 0;
+    height: 100%;
 }
 
 #flip-card {
     perspective: 1000px;
+    height: 98%;
 }
 
 #card {
     transition: transform 0.8s;
     transform-style: preserve-3d;
+    top: 0%;
+    height: 100%;
 }
 
 .flip {
