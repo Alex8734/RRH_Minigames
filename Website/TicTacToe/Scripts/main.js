@@ -32,8 +32,8 @@ const loadingCircle = document.getElementById('loading-circle');
 document.addEventListener('DOMContentLoaded', (event) =>{
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
-    canvas.height = 1500;
-    canvas.width = 1500;
+    canvas.height = 400;
+    canvas.width = 400;
 
     drawGame();
 });
