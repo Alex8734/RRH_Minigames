@@ -128,6 +128,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
     }
+
+    if (sessionStorage.getItem('token') !== null)
+    {
+        document.getElementById('sign-in').style.display = 'none';
+    }
 });
 
 $("#login-form").on("click", function (event)
@@ -186,16 +191,13 @@ async function createAccount() {
     let worked = false;
 
     if (password === confirmPassword) {
-        worked = await httpClient.registerUser({ name, email, password }, (error) => {
-            if (error && error.response && error.response.status === 400 && error.response.data === "User already exists") {
-                alert("User already exists. Please choose a different email or login instead.");
-            } else {
-                alert(error);
-            }
-        });
 
-        if (worked) {
-            document.getElementById('sign-up').style.display = 'none';
+        worked = await httpClient.registerUser({ name, email, password },  (error)=>
+        {
+            alert(error.value);
+        })
+        if (worked){
+            document.getElementById('sign-in').style.display = 'none';
         }
     }
 
@@ -204,8 +206,9 @@ async function createAccount() {
     document.getElementById("password").value = "";
     document.getElementById("password-Confirm").value = "";
 
-    if (worked) {
-        document.getElementById('sign-in').style.display = 'none';sm
+
+    if (worked){
+        flipCard()
         hideLoginForm();
         printStats();
     }

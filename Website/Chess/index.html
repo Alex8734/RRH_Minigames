@@ -18,21 +18,29 @@
         <div class="card-body">
             <h5 class="card-title">Play Online</h5>
             <p class="card-text">Let's see if you are able to win!</p>
-            <button id="play" class="btn btn-primary" type="reset">Play!</button>
+            <button id="play" class="btn btn-primary" type="reset">
+                <div id="play-1">
+                    Play!
+                </div>
+                <div id="queue" class="d-none">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Queueing...
+                </div>
+            </button>
         </div>
     </div>
     <div class="card card-2" style="width: 20rem;">
         <div class="card-body">
             <h5 class="card-title">Account</h5>
             <p class="card-text">See your account!</p>
-            <a href="#" class="btn btn-success">Go!</a>
+            <button class="btn btn-success" id="account">Go!</button>
         </div>
     </div>
     <div class="card card-3" style="width: 20rem;">
         <div class="card-body">
             <h5 class="card-title">Main Menu</h5>
             <p class="card-text">Go back to the main menu from RRH_Minigames</p>
-            <a href="../index.html" class="btn btn-danger">Go!</a>
+            <button class="btn btn-danger" id="main-menu">Go!</button>
         </div>
     </div>
 </div>

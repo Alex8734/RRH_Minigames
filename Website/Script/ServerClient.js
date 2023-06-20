@@ -64,20 +64,23 @@ export class HttpClient {
         return true;
     }
 
-    async endGame(gameId, winner)
-    {
-        const response = await fetch(`${this.address}/Game/EndGame/${gameId}`, {
+
+    async EndGame(gameId, winnerName, onError){
+        const response = await fetch(`${this.address}/Game/Endgame/${gameId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
-            body: JSON.stringify(winner)
-        });
-        return await response.json();
-    }
 
+            body: JSON.stringify(winnerName)
+        });
+        if (!response.ok){
+            onError(await response.json())
+        }
+    }
+    
     async registerUser(user, onError)
     {
         const data = {
@@ -117,6 +120,19 @@ export class HttpClient {
         return (await response.json()).value;
     }
 
+    async dequeue(game){
+        const response = await fetch(`${this.address}/Game/Dequeue`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(game)
+        });
+        return await response.json();
+    }
+    
     async queue(game)
     {
         const response = await fetch(`${this.address}/Game/Queue`, {
@@ -131,7 +147,7 @@ export class HttpClient {
         return await response.json();
     }
 
-    async getGameID() {
+    async getGameID(success) {
         const response = await fetch(`${this.address}/Game/GameStarted`, {
             method: "GET",
             headers: {
@@ -140,7 +156,10 @@ export class HttpClient {
                 "Host": `${this.address}`
             }
         });
-        return await response.json();
+        if (response.ok){
+            var data = await response.json();
+            success(data)
+        }
     }
 
     async getLastMove(gameId)

@@ -22,10 +22,9 @@ public class GameStatController : ControllerBase
     {
         _context = context;
     }
-    [HttpPost("Stats")]
-    public IActionResult UpdatePlayerStat([FromBody] NewStat playerStat)
+    
+    public static JsonOutput<PlayerStat[]> UpdatePlayerStat([FromBody] NewStat playerStat, string userGuid, DataContext _context)
     {
-        var userGuid = IdentityController.GetGuidFromToken(HttpContext);
         var stats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
         var user =_context.Users.FirstOrDefault(u => u.GUID == userGuid);
         var stat = stats.FirstOrDefault(s => s.Game == playerStat.Game);
@@ -68,7 +67,9 @@ public class GameStatController : ControllerBase
         }
         
         _context.SaveChanges();
-        return GetPlayerStat();
+        var outstats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
+        
+        return new JsonOutput<PlayerStat[]>(outstats.ToArray());
     }
     
     
@@ -80,43 +81,5 @@ public class GameStatController : ControllerBase
         var stats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
         
         return Ok(new JsonOutput<PlayerStat[]>(stats.ToArray()));
-        
-        /*Console.WriteLine("UserGuid: " + userGuid);
-        userGuid = Guid.NewGuid().ToString();
-        var stats = new List<PlayerStat>()
-        {
-            new PlayerStat
-            {
-                Game = AvailableGames.Chess,
-                Guid = userGuid, // Assign the provided userGuid
-                Id = 1,
-                HighScore = 12,
-                PlayCount = 24
-            },
-            new PlayerStat
-            {
-                Game = AvailableGames.CarRacing,
-                Guid = userGuid, // Assign the provided userGuid
-                Id = 2,
-                HighScore = 200,
-                PlayCount = 20
-            },
-            new PlayerStat
-            {
-                Game = AvailableGames.SpaceShooter,
-                Guid = userGuid, // Assign the provided userGuid
-                Id = 3,
-                HighScore = 100,
-                PlayCount = 10
-            }
-        };
-
-        var user = new DBUser()
-        {
-            UserName = "TestUser",
-            Password = "TestPassword",
-            GUID = userGuid, // Assign the provided userGuid
-            Stats = stats
-        };*/
     }
 }

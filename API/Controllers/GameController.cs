@@ -53,6 +53,16 @@ public class GameController : ControllerBase
         return Ok(new JsonOutput<string[]>(new[]{ player1!.UserName, player2!.UserName}));
     }
     
+    [HttpPost("EndGame/{gameId}")]
+    public IActionResult StopGame(string gameId, [FromBody] string winner)
+    {
+        var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId);
+        if(game == null) return NotFound(new JsonOutput<string>("game not found!"));
+        game.WinnerGuid = _context.Users.FirstOrDefault(u => u.UserName == winner)?.GUID ?? "";
+        if (!GameManager.EndGame(game, _context)) return NotFound(new JsonOutput<string>($"winner {game.WinnerGuid} not found!"));
+        return Ok();
+    }
+    
     [HttpGet("GameStarted")]
     public IActionResult CheckForGameStart()
     {
@@ -66,6 +76,27 @@ public class GameController : ControllerBase
                 : "Queueing"));
     }
     
+    [HttpPost("StartSoloGame")]
+    public IActionResult LogSoloStart([FromBody] AvailableGames game)
+    {
+        var userGuid = IdentityController.GetGuidFromToken(HttpContext);
+        var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
+        if(user == null) return BadRequest($"User: {userGuid} not found");
+        var newgame = GameManager.StartSoloGame(user!, game, _context);
+        return Ok(new JsonOutput<string>(newgame.GameId));
+    }
+    
+    [HttpPost("EndSoloGame/{gameId}")]
+    public IActionResult GetStats(string gameId, [FromBody] NewStat playerStat)
+    {
+        var userGuid = IdentityController.GetGuidFromToken(HttpContext);
+        if (userGuid == null) return BadRequest(new JsonOutput<string>("user not found!"));
+        var game = GameManager.PlayingSoloGames.FirstOrDefault(g => g.GameId == gameId);
+        if(game == null) return NotFound(new JsonOutput<string>("game not found!"));
+        var output = GameStatController.UpdatePlayerStat(playerStat, userGuid!, _context);
+        return Ok(output);
+    }
+    
     [HttpPost("Queue")]
     public IActionResult QueueGame([FromBody] AvailableGames game)
     {
@@ -73,6 +104,16 @@ public class GameController : ControllerBase
         var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
         if(user == null) return BadRequest($"User: {userGuid} not found");
         if (!GameManager.Queue(user!, game, _context, out var newGame)) return BadRequest(new JsonOutput<string>("already queued"));
+        foreach (var quers in GameManager.QueueingPlayers)
+        {
+            Console.WriteLine(quers.User.UserName);
+        }
+
+        Console.WriteLine("");
+        foreach (var playingGame in GameManager.PlayingGames)
+        {
+            Console.WriteLine($"{playingGame.Player1Guid} vs {playingGame.Player2Guid} : {playingGame.GameName}");
+        }
         if(newGame == null) return Ok(new JsonOutput<string>("Queueing"));
         return Ok(new JsonOutput<string>(newGame.GameId));
     }
@@ -84,6 +125,15 @@ public class GameController : ControllerBase
         var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
         if(user == null) return BadRequest(new JsonOutput<string>($"User: {userGuid} not found"));
         if (!GameManager.Dequeue(user!, game)) return BadRequest(new JsonOutput<string>("nobody queued"));
-        return Ok(new JsonOutput<string>($"removed {user.UserName} from queue"));
+        foreach (var quers in GameManager.QueueingPlayers)
+        {
+            Console.WriteLine(quers.User);
+            
+        }
+        if(GameManager.QueueingPlayers.Count == 0)
+        {
+            Console.WriteLine("no querers");
+        }
+        return Ok(new JsonOutput<QueueingMember[]>(GameManager.QueueingPlayers.ToArray()));
     }
 }

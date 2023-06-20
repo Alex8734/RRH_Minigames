@@ -52,7 +52,7 @@ public class IdentityController : ControllerBase
     {
         if(!IsNewUserValid(newUser))
         {
-            return BadRequest("User already exists");
+            return BadRequest(new JsonOutput<string>("User already exists"));
         }
         var user = new User(
             newUser.UserName,
@@ -68,7 +68,9 @@ public class IdentityController : ControllerBase
             UserName = user.UserName
         };
         
-        if(user.Email == null) return BadRequest("Invalid email");
+        if(user.Email == null) return BadRequest(new JsonOutput<string>("Invalid email"));
+        if(user.UserName == "") return BadRequest(new JsonOutput<string>("Invalid username"));
+        if(user.Password == "") return BadRequest(new JsonOutput<string>("Invalid password"));
         _context.Users.Add(dbUser);
         _context.SaveChanges();
 

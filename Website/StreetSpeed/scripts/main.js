@@ -53,7 +53,7 @@ const targetFrameTime = 1000 / 60; // 60Hz target refresh rate
 let gameStopped = false;
 function gameLoop(currentTime) {
     let deltaTime = currentTime - lastTime;
-
+    
     if (deltaTime >= targetFrameTime) {
         const scalingFactor = canvas.width / 2000;
 

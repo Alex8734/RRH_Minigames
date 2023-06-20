@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using RRH_Minigames_API.Controllers;
 using RRH_Minigames_API.Identity;
 
 namespace RRH_Minigames_API;
 
 public static class GameManager
 {
+    public static List<SoloGame> PlayingSoloGames { get; set; } = new();
     public static List<Game> PlayingGames { get; set; } = new();
     public static List<QueueingMember> QueueingPlayers { get; set; } = new List<QueueingMember>();    
     
@@ -21,7 +23,7 @@ public static class GameManager
         if(sameGameQueuers != null)
         {
             gameStarted = StartGame(user, sameGameQueuers!.User, game, ctx);
-            QueueingPlayers.Remove(sameGameQueuers);
+            QueueingPlayers.RemoveAt(QueueingPlayers.FindIndex(u => u.Game == game));
             return true;
         }
         QueueingPlayers.Add(new QueueingMember(user, game));
@@ -40,18 +42,33 @@ public static class GameManager
         PlayingGames.Add(newGame);
         return newGame;
     }
-    
+    public static Game StartSoloGame(DbUser player, AvailableGames game, DataContext ctx)
+    {
+        var newGame = new SoloGame(game, player.GUID, ctx);
+        PlayingSoloGames.Add(newGame);
+        return newGame;
+    }
     public static string GetGameId(string userGuid)
     {
         var game = PlayingGames.Find(g => g.Player1Guid == userGuid || g.Player2Guid == userGuid);
         return game?.GameId ?? "";
     }
     
-    public static DbUser? EndGame(Game game, DataContext ctx)
+    public static bool EndGame(Game game, DataContext ctx)
     {
         PlayingGames.Remove(game);
+        if(game.WinnerGuid == "")
+        {
+            return true;
+        }
+        if(game.WinnerGuid == null || GetGameId(game.WinnerGuid) == "")
+        {
+            return false;
+        }
         var winner = ctx.Users.FirstOrDefault(u => u.GUID == game.WinnerGuid);
-        return winner;
+        if(winner == null) return false;
+        
+        return true;
     }
     
 }
