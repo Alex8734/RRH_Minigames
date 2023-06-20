@@ -1,6 +1,6 @@
 export class HttpClient {
 
-    address = "http://185.91.173.10:5001";
+    address = "http://localhost:5001";
 
     async getUserStats(onError)
     {
@@ -81,6 +81,7 @@ export class HttpClient {
         }
     }
     
+    
     async registerUser(user, onError)
     {
         const data = {
@@ -120,6 +121,19 @@ export class HttpClient {
         return (await response.json()).value;
     }
 
+    async dequeue(game){
+        const response = await fetch(`${this.address}/Game/Dequeue`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+                "Host": `${this.address}`
+            },
+            body: JSON.stringify(game)
+        });
+        return await response.json();
+    }
+    
     async queue(game)
     {
         const response = await fetch(`${this.address}/Game/Queue`, {
@@ -134,7 +148,7 @@ export class HttpClient {
         return await response.json();
     }
 
-    async getGameID() {
+    async getGameID(success) {
         const response = await fetch(`${this.address}/Game/GameStarted`, {
             method: "GET",
             headers: {
@@ -143,7 +157,10 @@ export class HttpClient {
                 "Host": `${this.address}`
             }
         });
-        return await response.json();
+        if (response.ok){
+            var data = await response.json();
+            success(data)
+        }
     }
 
     async getLastMove(gameId)

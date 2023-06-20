@@ -22,10 +22,9 @@ public class GameStatController : ControllerBase
     {
         _context = context;
     }
-    [HttpPost("Stats")]
-    public IActionResult UpdatePlayerStat([FromBody] NewStat playerStat)
+    
+    public static JsonOutput<PlayerStat[]> UpdatePlayerStat([FromBody] NewStat playerStat, string userGuid, DataContext _context)
     {
-        var userGuid = IdentityController.GetGuidFromToken(HttpContext);
         var stats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
         var user =_context.Users.FirstOrDefault(u => u.GUID == userGuid);
         var stat = stats.FirstOrDefault(s => s.Game == playerStat.Game);
@@ -68,7 +67,9 @@ public class GameStatController : ControllerBase
         }
         
         _context.SaveChanges();
-        return GetPlayerStat();
+        var outstats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
+        
+        return new JsonOutput<PlayerStat[]>(outstats.ToArray());
     }
     
     
@@ -80,7 +81,5 @@ public class GameStatController : ControllerBase
         var stats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
         
         return Ok(new JsonOutput<PlayerStat[]>(stats.ToArray()));
-        
-        
     }
 }

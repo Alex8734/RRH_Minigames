@@ -105,7 +105,7 @@ export class Game {
 
         if ((this.myclr  === "black" && this.gameOver === "black") || (this.myclr === "white" && this.gameOver === "white")) {
             //win
-            await this.client.EndGame(this.gid, this.myName, (e) => alert(e.value))
+            await this.client.EndGame(this.gid, this.myName,(e)=>{console.log(e.value)} )
             this.body.style.backgroundColor = "green";
             alert("you won!");
             return;
@@ -114,7 +114,7 @@ export class Game {
 
         else if ((this.myclr  === "black" && this.gameOver === "white") || (this.myclr === "white" && this.gameOver === "black")) {
             //lose
-            await this.client.EndGame(this.gid, this.opponentName, (e) => alert(e.value))
+            await this.client.EndGame(this.gid, this.opponentName,(e)=>{console.log(e.value)})
             this.body.style.backgroundColor = "red";
             alert("you lost!");
             return;
