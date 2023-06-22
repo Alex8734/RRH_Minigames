@@ -34,7 +34,7 @@ document.getElementById('back-to-home').addEventListener('click', function() {
 
 export async function init ()
 {
-    gameId = (await httpClient.startSoloGame("SpaceShooter")).value;
+    gameId = (httpClient.startSoloGame("SpaceShooter")).value;
     metorites = [];
     TimeMultiplier = 1;
     lastTime = 0;

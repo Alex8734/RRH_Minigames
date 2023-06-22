@@ -17,6 +17,10 @@ $(function (){
         window.location.href = "../index.html"
     })
     
+    window.addEventListener("unload",async()=>{
+        await client.dequeue("Chess");
+    })
+    
     play.addEventListener('click', async function (event) {
         
         if (home.disabled === true)
@@ -28,19 +32,23 @@ $(function (){
             await client.dequeue("Chess")
             return;
         }
-        else{
-            play1.classList.add("d-none");
-            queue.classList.remove("d-none");
-            home.disabled = true;
-            account.disabled = true;
-            currentGameId = (await client.queue("Chess")).value;
-        }
+        play1.classList.add("d-none");
+        queue.classList.remove("d-none");
+        home.disabled = true;
+        account.disabled = true;
+        currentGameId = (await client.queue("Chess")).value;
         
-        
-        while(currentGameId.split("-").length < 2 && home.disabled === true)
+        if (currentGameId.split("-").length > 2)
         {
-            await client.getGameID((r)=>{
-                if (r.value.split("-").length > 2){
+            window.location.href = `game.html?gid=${currentGameId}`;
+        }
+
+        while (currentGameId.split("-").length < 2 && home.disabled === true)
+        {
+            await client.getGameID((r) =>
+            {
+                if (r.value.split("-").length > 2)
+                {
                     window.location.href = `game.html?gid=${r.value}`;
                 }
                 currentGameId = r.value;

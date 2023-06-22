@@ -59,15 +59,22 @@ public static class GameManager
         PlayingGames.Remove(game);
         if(game.WinnerGuid == "")
         {
+            GameStatController.UpdatePlayerStat(new NewStat(game.GameName, -1), game.Player1Guid, ctx);
+            GameStatController.UpdatePlayerStat(new NewStat(game.GameName, -1), game.Player2Guid!, ctx);
             return true;
         }
-        if(game.WinnerGuid == null || GetGameId(game.WinnerGuid) == "")
+        if(game.WinnerGuid == null)
         {
             return false;
         }
         var winner = ctx.Users.FirstOrDefault(u => u.GUID == game.WinnerGuid);
+        GameStatController.UpdatePlayerStat(new NewStat(game.GameName, 2), game.WinnerGuid, ctx);
+        GameStatController.UpdatePlayerStat(new NewStat(game.GameName, -1), game.Player1Guid, ctx);
         if(winner == null) return false;
-        
+        foreach (var playingGame in PlayingGames)
+        {
+            Console.WriteLine(playingGame.GameName);
+        }
         return true;
     }
     

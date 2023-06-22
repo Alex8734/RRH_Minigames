@@ -11,7 +11,6 @@ const client = new HttpClient();
 let standardName = "Unknown User";
 let myclr;
 async function init() {
-
     
     const url = new URL(window.location.toLocaleString());
     const params = url.searchParams;
@@ -19,6 +18,7 @@ async function init() {
     
     let response = await client.getPlayers(currentGameId);
     console.log(response);
+    
     if (response[0] === sessionStorage.getItem('user'))
     {
         myclr = "white";
@@ -26,12 +26,19 @@ async function init() {
     else {
         myclr = "black";
     }
-
+    
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     game = new Game(560, response[0], response[1], myclr, currentGameId);
     game.init();
 
+    $(window).bind('beforeunload', async function ()
+    {
+        await client.EndGame(currentGameId, response[1]);
+        game.gameOver = game.myclr === "white" ? "black" : "white";
+        return 'your stil playing...';
+    });
+    
     canvas.addEventListener('click', function(event) {
 
         // Get the current URL

@@ -29,7 +29,7 @@ let status = gameStatus.NoGame;
 const button = document.getElementById('play-again');
 const statusBox = document.getElementById('status');
 const loadingCircle = document.getElementById('loading-circle');
-document.addEventListener('DOMContentLoaded', (event) =>{
+document.addEventListener('DOMContentLoaded', () =>{
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     canvas.height = 400;
@@ -38,26 +38,32 @@ document.addEventListener('DOMContentLoaded', (event) =>{
     drawGame();
 });
 
-button.addEventListener('click', () => {
+button.addEventListener('click', async () => {
     button.style.display = 'none';
     loadingCircle.style.display = 'block';
     statusBox.innerText = "Searching...";
-    init();
+    await init();
 });
 
 async function init()
 {
-    currentGameId = "Queueing";
     currentState = [[symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty], [symbol.Empty, symbol.Empty, symbol.Empty]];
-    await httPClient.queue("TicTacToe");
-
-    while(currentGameId === 'Queueing')
+    currentGameId = (await httPClient.queue("TicTacToe")).value;
+    
+    while (currentGameId.split("-").length < 2)
     {
-        currentGameId = await httPClient.getGameID();
-        currentGameId = currentGameId.value;
+        await httPClient.getGameID((r) =>
+        {
+            if (r.value.split("-").length > 2)
+            {
+                currentGameId = r.value;
+                console.log("game found...")
+            }
+            currentGameId = r.value;
+        });
         console.log(currentGameId);
     }
-
+    console.log(currentGameId);
     let response = await httPClient.getPlayers(currentGameId);
 
     if (response[0] === sessionStorage.getItem('user'))
@@ -74,17 +80,18 @@ async function init()
 async function gameLoop()
 {
     loadingCircle.style.display = 'none';
-    if (playerSymbol == symbol.X)
+    if (playerSymbol === symbol.X)
     {
-        while(status == gameStatus.Running)
+        while(status === gameStatus.Running)
         {
             statusBox.innerText = "Its your turn! Select a field";
             let click = await getClick();
             updateState(click, playerSymbol);
             await httPClient.postLastMove(currentGameId, click);
+            console.log(`posted mov... ${click}`);
             checkForGameFinished();
 
-            if(handleWin()){
+            if(await handleWin()){
                 break;
             }
 
@@ -99,12 +106,12 @@ async function gameLoop()
             updateState(json, enemySymbol);
             loadingCircle.style.display = 'none';
             checkForGameFinished();
-            handleWin();
+            await handleWin();
         }
     }
     else {
         let click = "";
-        while(status == gameStatus.Running)
+        while(status === gameStatus.Running)
         {
             loadingCircle.style.display = 'block';
             statusBox.innerText = "Wait for the enemy's move";
@@ -120,7 +127,7 @@ async function gameLoop()
             loadingCircle.style.display = 'none';
             checkForGameFinished();
 
-            if(handleWin()){
+            if(await handleWin()){
                 break;
             }
 
@@ -129,28 +136,26 @@ async function gameLoop()
             updateState(click, playerSymbol);
             await httPClient.postLastMove(currentGameId, click);
             checkForGameFinished();
-            handleWin();
+            await handleWin();
         }
     }
 }
 
-function handleWin()
+async function handleWin()
 {
     if (status === gameStatus.EnemyWon)
     {
         statusBox.innerText = "The enemy player won. Press the button to play again";
         button.style.display = 'block';
-        httPClient.postUserStats("TicTacToe", -1);
-        httPClient.postLastMove(currentGameId, "");
+        await httPClient.postLastMove(currentGameId, "");
         return true;
     }
     else if(status === gameStatus.PlayerWon)
     {
         statusBox.innerText = "Congratulation, you won!  Press the button to play again";
         button.style.display = 'block';
-        httPClient.postUserStats("TicTacToe", 0);
-        httPClient.postLastMove(currentGameId, "");
-        httPClient.endGame(currentGameId, sessionStorage.getItem('user'));
+        await httPClient.postLastMove(currentGameId, "");
+        await httPClient.EndGame(currentGameId, sessionStorage.getItem('user'), (e)=>alert(e.value));
         return true;
     }
 
@@ -167,10 +172,8 @@ function handleWin()
 
     statusBox.innerText = "Draw!  Press the button to play again";
     button.style.display = 'block';
-    httPClient.postUserStats("TicTacToe", 0);
-    gameStatus.Draw;
-    httPClient.postLastMove(currentGameId, "");
-    httPClient.endGame(currentGameId, "");
+    await httPClient.postLastMove(currentGameId, "");
+    await httPClient.EndGame(currentGameId, "");
     return true;
 }
 
@@ -223,42 +226,41 @@ function checkForGameFinished()
 {
     for (let row = 0; row < 3; row++) {
         if (
-            currentState[row][0] != symbol.Empty &&
-            currentState[row][0] == currentState[row][1] &&
-            currentState[row][1] == currentState[row][2]
+            currentState[row][0] !== symbol.Empty &&
+            currentState[row][0] === currentState[row][1] &&
+            currentState[row][1] === currentState[row][2]
         ) {
-            status = currentState[row][0] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
+            status = currentState[row][0] === playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
             return;
         }
     }
 
     for (let col = 0; col < 3; col++) {
         if (
-            currentState[0][col] != symbol.Empty &&
-            currentState[0][col] == currentState[1][col] &&
-            currentState[1][col] == currentState[2][col]
+            currentState[0][col] !== symbol.Empty &&
+            currentState[0][col] === currentState[1][col] &&
+            currentState[1][col] === currentState[2][col]
         ) {
-            status = currentState[0][col] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
+            status = currentState[0][col] === playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
             return;
         }
     }
 
     if (
-        currentState[0][0] != symbol.Empty &&
-        currentState[0][0] == currentState[1][1] &&
-        currentState[1][1] == currentState[2][2]
+        currentState[0][0] !== symbol.Empty &&
+        currentState[0][0] === currentState[1][1] &&
+        currentState[1][1] === currentState[2][2]
     ) {
-        status = currentState[0][0] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
+        status = currentState[0][0] === playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
         return;
     }
 
     if (
-        currentState[0][2] != symbol.Empty &&
-        currentState[0][2] == currentState[1][1] &&
-        currentState[1][1] == currentState[2][0]
+        currentState[0][2] !== symbol.Empty &&
+        currentState[0][2] === currentState[1][1] &&
+        currentState[1][1] === currentState[2][0]
     ) {
-        status = currentState[0][2] == playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
-        return;
+        status = currentState[0][2] === playerSymbol ? gameStatus.PlayerWon : gameStatus.EnemyWon;
     }
 }
 

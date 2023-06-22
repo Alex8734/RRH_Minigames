@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     let searched = '';
 
     loadGames(currentCategory, currentSortBy, searched);
-    //await httpClient.registerAnonymous();
     search.addEventListener('keyup', () => {
         searched = search.value.toLowerCase();
         loadGames(currentCategory, currentSortBy, searched);
@@ -129,7 +128,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    if (sessionStorage.getItem('token') !== null)
+    if (sessionStorage.getItem('token') !== null && sessionStorage.getItem('user') !== "Anonymous")
     {
         document.getElementById('sign-in').style.display = 'none';
         await printStats()
