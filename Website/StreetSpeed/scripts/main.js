@@ -23,7 +23,7 @@ let lines;
 
 export async function init ()
 {
-    gameId = (await httpClient.startSoloGame("CarRacing")).value;
+    gameId = (httpClient.startSoloGame("CarRacing")).value;
     cars = [];
     speedMultiplier = 1;
     lastTime = 0;
