@@ -1,6 +1,6 @@
 export class HttpClient {
 
-    address = "http://localhost:5000";
+    address = "http://localhost:5001";
 
     async getUserStats(onError)
     {
@@ -115,6 +115,10 @@ export class HttpClient {
     
     async queue(game)
     {
+        let token = sessionStorage.getItem("token");
+        if ( token === null){
+            await this.registerAnonymous();
+        }
         const response = await fetch(`${this.address}/Game/Queue`, {
             method: "POST",
             headers: {
@@ -172,7 +176,7 @@ export class HttpClient {
         return await response.json();
     }
 
-    async endSoloGame(gameId, stat)
+    async endSoloGame(gameId, stat, gameName)
     {
         const response = await fetch(`${this.address}/Game/EndSoloGame/${gameId}`, {
             method: "POST",
@@ -181,7 +185,10 @@ export class HttpClient {
                 "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
                 "Host": `${this.address}`
             },
-            body: JSON.stringify(stat)
+            body: JSON.stringify({
+                "game":gameName,
+                "score":stat
+            })
         });
         return await response.json();
     }

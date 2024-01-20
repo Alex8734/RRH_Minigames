@@ -145,6 +145,7 @@ header {
     width: 25%;
 }
 
+
 .switch-text{
     position: fixed;
     bottom: 0;
@@ -184,15 +185,17 @@ header {
 }
 
 .game {
-    width: 100%;
+    width: 13rem;
     background: black;
-    border-radius: 2vw;
+    border-radius: 10%;
     border: none;
     transition: all 0.2s ease-in-out;
     overflow: hidden;
     scale: 100%;
-    aspect-ratio: 4/2;
+    aspect-ratio: 5/ 5;
     display: inline-block;
+    flex: 1 0 200px; /* This means that the item will grow and shrink as needed, but won't be smaller than 200px */
+    margin: 10px;
 }
 
 a {
@@ -230,26 +233,31 @@ a {
     border: var(--primary-color) solid;
     scale: 105%;
 }
-
-.game-name {
+.game-name-box{
     background: rgba(0, 0, 0, 0.82);
     position: absolute;
-    top: 79%;
-    padding-left: 4%;
+    top: 85%;
     color: white;
     margin: 0;
-    height: 21%;
-    font-size: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     white-space: nowrap;
     overflow: hidden;
     width: 100%;
 }
 
+.game-name {
+    margin-top: .1%;
+    font-size-adjust: inherit;
+    font-size: 3vh;
+}
+
 .video {
-    top: -15%;
-    position: relative;
-    width: 100%;
-    bottom: -20%;
+    
+    position: absolute;
+    
+    height: 100%;
 }
 
 #login-form {
@@ -334,7 +342,6 @@ h2 {
 
 p {
     color: white;
-    padding-left: 1rem;
 }
 
 #log-in-card{

@@ -15,14 +15,14 @@ public static class GameManager
     public static bool Queue(DbUser user, AvailableGames game , DataContext ctx, out Game? gameStarted)
     {
         gameStarted = null;
-        foreach (var queueingPlayer in QueueingPlayers)
+        if (QueueingPlayers.Any(queueingPlayer => queueingPlayer.User.GUID == user.GUID))
         {
-            if(queueingPlayer.User.GUID == user.GUID) return false;
+            return false;
         }
         var sameGameQueuers = QueueingPlayers.Find(u => u.Game == game);
         if(sameGameQueuers != null)
         {
-            gameStarted = StartGame(user, sameGameQueuers!.User, game, ctx);
+            gameStarted = StartGame(user, sameGameQueuers!.User, game);
             QueueingPlayers.RemoveAt(QueueingPlayers.FindIndex(u => u.Game == game));
             return true;
         }
@@ -36,15 +36,15 @@ public static class GameManager
         QueueingPlayers.Remove(queueingPlayer);
         return true;
     }
-    public static Game StartGame(DbUser player1, DbUser player2, AvailableGames game, DataContext ctx)
+    public static Game StartGame(DbUser player1, DbUser player2, AvailableGames game)
     {
-        var newGame = new Game(game, player1.GUID, player2.GUID, ctx);
+        var newGame = new Game(game, player1.GUID, player2.GUID);
         PlayingGames.Add(newGame);
         return newGame;
     }
-    public static Game StartSoloGame(DbUser player, AvailableGames game, DataContext ctx)
+    public static Game StartSoloGame(DbUser player, AvailableGames game)
     {
-        var newGame = new SoloGame(game, player.GUID, ctx);
+        var newGame = new SoloGame(game, player.GUID);
         PlayingSoloGames.Add(newGame);
         return newGame;
     }
@@ -81,7 +81,7 @@ public static class GameManager
 }
 public class Game
 {
-    public Game(AvailableGames gameName, string player1Guid, string player2Guid, DataContext ctx)
+    public Game(AvailableGames gameName, string player1Guid, string player2Guid)
     {
         Player1Guid = player1Guid;
         Player2Guid = player2Guid;
@@ -111,8 +111,8 @@ public class Move
 
 public class SoloGame : Game
 {
-    public SoloGame(AvailableGames gameName, string player1Guid, DataContext ctx) 
-    : base(gameName, player1Guid, player1Guid, ctx)
+    public SoloGame(AvailableGames gameName, string player1Guid) 
+    : base(gameName, player1Guid, player1Guid)
     {
     }
 

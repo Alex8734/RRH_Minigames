@@ -10,14 +10,16 @@ export class Game {
 
     getHtml()
     {
-        let html = `<a href="${this.link}">
-            <div class="game">
-            <video poster="${this.poster}" class="video" src="${this.videoSrc}"></video>
-            <p class="game-name">
-                ${this.name}
-            </p>
-        </div>
-        </a>`
+        let html = `<div >
+            <a href="${this.link}"  class="game">
+                <video poster="${this.poster}" class="video" src="${this.videoSrc}"></video>
+                <div class="game-name-box">
+                    <p class="game-name">
+                        ${this.name}
+                    </p>
+                </div>
+            </a>
+        </div>`
 
         return html;
     }

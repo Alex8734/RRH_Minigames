@@ -47,10 +47,25 @@ public class GameController : ControllerBase
     {
         var game = GameManager.PlayingGames.FirstOrDefault(g => g.GameId == gameId);
         if(game == null) return NotFound(new JsonOutput<string>("game not found!"));
-        var player1 = _context.Users.FirstOrDefault(u => u.GUID == game!.Player1Guid);
-        var player2 = _context.Users.FirstOrDefault(u => u.GUID == game!.Player2Guid);
+        string player1name, player2name;
+        if(AnonymousUser.Guids.Contains(game!.Player1Guid))
+        {
+         player1name = AnonymousUser.AnonymousUserName+AnonymousUser.Guids.IndexOf(game!.Player1Guid);   
+        }
+        else
+        {
+            player1name = _context.Users.FirstOrDefault(u => u.GUID == game!.Player1Guid)!.UserName;
+        }
+        if(game!.Player2Guid != null && AnonymousUser.Guids.Contains(game!.Player2Guid!))
+        {
+            player2name = AnonymousUser.AnonymousUserName+AnonymousUser.Guids.IndexOf(game!.Player2Guid!);
+        }
+        else
+        {
+            player2name = _context.Users.FirstOrDefault(u => u.GUID == game!.Player2Guid)!.UserName;
+        }
         
-        return Ok(new JsonOutput<string[]>(new[]{ player1!.UserName, player2!.UserName}));
+        return Ok(new JsonOutput<string[]>(new[]{ player1name, player2name}));
     }
     
     [HttpPost("EndGame/{gameId}")]
@@ -82,7 +97,7 @@ public class GameController : ControllerBase
         var userGuid = IdentityController.GetGuidFromToken(HttpContext);
         var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
         if(user == null) return BadRequest($"User: {userGuid} not found");
-        var newgame = GameManager.StartSoloGame(user!, game, _context);
+        var newgame = GameManager.StartSoloGame(user!, game);
         return Ok(new JsonOutput<string>(newgame.GameId));
     }
     
@@ -93,6 +108,7 @@ public class GameController : ControllerBase
         if (userGuid == null) return BadRequest(new JsonOutput<string>("user not found!"));
         var game = GameManager.PlayingSoloGames.FirstOrDefault(g => g.GameId == gameId);
         if(game == null) return NotFound(new JsonOutput<string>("game not found!"));
+
         var output = GameStatController.UpdatePlayerStat(playerStat, userGuid!, _context);
         return Ok(output);
     }
@@ -101,8 +117,22 @@ public class GameController : ControllerBase
     public IActionResult QueueGame([FromBody] AvailableGames game)
     {
         var userGuid = IdentityController.GetGuidFromToken(HttpContext);
+        var userName = IdentityController.GetUserNameFromToken(HttpContext);
         var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
-        if(user == null) return BadRequest($"User: {userGuid} not found");
+        if(user == null 
+           && userGuid != null
+           && userName != null
+           && AnonymousUser.Guids.Contains(userGuid))
+        {
+            user = new DbUser()
+            {
+                
+                GUID = userGuid!,
+                UserName = userName,
+                Password = "Anonymous",
+            };
+        }
+        if(user == null ) return BadRequest($"User: {userGuid} not found");
         if (!GameManager.Queue(user!, game, _context, out var newGame)) return BadRequest(new JsonOutput<string>("already queued"));
         foreach (var quers in GameManager.QueueingPlayers)
         {
@@ -122,7 +152,22 @@ public class GameController : ControllerBase
     public IActionResult DequeueGame([FromBody] AvailableGames game)
     {
         var userGuid = IdentityController.GetGuidFromToken(HttpContext);
+        
+        var userName = IdentityController.GetUserNameFromToken(HttpContext);
         var user = _context.Users.FirstOrDefault(u => u.GUID == userGuid);
+        if(user == null 
+           && userGuid != null
+           && userName != null
+           && AnonymousUser.Guids.Contains(userGuid))
+        {
+            user = new DbUser()
+            {
+                
+                GUID = userGuid!,
+                UserName = userName,
+                Password = "Anonymous",
+            };
+        }
         if(user == null) return BadRequest(new JsonOutput<string>($"User: {userGuid} not found"));
         if (!GameManager.Dequeue(user!, game)) return BadRequest(new JsonOutput<string>("nobody queued"));
         foreach (var quers in GameManager.QueueingPlayers)

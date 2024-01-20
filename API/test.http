@@ -1,0 +1,8 @@
+﻿POST 185.91.173.10:5000/Game/LastMove/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWxleDEyMyIsImVtYWlsIjoiYWRkc2ZAZ21haWwuY29tIiwibmFtZWlkIjoiMTZiNTc5MDktZWRmOC00NGIwLWIyZTktYzAyZmQyNGNmYjk0IiwibmJmIjoxNzA1Nzc2NzIzLCJleHAiOjE3MDU4MDU1MjMsImlhdCI6MTcwNTc3NjcyMywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIn0.SV3ET0Az2B4DBAnKgMSBYInGuZMXWcLxqnvSKjtNua0
+
+{
+  "GameId" : "5d87490a-fc43-4cc7-957d-5806b7775e4e",
+  "Move" : "47-30"
+}

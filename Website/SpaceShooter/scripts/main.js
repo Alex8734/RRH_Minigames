@@ -34,7 +34,7 @@ document.getElementById('back-to-home').addEventListener('click', function() {
 
 export async function init ()
 {
-    gameId = (httpClient.startSoloGame("SpaceShooter")).value;
+    gameId = (await httpClient.startSoloGame("SpaceShooter")).value;
     metorites = [];
     TimeMultiplier = 1;
     lastTime = 0;
@@ -98,7 +98,7 @@ async function gameLoop() {
         ctx.textAlign = "center";
         ctx.fillText(`Your score was: ${score}`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
         ctx.restore();
-        await httpClient.endSoloGame(gameId, score);
+        await httpClient.endSoloGame(gameId, score, "SpaceShooter");
     }
 
     TimeMultiplier += (0.00001 * deltaTime);

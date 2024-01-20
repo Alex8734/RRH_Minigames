@@ -138,4 +138,13 @@ public class IdentityController : ControllerBase
         if(claim == null) return null;
         return claim.Value;
     }
+    public static string? GetUserNameFromToken(HttpContext httpContext)
+    {
+        var identity = httpContext.User.Identity as ClaimsIdentity;
+        if (identity == null) return null;
+        var claim = identity.Claims.ToList().Find(c => c.Type == "name");
+        
+        if(claim == null) return null;
+        return claim.Value;
+    }
 }

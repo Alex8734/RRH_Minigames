@@ -25,6 +25,10 @@ public class GameStatController : ControllerBase
     
     public static JsonOutput<PlayerStat[]> UpdatePlayerStat([FromBody] NewStat playerStat, string userGuid, DataContext _context)
     {
+        if(AnonymousUser.Guids.Contains(userGuid))
+        {
+            return new JsonOutput<PlayerStat[]>(Array.Empty<PlayerStat>());
+        }
         var stats = _context.Stats.Where(s => s.Guid == userGuid).ToList();
         var user =_context.Users.FirstOrDefault(u => u.GUID == userGuid);
         var stat = stats.FirstOrDefault(s => s.Game == playerStat.Game);

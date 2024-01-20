@@ -23,7 +23,7 @@ let lines;
 
 export async function init ()
 {
-    gameId = (httpClient.startSoloGame("CarRacing")).value;
+    gameId = (await httpClient.startSoloGame("CarRacing")).value;
     cars = [];
     speedMultiplier = 1;
     lastTime = 0;
@@ -123,7 +123,7 @@ async function gameLoop(currentTime) {
             ctx.fillText(`You collected ${money}$`, canvas.width/2, canvas.height/2 + canvas.width / 12.5);
             ctx.restore();
             //changeButton.style.display = 'block';
-            await httpClient.endSoloGame(gameId, money);
+            await httpClient.endSoloGame(gameId, money, "CarRacing");
         }
         lastTime = currentTime - (deltaTime % targetFrameTime);
     }

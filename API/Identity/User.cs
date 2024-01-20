@@ -23,7 +23,10 @@ public class User
 }
 public class AnonymousUser : User
 {
-    public AnonymousUser(string? guid = null) : base("Anonymous", "Anonymous", guid: guid)
+    public static string AnonymousUserName = "Anonymous";
+    public static readonly List<string> Guids = new();
+    public AnonymousUser(string? guid = null) : base(AnonymousUserName+Guids.Count, "Anonymous", guid: guid)
     {
+        Guids.Add(this.GUID);
     }
 }
