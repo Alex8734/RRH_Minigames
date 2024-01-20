@@ -83,6 +83,7 @@ async function init() {
     await game.gameLoop();
 }
 $(async function () {
+   
     await init()
 })
 

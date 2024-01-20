@@ -26,6 +26,7 @@ let currentState;
 let playerSymbol = symbol.X;
 let enemySymbol = symbol.O;
 let status = gameStatus.NoGame;
+let enemyName = "";
 const button = document.getElementById('play-again');
 const statusBox = document.getElementById('status');
 const loadingCircle = document.getElementById('loading-circle');
@@ -65,7 +66,7 @@ async function init()
     }
     console.log(currentGameId);
     let response = await httPClient.getPlayers(currentGameId);
-
+    enemyName = response.filter((e) => e !== sessionStorage.getItem('user'))[0];
     if (response[0] === sessionStorage.getItem('user'))
     {
         playerSymbol = symbol.O;
@@ -97,7 +98,7 @@ async function gameLoop()
 
             loadingCircle.style.display = 'block';
             let json = click;
-            statusBox.innerText = "Wait for the enemy's move";
+            statusBox.innerText = `Wait for the ${enemyName}'s move`;
             while(json === click)
             {
                 json = (await httPClient.getLastMove(currentGameId)).value;
@@ -114,7 +115,7 @@ async function gameLoop()
         while(status === gameStatus.Running)
         {
             loadingCircle.style.display = 'block';
-            statusBox.innerText = "Wait for the enemy's move";
+            statusBox.innerText = `Wait for the ${enemyName}'s move`;
             let json = click;
 
             while(json === click)
@@ -145,7 +146,7 @@ async function handleWin()
 {
     if (status === gameStatus.EnemyWon)
     {
-        statusBox.innerText = "The enemy player won. Press the button to play again";
+        statusBox.innerText = `${enemyName} won. Press the button to play again`;
         button.style.display = 'block';
         await httPClient.postLastMove(currentGameId, "");
         return true;
